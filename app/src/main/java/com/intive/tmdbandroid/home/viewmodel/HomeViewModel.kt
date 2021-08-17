@@ -3,7 +3,7 @@ package com.intive.tmdbandroid.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.state.Resource
-import com.intive.tmdbandroid.sample.model.Sample
+import com.intive.tmdbandroid.sample.domain.Sample
 import com.intive.tmdbandroid.sample.usecase.SampleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

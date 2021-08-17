@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.sample.usecase
 
-import com.intive.tmdbandroid.sample.model.Sample
+import com.intive.tmdbandroid.sample.domain.Sample
 import com.intive.tmdbandroid.sample.repository.SampleRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

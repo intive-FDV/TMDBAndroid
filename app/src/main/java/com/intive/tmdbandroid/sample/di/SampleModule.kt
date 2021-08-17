@@ -13,7 +13,7 @@ class SampleModule {
 
     @Singleton
     @Provides
-    fun provideEventAPIService(): SampleDataSource {
+    fun provideSampleDataSource(): SampleDataSource {
         return SampleDataSource()
     }
 }

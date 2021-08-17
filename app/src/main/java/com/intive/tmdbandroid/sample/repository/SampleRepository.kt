@@ -1,7 +1,7 @@
 package com.intive.tmdbandroid.sample.repository
 
 import com.intive.tmdbandroid.sample.datasource.SampleDataSource
-import com.intive.tmdbandroid.sample.model.Sample
+import com.intive.tmdbandroid.sample.domain.Sample
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
