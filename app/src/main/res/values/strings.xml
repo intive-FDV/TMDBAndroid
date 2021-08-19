@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TMDB Android</string>
+
+    <string name="popular_movies">Popular movies</string>
+    <string name="popular_tvShows">Popular TV shows</string>
+    <string name="base_imageURL">https://image.tmdb.org/t/p/original</string>
+    <string name="popularity">"%1$d%%"</string>
 </resources>
