@@ -22,20 +22,20 @@ test: &test
     name: Test
     caches:
       - gradle    # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
-      script:
-        - echo "Starting test..."
-        - ./gradlew testDebugUnitTest # test reporting is automatically enabled https://support.atlassian.com/bitbucket-cloud/docs/test-reporting-in-pipelines/
+    script:
+      - echo "Starting test..."
+      - ./gradlew testDebugUnitTest # test reporting is automatically enabled https://support.atlassian.com/bitbucket-cloud/docs/test-reporting-in-pipelines/
 
 lint: &lint
   step:
     name: Lint
     caches: # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
       - gradle
-      script:
-        - echo "Starting lint..."
-        - ./gradlew lint
-      artifacts:
-        - app/build/reports/**        # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+    script:
+      - echo "Starting lint..."
+      - ./gradlew lint
+    artifacts:
+      - app/build/reports/**        # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
 
 build: &build
   step:
@@ -45,17 +45,17 @@ build: &build
     script:
       - echo "Starting build..."
       - ./gradlew assembleDebug
-     artifacts:
-       - app/build/outputs/** # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+    artifacts:
+      - app/build/outputs/** # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
     after-script:
       - ALERT_TYPE="success"
       - if [[ $BITBUCKET_EXIT_CODE -ne 0 ]]; then ALERT_TYPE="error" ; fi
       - pipe: atlassian/email-notify:0.4.5
         variables:
-          USERNAME: 'myemail@example.com'
+          USERNAME: 'tmdba2021@gmail.com'
           PASSWORD: $PASSWORD
           FROM: 'tmdba2021@gmail.com'
-          TO: 'francisco.beccuti@intive.com, example2@example.com'
+          TO: 'francisco.beccuti@intive.com, fernando.perez@intive.com,uriel.garrido@intive.com,andres.seoane@intive.com'
           HOST: 'smtp.gmail.com'
           SUBJECT: '${ALERT_TYPE}:Bitbucket Pipe Notification for ${BITBUCKET_BRANCH}'
 
@@ -68,6 +68,7 @@ pipelines:
       # - <<: *build
   branches:
     master:
+      - <<: *build
       - <<: *test
       - <<: *lint
-      - <<: *build
+
