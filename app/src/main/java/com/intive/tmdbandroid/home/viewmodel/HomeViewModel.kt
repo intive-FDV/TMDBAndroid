@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.state.Resource
 import com.intive.tmdbandroid.model.ResultMovies
 import com.intive.tmdbandroid.model.ResultTVShows
-import com.intive.tmdbandroid.sample.model.Sample
+import com.intive.tmdbandroid.sample.domain.Sample
 import com.intive.tmdbandroid.sample.usecase.SampleUseCase
 import com.intive.tmdbandroid.usecase.PopularMoviesUseCase
 import com.intive.tmdbandroid.usecase.PopularTVShowsUseCase
