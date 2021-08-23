@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.state.Resource
 import com.intive.tmdbandroid.model.ResultMovies
 import com.intive.tmdbandroid.model.ResultTVShows
-import com.intive.tmdbandroid.sample.model.Sample
+//import com.intive.tmdbandroid.sample.model.Sample
 import com.intive.tmdbandroid.sample.usecase.SampleUseCase
 import com.intive.tmdbandroid.usecase.PopularMoviesUseCase
 import com.intive.tmdbandroid.usecase.PopularTVShowsUseCase
@@ -24,8 +24,8 @@ class HomeViewModel @Inject internal constructor(
     private val popularTVShowsUseCase: PopularTVShowsUseCase
 ) : ViewModel() {
 
-    private val _sampleFlow = Channel<Resource<Sample>>(Channel.BUFFERED)
-    val sampleFlow = _sampleFlow.receiveAsFlow()
+//    private val _sampleFlow = Channel<Resource<Sample>>(Channel.BUFFERED)
+//    val sampleFlow = _sampleFlow.receiveAsFlow()
 
     private val _popularMoviesFlow = Channel<Resource<ResultMovies>>(Channel.BUFFERED)
     val popularMoviesFlow = _popularMoviesFlow.receiveAsFlow()
@@ -33,20 +33,20 @@ class HomeViewModel @Inject internal constructor(
     private val _popularTVShowsFlow = Channel<Resource<ResultTVShows>>(Channel.BUFFERED)
     val popularTVShowsFlow = _popularTVShowsFlow.receiveAsFlow()
 
-    fun sample() {
-        viewModelScope.launch {
-            _sampleFlow.send(Resource.loading())
-
-            sampleUseCase()
-                .catch { e ->
-                    _sampleFlow.send(Resource.error(e.toString()))
-                }
-                .collect { sample ->
-                    _sampleFlow.send(Resource.success(sample))
-
-                }
-        }
-    }
+//    fun sample() {
+//        viewModelScope.launch {
+//            _sampleFlow.send(Resource.loading())
+//
+//            sampleUseCase()
+//                .catch { e ->
+//                    _sampleFlow.send(Resource.error(e.toString()))
+//                }
+//                .collect { sample ->
+//                    _sampleFlow.send(Resource.success(sample))
+//
+//                }
+//        }
+//    }
 
     fun popularMovies() {
         viewModelScope.launch {

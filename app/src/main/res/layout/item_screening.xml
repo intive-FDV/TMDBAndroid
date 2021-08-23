@@ -28,6 +28,7 @@
         android:layout_margin="2dp"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/popularity_card"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Screening Title" />
@@ -47,24 +48,26 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/popularity_card"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/screening_poster"
         app:layout_constraintBottom_toBottomOf="@id/screening_poster"
         app:layout_constraintStart_toStartOf="parent"
         app:cardCornerRadius="100dp"
         app:cardElevation="3dp"
-        app:cardBackgroundColor="@color/purple_200"
+        app:cardBackgroundColor="@color/black"
         tools:src="@drawable/ic_launcher_foreground" >
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/screening_popularity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="3dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/secondaryColor"
             tools:text="100%" />
 
     </androidx.cardview.widget.CardView>
