@@ -65,7 +65,7 @@ sonar: &sonar
     clone:
       depth: full              # SonarCloud scanner needs the full history to assign issues properly
     caches:
-      sonar: ~/.sonar/cache # Caching SonarCloud artifacts will speed up your build
+      - gradle
     script:
       - echo "Starting Sonarqube..."
       - ./gradlew build sonarqube
