@@ -59,6 +59,18 @@ build: &build
           HOST: 'smtp.gmail.com'
           SUBJECT: '${ALERT_TYPE}:Bitbucket Pipe Notification for ${BITBUCKET_BRANCH}'
 
+sonar: &sonar
+  step:
+    name: Build, test and analyze on SonarCloud
+    clone:
+      depth: full              # SonarCloud scanner needs the full history to assign issues properly
+    caches:
+      sonar: ~/.sonar/cache # Caching SonarCloud artifacts will speed up your build
+    script:
+      - echo "Starting Sonarqube..."
+      - ./gradlew build sonarqube
+    artifacts:
+      - build/libs/**
 
 pipelines:
   default:                # pipeline definition for all branches
@@ -66,9 +78,11 @@ pipelines:
         - <<: *test
         - <<: *lint
         - <<: *build
-  branches:
-    master:
+        - <<: *sonar
+  pull-requests:
+    '**':
       - <<: *build
       - <<: *test
       - <<: *lint
+      - <<: *sonar
 
