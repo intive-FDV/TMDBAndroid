@@ -31,14 +31,13 @@ class TVShowAdapter (var tvShows: ArrayList<TVShow>) : RecyclerView.Adapter<TVSh
                     .error(R.drawable.ic_image)
 
                 val posterURL = binding.root.resources.getString(R.string.base_imageURL) + poster_path
-                Log.i("MAS", "poster_url: $posterURL")
 
                 Glide.with(binding.root)
                     .load(posterURL)
                     .apply(options)
                     .into(binding.screeningPoster)
 
-                binding.screeningPopularity.text = binding.root.resources.getString(R.string.popularity, popularity.toInt())
+                binding.screeningPopularity.text = binding.root.resources.getString(R.string.popularity, (vote_average * 10).toInt())
                 binding.screeningTitle.text = original_name
                 binding.screeningDate.text = first_air_date
             }

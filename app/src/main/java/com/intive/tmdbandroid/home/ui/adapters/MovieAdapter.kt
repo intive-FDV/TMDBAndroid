@@ -31,7 +31,6 @@ class MovieAdapter (var movies: ArrayList<Movie>) : RecyclerView.Adapter<MovieAd
                     .error(R.drawable.ic_image)
 
                 val posterURL = binding.root.resources.getString(R.string.base_imageURL) + poster_path
-                Log.i("MAS", "poster_url: $posterURL")
 
                 Glide.with(binding.root)
                     .load(posterURL)
