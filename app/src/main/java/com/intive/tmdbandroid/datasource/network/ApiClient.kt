@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface ApiClient {
     @GET("tv/popular")
-    suspend fun getPopularTVShows(@Query("api_key") apiKey: String) : Response<ResultTVShows>
+    suspend fun getPopularTVShows(@Query("api_key") apiKey: String) : ResultTVShows
 }

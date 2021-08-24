@@ -1,12 +1,12 @@
 package com.intive.tmdbandroid.usecase
 
 import com.intive.tmdbandroid.entity.ResultTVShows
-import com.intive.tmdbandroid.repository.Repository
+import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PopularTVShowsUseCase @Inject constructor(private val repository: Repository) {
+class PopularTVShowsUseCase @Inject constructor(private val catalogRepository: CatalogRepository) {
 
-    operator fun invoke(): Flow<ResultTVShows> = repository.popularTVShows()
+    operator fun invoke(): Flow<ResultTVShows> = catalogRepository.popularTVShows()
 
 }
