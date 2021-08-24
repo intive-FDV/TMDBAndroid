@@ -39,7 +39,6 @@ class HomeFragment : Fragment() {
         context ?: return binding.root
 
         initViews(binding)
-//        subscribeUi(binding)
         subscribePopularData(binding)
 
         return binding.root
@@ -48,30 +47,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //viewModel.sample()
-        viewModel.popularMovies()
+        //viewModel.popularMovies()
         viewModel.popularTVShows()
     }
-
-    /*private fun subscribeUi(binding: FragmentHomeBinding) {
-        lifecycleScope.launchWhenStarted {
-            viewModel.sampleFlow.collectLatest { sampleResource ->
-                when (sampleResource.status) {
-                    Resource.Status.SUCCESS -> {
-                        binding.dummy.text = sampleResource.data?.dummy
-                    }
-                    Resource.Status.ERROR -> {
-                        Toast.makeText(context, sampleResource.message, Toast.LENGTH_LONG).show()
-                    }
-                    Resource.Status.LOADING -> {
-                    }
-                    Resource.Status.FAILURE -> {
-                        Toast.makeText(context, sampleResource.message, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-    }*/
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {
         lifecycleScope.launchWhenStarted {

@@ -1,8 +1,8 @@
 package com.intive.tmdbandroid.repository
 
 import com.intive.tmdbandroid.datasource.MockDataSource
-import com.intive.tmdbandroid.model.ResultMovies
-import com.intive.tmdbandroid.model.ResultTVShows
+import com.intive.tmdbandroid.entity.ResultMovies
+import com.intive.tmdbandroid.entity.ResultTVShows
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
