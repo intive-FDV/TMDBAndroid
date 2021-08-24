@@ -1,9 +1,8 @@
 package com.intive.tmdbandroid.datasource
 
-import android.util.Log
 import com.intive.tmdbandroid.model.Movie
-import com.intive.tmdbandroid.model.ResultMovies
-import com.intive.tmdbandroid.model.ResultTVShows
+import com.intive.tmdbandroid.entity.ResultMovies
+import com.intive.tmdbandroid.entity.ResultTVShows
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

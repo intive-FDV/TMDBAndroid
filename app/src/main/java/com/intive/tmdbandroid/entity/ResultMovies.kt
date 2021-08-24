@@ -1,4 +1,6 @@
-package com.intive.tmdbandroid.model
+package com.intive.tmdbandroid.entity
+
+import com.intive.tmdbandroid.model.Movie
 
 data class ResultMovies(
     val page: Int,
