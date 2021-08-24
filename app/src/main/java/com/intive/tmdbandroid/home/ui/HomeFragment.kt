@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.sample()
+        //viewModel.sample()
         viewModel.popularMovies()
         viewModel.popularTVShows()
     }
@@ -143,7 +143,7 @@ class HomeFragment : Fragment() {
         val moviesTextwidth = topMoviesText.paint.measureText(topMoviesText.text.toString())
         val tvShowsTextwidth = topTVShowsText.paint.measureText(topMoviesText.text.toString())
 
-        val darkseaGreen = ContextCompat.getColor(binding.root.context, R.color.darksea_green)
+        val darkseaGreen = ContextCompat.getColor(binding.root.context, R.color.secondaryColor)
         val lightseaGreen = ContextCompat.getColor(binding.root.context, R.color.lightsea_green)
 
         val moviesTextShader = LinearGradient(0f, 0f, moviesTextwidth, 0f,

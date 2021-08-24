@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class MokkDataSource {
+class MockDataSource {
     fun mokkPopularMovies(): Flow<ResultMovies> {
         return flow {
             delay(3000)
