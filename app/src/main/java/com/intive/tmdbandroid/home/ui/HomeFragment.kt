@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //viewModel.sample()
-        viewModel.popularMovies()
+        //viewModel.popularMovies()
         viewModel.popularTVShows()
     }
 
