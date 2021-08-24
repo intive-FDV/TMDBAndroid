@@ -75,9 +75,8 @@ sonar: &sonar
 pipelines:
   pull-requests:
     '**':
-      - parallel: # running a set of steps at the same time https://support.atlassian.com/bitbucket-cloud/docs/set-up-or-run-parallel-steps/
-        - <<: *test
-        - <<: *lint
-        - <<: *build
-        - <<: *sonar
+      - <<: *test
+      - <<: *lint
+      - <<: *build
+      - <<: *sonar
 
