@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.usecase
 
-import com.intive.tmdbandroid.model.ResultMovies
+import com.intive.tmdbandroid.entity.ResultMovies
 import com.intive.tmdbandroid.repository.MockRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
