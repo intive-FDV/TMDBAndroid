@@ -15,7 +15,7 @@ android {
     def _patch=0
 
     def versionPropsFile = file('version.properties')
-    def _versionCode   = 'git rev-list --all --count'.execute().text.trim().toInteger()
+    def _versionCode   = 'git rev-parse --verify --short HEAD'.execute().text.trim().toInteger()
     if (versionPropsFile.canRead()) {
         def Properties versionProps = new Properties()
 
@@ -24,15 +24,6 @@ android {
         _patch = versionProps['PATCH'].toInteger()
         _major = versionProps['MAJOR'].toInteger()
         _minor = versionProps['MINOR'].toInteger()
-
-        if(_patch==100) {
-            _patch=0
-            _minor=_minor+1
-        }
-        if(_minor == 10){
-            _minor = 0
-            _major =_major + 1
-        }
 
         versionProps['MAJOR']=_major.toString()
         versionProps['MINOR']=_minor.toString()
