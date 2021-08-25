@@ -47,6 +47,19 @@ build: &build
       - ./gradlew assembleDebug
     artifacts:
       - app/build/outputs/** # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+
+sonar: &sonar
+  step:
+    name: Build, test and analyze on SonarCloud
+    clone:
+      depth: full              # SonarCloud scanner needs the full history to assign issues properly
+    caches:
+      - gradle
+    script:
+      - echo "Starting Sonarqube..."
+      - ./gradlew sonarqube
+    artifacts:
+      - build/libs/**
     after-script:
       - ALERT_TYPE="success"
       - if [[ $BITBUCKET_EXIT_CODE -ne 0 ]]; then ALERT_TYPE="error" ; fi
@@ -59,16 +72,11 @@ build: &build
           HOST: 'smtp.gmail.com'
           SUBJECT: '${ALERT_TYPE}:Bitbucket Pipe Notification for ${BITBUCKET_BRANCH}'
 
-
 pipelines:
-  default:                # pipeline definition for all branches
-    - parallel:           # running a set of steps at the same time https://support.atlassian.com/bitbucket-cloud/docs/set-up-or-run-parallel-steps/
-        - <<: *test
-        - <<: *lint
-        - <<: *build
-  branches:
-    master:
+  pull-requests:
+    '**':
       - <<: *build
       - <<: *test
       - <<: *lint
+      - <<: *sonar
 
