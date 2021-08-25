@@ -8,4 +8,8 @@ import retrofit2.http.Query
 interface ApiClient {
     @GET("tv/popular")
     suspend fun getPopularTVShows(@Query("api_key") apiKey: String) : ResultTVShows
+
+    @GET("tv/popular")
+    suspend fun getPaginatedPopularTVShows(@Query("api_key") apiKey: String,
+                                           @Query("page") page: Int) : ResultTVShows
 }

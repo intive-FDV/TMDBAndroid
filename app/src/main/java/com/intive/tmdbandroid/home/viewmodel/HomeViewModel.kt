@@ -3,9 +3,11 @@ package com.intive.tmdbandroid.home.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.intive.tmdbandroid.common.state.Resource
 import com.intive.tmdbandroid.entity.ResultMovies
-import com.intive.tmdbandroid.entity.ResultTVShows
+import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import com.intive.tmdbandroid.usecase.PopularMoviesUseCase
 import com.intive.tmdbandroid.usecase.PopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,13 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject internal constructor(
     private val popularMoviesUseCase: PopularMoviesUseCase,
-    private val popularTVShowsUseCase: PopularTVShowsUseCase
+    private val popularTVShowsUseCase: PopularTVShowsUseCase,
+    private val paginatedPopularTVShowsUseCase: PaginatedPopularTVShowsUseCase
 ) : ViewModel() {
 
     private val _popularMoviesFlow = Channel<Resource<ResultMovies>>(Channel.BUFFERED)
     val popularMoviesFlow = _popularMoviesFlow.receiveAsFlow()
 
-    private val _popularTVShowsFlow = Channel<Resource<ResultTVShows>>(Channel.BUFFERED)
+    private val _popularTVShowsFlow = Channel<Resource<PagingData<TVShow>>>(Channel.BUFFERED)
     val popularTVShowsFlow = _popularTVShowsFlow.receiveAsFlow()
 
     fun popularMovies() {
@@ -46,7 +49,7 @@ class HomeViewModel @Inject internal constructor(
         viewModelScope.launch {
             _popularTVShowsFlow.send(Resource.loading())
 
-            popularTVShowsUseCase()
+            paginatedPopularTVShowsUseCase()
                 .catch { e ->
                     Log.i("MAS", "tvshow usecase - catch $e")
                     _popularTVShowsFlow.send(Resource.error(e.toString()))
