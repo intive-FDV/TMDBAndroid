@@ -16,7 +16,8 @@ android {
     def _patch=0
 
     def versionPropsFile = file('version.properties')
-    def _versionCode   = 'git rev-parse --verify --short HEAD'.execute().text.trim().toInteger()
+    def _versionCodeHash   = 'git rev-parse --verify --short HEAD'.execute().text.trim()
+    def _versionCode   = 'git rev-list --all --count'.execute().text.trim().toInteger()
     if (versionPropsFile.canRead()) {
         def Properties versionProps = new Properties()
 
@@ -35,7 +36,7 @@ android {
         throw new GradleException("Could not read version.properties!")
     }
 
-    def _versionName = "${_major}.${_minor}.${_patch}.${_versionCode}"
+    def _versionName = "${_major}.${_minor}.${_patch}.${_versionCodeHash}"
 
     defaultConfig {
         applicationId "com.intive.tmdbandroid"
