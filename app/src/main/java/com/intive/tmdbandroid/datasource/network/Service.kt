@@ -16,4 +16,10 @@ class Service {
             emit(retrofit.create(ApiClient::class.java).getPopularTVShows(BuildConfig.API_KEY))
         }
     }
+
+    fun getPaginatedPopularTVShows(page: Int) : Flow<ResultTVShows> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getPaginatedPopularTVShows(BuildConfig.API_KEY, page))
+        }
+    }
 }

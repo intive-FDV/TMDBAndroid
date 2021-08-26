@@ -12,11 +12,12 @@ object RetrofitHelper {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+        // REMOVE COMMENT TO ENABLE LOGS
+        //val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
-            .client(client)
+            //.client(client)                       //REMOVE COMMENT TO ENABLE LOGS
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
