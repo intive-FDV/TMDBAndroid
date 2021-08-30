@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.navigationVersion = '2.3.5'
-    ext.kotlinVersion = '1.5.21'
+    ext.kotlinVersion = '1.5.30'
     ext.hiltVersion = '2.38.1'
 
     repositories {
@@ -44,4 +44,10 @@ ext {
     paletteVersion = '1.0.0'
     constraintLayoutVersion = '2.1.0'
     coreKTXVersion = '1.6.0'
+
+    mockitoVersion = '3.6.28'
+    archTestingVersion = '2.1.0'
+    truthVersion = '1.4.0'
+    espressoVersion = '3.4.0'
+    turbineVersion = '0.6.0'
 }
