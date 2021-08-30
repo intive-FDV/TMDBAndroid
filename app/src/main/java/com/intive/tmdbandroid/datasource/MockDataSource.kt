@@ -2,8 +2,7 @@ package com.intive.tmdbandroid.datasource
 
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.entity.ResultMovies
-import com.intive.tmdbandroid.entity.ResultTVShows
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,16 +23,11 @@ class MockDataSource {
         }
     }
 
-    fun mokkPopularTVShows(): Flow<ResultTVShows> {
+    fun mokkPopularTVShows(): Flow<ResultTVShowsEntity> {
         return flow {
             delay(3000)
 
-            val tvShow1 = TVShow("","22-09-1994", listOf(),0,"", listOf(),"en-US"
-                ,"Friends","",100.00,"/1uIMhXNXpQTVEdLSpKWjbsCzIEc.jpg",0.0,0)
-            val tvShow2 = TVShow("","19-09-2005", listOf(),0,"", listOf(),"en-US"
-                ,"How I met your mother","",100.00,"/b34jPzmB0wZy7EjUZoleXOl2RRI.jpg",0.0,0)
-
-            emit(ResultTVShows(1, arrayListOf(tvShow1, tvShow2,tvShow1, tvShow2,tvShow1, tvShow2),1,2))
+            emit(ResultTVShowsEntity(1, arrayListOf(),1,2))
         }
     }
 }

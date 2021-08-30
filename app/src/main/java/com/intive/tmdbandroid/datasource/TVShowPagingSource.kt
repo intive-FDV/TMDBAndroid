@@ -1,7 +1,7 @@
 package com.intive.tmdbandroid.datasource
 
 import androidx.paging.PagingSource
-import com.intive.tmdbandroid.entity.ResultTVShows
+import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import androidx.paging.PagingState
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.TVShow
@@ -18,14 +18,14 @@ class TVShowPagingSource(private val service: Service) : PagingSource<Int, TVSho
         return try {
             val pageNumber = params.key ?: DEFAULT_PAGE_INDEX
 
-            lateinit var response: ResultTVShows
+            lateinit var response: ResultTVShowsEntity
             service.getPaginatedPopularTVShows(pageNumber).collect { response = it }
 
             val prevKey = if (pageNumber > DEFAULT_PAGE_INDEX) pageNumber - 1 else null
             val nextKey = if (response.TVShows.isNotEmpty()) pageNumber + 1 else null
 
             LoadResult.Page(
-                data = response.TVShows,
+                data = response.toTVShowList(),
                 prevKey = prevKey,
                 nextKey = nextKey
             )

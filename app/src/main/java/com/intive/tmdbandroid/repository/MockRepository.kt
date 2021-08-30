@@ -2,7 +2,7 @@ package com.intive.tmdbandroid.repository
 
 import com.intive.tmdbandroid.datasource.MockDataSource
 import com.intive.tmdbandroid.entity.ResultMovies
-import com.intive.tmdbandroid.entity.ResultTVShows
+import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,7 +16,7 @@ class MockRepository @Inject constructor(
         return dataSource.mokkPopularMovies()
     }
 
-    fun mokkPopularTVShows() : Flow<ResultTVShows> {
+    fun mokkPopularTVShows() : Flow<ResultTVShowsEntity> {
         return dataSource.mokkPopularTVShows()
     }
 }
