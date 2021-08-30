@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.intive.tmdbandroid.common.state.Resource
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
+import com.intive.tmdbandroid.home.viewmodel.State
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -44,24 +44,20 @@ class HomeFragment : Fragment() {
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {
         lifecycleScope.launchWhenStarted {
-            viewModel.popularTVShowsFlow.collectLatest { resultTVShows ->
-                Log.i("MAS", "popular tvshows status: ${resultTVShows.status}")
+            viewModel.uiState.collect { resultTVShows ->
+                Log.i("MAS", "popular tvshows status: $resultTVShows")
 
-                when (resultTVShows.status) {
-                    Resource.Status.SUCCESS -> {
+                when (resultTVShows) {
+                    is State.Success -> {
                         binding.tvshowsProgress.visibility = View.GONE
-                        resultTVShows.data?.let { tvShowPageAdapter.submitData(it) }
+                        tvShowPageAdapter.submitData(resultTVShows.data)
                     }
-                    Resource.Status.ERROR -> {
+                    is State.Error -> {
                         binding.tvshowsProgress.visibility = View.GONE
-                        Toast.makeText(context, resultTVShows.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG).show()
                     }
-                    Resource.Status.LOADING -> {
+                    State.Loading -> {
                         binding.tvshowsProgress.visibility = View.VISIBLE
-                    }
-                    Resource.Status.FAILURE -> {
-                        binding.tvshowsProgress.visibility = View.GONE
-                        Toast.makeText(context, resultTVShows.message, Toast.LENGTH_LONG).show()
                     }
                 }
             }

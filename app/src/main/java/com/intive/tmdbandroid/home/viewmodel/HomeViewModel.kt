@@ -4,17 +4,15 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.intive.tmdbandroid.common.state.Resource
-import com.intive.tmdbandroid.entity.ResultMovies
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import com.intive.tmdbandroid.usecase.PopularMoviesUseCase
 import com.intive.tmdbandroid.usecase.PopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,42 +20,30 @@ import javax.inject.Inject
 class HomeViewModel @Inject internal constructor(
     private val popularMoviesUseCase: PopularMoviesUseCase,
     private val popularTVShowsUseCase: PopularTVShowsUseCase,
-    private val paginatedPopularTVShowsUseCase: PaginatedPopularTVShowsUseCase
+    private val paginatedPopularTVShowsUseCase: PaginatedPopularTVShowsUseCase,
 ) : ViewModel() {
 
-    private val _popularMoviesFlow = Channel<Resource<ResultMovies>>(Channel.BUFFERED)
-    val popularMoviesFlow = _popularMoviesFlow.receiveAsFlow()
+    private val _state = MutableStateFlow<State>(State.Loading)
 
-    private val _popularTVShowsFlow = Channel<Resource<PagingData<TVShow>>>(Channel.BUFFERED)
-    val popularTVShowsFlow = _popularTVShowsFlow.receiveAsFlow()
-
-    fun popularMovies() {
-        viewModelScope.launch {
-            _popularMoviesFlow.send(Resource.loading())
-
-            popularMoviesUseCase()
-                .catch { e ->
-                    _popularMoviesFlow.send(Resource.error(e.toString()))
-                }
-                .collect { resultMovies ->
-                    _popularMoviesFlow.send(Resource.success(resultMovies))
-                }
-        }
-    }
+    val uiState: StateFlow<State> = _state
 
     fun popularTVShows() {
         viewModelScope.launch {
-            _popularTVShowsFlow.send(Resource.loading())
-
             paginatedPopularTVShowsUseCase()
                 .catch { e ->
                     Log.i("MAS", "tvshow usecase - catch $e")
-                    _popularTVShowsFlow.send(Resource.error(e.toString()))
+                    _state.value = State.Error(e)
                 }
                 .collect { resultTVShows ->
                     Log.i("MAS", "tvshow usecase - collect $resultTVShows")
-                    _popularTVShowsFlow.send(Resource.success(resultTVShows))
+                    _state.value = State.Success(resultTVShows)
                 }
         }
     }
+}
+
+sealed class State {
+    object Loading : State()
+    data class Success(val data: PagingData<TVShow>) : State()
+    data class Error(val exception: Throwable) : State()
 }
