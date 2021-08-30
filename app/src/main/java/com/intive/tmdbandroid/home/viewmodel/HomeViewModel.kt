@@ -1,13 +1,10 @@
 package com.intive.tmdbandroid.home.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
-import com.intive.tmdbandroid.usecase.PopularMoviesUseCase
-import com.intive.tmdbandroid.usecase.PopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +15,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject internal constructor(
-    private val popularMoviesUseCase: PopularMoviesUseCase,
-    private val popularTVShowsUseCase: PopularTVShowsUseCase,
     private val paginatedPopularTVShowsUseCase: PaginatedPopularTVShowsUseCase,
 ) : ViewModel() {
 
@@ -31,11 +26,9 @@ class HomeViewModel @Inject internal constructor(
         viewModelScope.launch {
             paginatedPopularTVShowsUseCase()
                 .catch { e ->
-                    Log.i("MAS", "tvshow usecase - catch $e")
                     _state.value = State.Error(e)
                 }
                 .collect { resultTVShows ->
-                    Log.i("MAS", "tvshow usecase - collect $resultTVShows")
                     _state.value = State.Success(resultTVShows)
                 }
         }
