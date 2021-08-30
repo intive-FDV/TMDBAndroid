@@ -8,16 +8,15 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitHelper {
-    fun getRertrofit() : Retrofit {
+    fun getRetrofit() : Retrofit {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-        // REMOVE COMMENT TO ENABLE LOGS
-        //val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
-            //.client(client)                       //REMOVE COMMENT TO ENABLE LOGS
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
