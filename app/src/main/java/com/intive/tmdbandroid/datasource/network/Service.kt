@@ -1,7 +1,7 @@
 package com.intive.tmdbandroid.datasource.network
 
 import com.intive.tmdbandroid.BuildConfig
-import com.intive.tmdbandroid.common.state.RetrofitHelper
+import com.intive.tmdbandroid.common.RetrofitHelper
 import com.intive.tmdbandroid.entity.ResultTVShows
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

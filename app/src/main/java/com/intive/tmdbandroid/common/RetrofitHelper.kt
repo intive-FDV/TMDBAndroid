@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.common.state
+package com.intive.tmdbandroid.common
 
 import com.intive.tmdbandroid.BuildConfig
 import retrofit2.Retrofit
