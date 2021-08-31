@@ -25,4 +25,12 @@
         app:layout_constraintStart_toStartOf="@+id/rv_popularTVShows"
         app:layout_constraintTop_toTopOf="@+id/rv_popularTVShows" />
 
+    <include
+        android:id="@+id/layout_empty"
+        layout="@layout/layout_empty"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
