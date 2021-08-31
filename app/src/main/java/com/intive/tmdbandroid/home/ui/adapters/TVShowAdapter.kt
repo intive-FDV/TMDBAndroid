@@ -50,9 +50,7 @@ class TVShowAdapter (var tvShows: ArrayList<TVShow>) : RecyclerView.Adapter<TVSh
                     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(first_air_date)
                     val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date!!)
                     binding.screeningDate.text = stringDate
-                } catch (e: IllegalArgumentException) {
-                    binding.screeningDate.text = ""
-                } catch (e:NullPointerException) {
+                } catch (e: Exception) {
                     binding.screeningDate.text = ""
                 }
 
