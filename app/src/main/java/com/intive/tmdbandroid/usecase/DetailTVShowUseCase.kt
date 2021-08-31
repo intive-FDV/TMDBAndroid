@@ -5,8 +5,8 @@ import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DetailTVShowsUseCase @Inject constructor(private val showTVRepository: CatalogRepository) {
+class DetailTVShowUseCase @Inject constructor(private val repository: CatalogRepository) {
 
-    operator fun invoke(id:Int): Flow<TVShow> = showTVRepository.getTVShowByID(id)
+    operator fun invoke(id:Int): Flow<TVShow> = repository.getTVShowByID(id)
 
 }

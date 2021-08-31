@@ -19,10 +19,6 @@ class CatalogRepository @Inject constructor(
         const val DEFAULT_PAGE_SIZE = 20
     }
 
-    fun popularTVShows() : Flow<ResultTVShowsEntity> {
-        return service.getPopularTVShows()
-    }
-
     fun paginatedPopularTVShows(): Flow<PagingData<TVShow>> {
         return Pager(
             config = PagingConfig(
