@@ -29,9 +29,7 @@ class TVShowPagingSource(private val service: Service) : PagingSource<Int, TVSho
                 prevKey = prevKey,
                 nextKey = nextKey
             )
-        } catch (e: IOException) {
-            LoadResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
