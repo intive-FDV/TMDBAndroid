@@ -9,7 +9,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
@@ -55,13 +58,18 @@ class HomeFragment : Fragment() {
                     is State.Error -> {
                         binding.tvshowsProgress.visibility = View.GONE
                         Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG).show()
+                        goToEmptyFragment()
                     }
-                    State.Loading -> {
+                    is State.Loading -> {
                         binding.tvshowsProgress.visibility = View.VISIBLE
                     }
                 }
             }
         }
+    }
+
+    private fun goToEmptyFragment() {
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentDestToEmptyFragment())
     }
 
     private fun initViews(binding: FragmentHomeBinding) {
