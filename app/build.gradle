@@ -71,7 +71,6 @@ android {
         }
     }
     buildFeatures {
-        dataBinding true
         viewBinding true
     }
 }
@@ -98,6 +97,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$archLifecycleVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "androidx.palette:palette-ktx:$paletteVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
