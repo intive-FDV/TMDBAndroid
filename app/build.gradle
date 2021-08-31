@@ -11,17 +11,57 @@ plugins {
 android {
     compileSdk 30
 
+    def _major=0
+    def _minor=0
+    def _patch=0
+
+    def versionPropsFile = file('version.properties')
+    def _versionCodeHash   = 'git rev-parse --verify --short HEAD'.execute().text.trim()
+    def _versionCode   = 'git rev-list --all --count'.execute().text.trim().toInteger()
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        _patch = versionProps['PATCH'].toInteger()
+        _major = versionProps['MAJOR'].toInteger()
+        _minor = versionProps['MINOR'].toInteger()
+
+        versionProps['MAJOR']=_major.toString()
+        versionProps['MINOR']=_minor.toString()
+        versionProps['PATCH']=_patch.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+    }
+    else {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+    def _versionName = "${_major}.${_minor}.${_patch}.${_versionCodeHash}"
+
     defaultConfig {
         applicationId "com.intive.tmdbandroid"
         minSdk 21
         targetSdk 30
-        versionCode 1
-        versionName "1.0"
+        versionCode _versionCode
+        versionName _versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/3/\"")
         buildConfigField("String", "API_KEY", "\"dc41c63c639111ed0845809d99175035\"")
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def fileNaming = "TMDBAndroid"
+            if (variant.buildType.name.equals("release"))
+                fileNaming = fileNaming+"-Release"
+            else
+                fileNaming = fileNaming+"-Debug"
+
+            outputFileName = fileNaming+"-" + _versionName+".apk"
+
+        }
     }
 
     buildTypes {
