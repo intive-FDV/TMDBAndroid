@@ -4,31 +4,28 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.model.TVShow
-import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
-class TVShowAdapter (var tvShows: ArrayList<TVShow>) : RecyclerView.Adapter<TVShowAdapter.TVShowHolder>() {
-    fun refresh (TVShowList: List<TVShow>) {
-        tvShows.clear()
-        tvShows.addAll(TVShowList)
-        notifyDataSetChanged()
+class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHolder>(REPO_COMPARATOR) {
+    companion object {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
+            override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
+            override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
+        }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowAdapter.TVShowHolder = TVShowHolder(
-        ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
 
     override fun onBindViewHolder(holder: TVShowHolder, position: Int) {
         with(holder) {
-            with(tvShows[position]) {
+            with(getItem(position) as TVShow) {
                 val options = RequestOptions()
                     .override(150, 225)
                     .centerCrop()
@@ -73,7 +70,9 @@ class TVShowAdapter (var tvShows: ArrayList<TVShow>) : RecyclerView.Adapter<TVSh
         }
     }
 
-    override fun getItemCount(): Int = tvShows.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder = TVShowHolder(
+        ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
 
     inner class TVShowHolder (val binding: ItemScreeningBinding) : RecyclerView.ViewHolder(binding.root)
 }

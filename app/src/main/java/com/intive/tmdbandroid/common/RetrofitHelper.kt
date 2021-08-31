@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.common.state
+package com.intive.tmdbandroid.common
 
 import com.intive.tmdbandroid.BuildConfig
 import retrofit2.Retrofit
@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitHelper {
-    fun getRertrofit() : Retrofit {
+    fun getRetrofit() : Retrofit {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 

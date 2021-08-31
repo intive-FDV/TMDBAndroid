@@ -1,34 +1,27 @@
 package com.intive.tmdbandroid.home.ui
 
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.common.state.Resource
+import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
-import com.intive.tmdbandroid.home.ui.adapters.MovieAdapter
-import com.intive.tmdbandroid.home.ui.adapters.TVShowAdapter
+import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
+import com.intive.tmdbandroid.home.viewmodel.State
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
     private val viewModel: HomeViewModel by viewModels()
 
-    private val movieAdapter = MovieAdapter(arrayListOf())
-    private val tvShowsAdapter = TVShowAdapter(arrayListOf())
+    private val tvShowPageAdapter = TVShowPageAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,56 +39,25 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //viewModel.popularMovies()
         viewModel.popularTVShows()
     }
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {
         lifecycleScope.launchWhenStarted {
-            viewModel.popularMoviesFlow.collectLatest { resultMovies ->
-                Log.i("MAS", "popular movies status: ${resultMovies.status}")
+            viewModel.uiState.collect { resultTVShows ->
+                Log.i("MAS", "popular tvshows status: $resultTVShows")
 
-                when (resultMovies.status) {
-                    Resource.Status.SUCCESS -> {
-                        binding.moviesProgress.visibility = View.GONE
-                        resultMovies.data?.movies?.let { movieAdapter.refresh(it) }
-                    }
-                    Resource.Status.ERROR -> {
-                        binding.moviesProgress.visibility = View.GONE
-                        Toast.makeText(context, resultMovies.message, Toast.LENGTH_LONG).show()
-                    }
-                    Resource.Status.LOADING -> {
-                        binding.moviesProgress.visibility = View.VISIBLE
-                    }
-                    Resource.Status.FAILURE -> {
-                        binding.moviesProgress.visibility = View.GONE
-                        Toast.makeText(context, resultMovies.message, Toast.LENGTH_LONG).show()
-                    }
-                }
-
-            }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.popularTVShowsFlow.collectLatest { resultTVShows ->
-                Log.i("MAS", "popular tvshows status: ${resultTVShows.status}")
-
-                when (resultTVShows.status) {
-                    Resource.Status.SUCCESS -> {
+                when (resultTVShows) {
+                    is State.Success -> {
                         binding.tvshowsProgress.visibility = View.GONE
-                        resultTVShows.data?.TVShows?.let { tvShowsAdapter.refresh(it) }
+                        tvShowPageAdapter.submitData(resultTVShows.data)
                     }
-                    Resource.Status.ERROR -> {
+                    is State.Error -> {
                         binding.tvshowsProgress.visibility = View.GONE
-                        Toast.makeText(context, resultTVShows.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG).show()
                     }
-                    Resource.Status.LOADING -> {
+                    State.Loading -> {
                         binding.tvshowsProgress.visibility = View.VISIBLE
-                    }
-                    Resource.Status.FAILURE -> {
-                        binding.tvshowsProgress.visibility = View.GONE
-                        Toast.makeText(context, resultTVShows.message, Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -103,40 +65,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun initViews(binding: FragmentHomeBinding) {
-        val rvTopMovies = binding.rvPopularMovies
         val rvTopTVShows = binding.rvPopularTVShows
 
-        rvTopMovies.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = movieAdapter
-        }
         rvTopTVShows.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = tvShowsAdapter
+            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+            adapter = tvShowPageAdapter
         }
-
-        val topMoviesText = binding.popularMoviesText
-        val topTVShowsText = binding.popularTvshowsText
-
-        val moviesTextwidth = topMoviesText.paint.measureText(topMoviesText.text.toString())
-        val tvShowsTextwidth = topTVShowsText.paint.measureText(topMoviesText.text.toString())
-
-        val darkseaGreen = ContextCompat.getColor(binding.root.context, R.color.secondaryColor)
-        val lightseaGreen = ContextCompat.getColor(binding.root.context, R.color.lightsea_green)
-
-        val moviesTextShader = LinearGradient(0f, 0f, moviesTextwidth, 0f,
-            darkseaGreen,
-            lightseaGreen,
-            Shader.TileMode.CLAMP)
-        val tvShowsTextShader = LinearGradient(0f, 0f, tvShowsTextwidth, 0f,
-            darkseaGreen,
-            lightseaGreen,
-            Shader.TileMode.CLAMP)
-
-        topMoviesText.setTextColor(darkseaGreen)
-        topMoviesText.paint.shader = moviesTextShader
-        topTVShowsText.setTextColor(darkseaGreen)
-        topTVShowsText.paint.shader = tvShowsTextShader
     }
-
 }
