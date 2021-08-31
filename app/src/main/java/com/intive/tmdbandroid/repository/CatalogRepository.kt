@@ -5,10 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.TVShowPagingSource
 import com.intive.tmdbandroid.datasource.network.Service
-import com.intive.tmdbandroid.entity.ResultTVShows
+import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,10 +17,6 @@ class CatalogRepository @Inject constructor(
 ) {
     companion object {
         const val DEFAULT_PAGE_SIZE = 20
-    }
-
-    fun popularTVShows() : Flow<ResultTVShows> {
-        return service.getPopularTVShows()
     }
 
     fun paginatedPopularTVShows(): Flow<PagingData<TVShow>> {
@@ -34,5 +29,9 @@ class CatalogRepository @Inject constructor(
                 TVShowPagingSource(service = service)
             }
         ).flow
+    }
+
+    fun getTVShowByID(id:Int): Flow<TVShow>{
+        return service.getTVShowByID(id)
     }
 }
