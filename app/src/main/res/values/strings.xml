@@ -5,8 +5,4 @@
     <string name="popular_tvShows">Popular TV shows</string>
     <string name="base_imageURL">https://image.tmdb.org/t/p/original</string>
     <string name="popularity">"%1$d%%"</string>
-
-    <string name="error_message">Oops! Something went wrong.\nPlease try again in a moment.</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="empty_message">Nothing to see here</string>
 </resources>
