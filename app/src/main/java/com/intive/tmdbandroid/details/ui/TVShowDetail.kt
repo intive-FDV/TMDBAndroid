@@ -1,15 +1,19 @@
 package com.intive.tmdbandroid.details.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.intive.tmdbandroid.R
+import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
+import com.intive.tmdbandroid.databinding.FragmentTvShowDetailBinding
+import com.intive.tmdbandroid.home.ui.HomeActivity
 
 class TVShowDetail : Fragment() {
+
     private var tvShowId : Int? = null
+    private lateinit var binding: FragmentTvShowDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -20,13 +24,24 @@ class TVShowDetail : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_tv_show_detail, container, false)
-
-        val tvShowDetailText = view.findViewById<TextView>(R.id.tvShowDetailText)
-        tvShowDetailText.text = tvShowId.toString()
-
-        return view
+    ): View {
+        binding = FragmentTvShowDetailBinding.inflate(inflater,container,false)
+        with(activity as HomeActivity){
+            setSupportActionBar(binding.toolbar)
+            with(supportActionBar){
+                this?.setDisplayHomeAsUpEnabled(true)
+            }
+        }
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener {_, verticalOffset ->
+            if (verticalOffset < -500){
+                binding.popularityCard.visibility = View.INVISIBLE
+            }else binding.popularityCard.visibility = View.VISIBLE
+        })
+    }
+
 }
