@@ -9,8 +9,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.intive.tmdbandroid.databinding.FragmentTvShowDetailBinding
 import com.intive.tmdbandroid.home.ui.HomeActivity
 
-class TVShowDetail : Fragment() {
-
+class DetailFragment : Fragment() {
     private var tvShowId : Int? = null
     private lateinit var binding: FragmentTvShowDetailBinding
 
@@ -43,5 +42,4 @@ class TVShowDetail : Fragment() {
             }else binding.popularityCard.visibility = View.VISIBLE
         })
     }
-
 }

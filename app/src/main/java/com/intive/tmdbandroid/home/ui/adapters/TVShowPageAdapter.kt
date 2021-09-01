@@ -79,12 +79,7 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder = TVShowHolder(
         ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    ).apply {
-        this.binding.root.setOnClickListener() {
-            Timber.d("Item clicked!",)
-            it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail)
-        }
-    }
+    )
 
     inner class TVShowHolder (val binding: ItemScreeningBinding) : RecyclerView.ViewHolder(binding.root)
 }

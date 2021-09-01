@@ -17,8 +17,8 @@
     </fragment>
     <fragment
         android:id="@+id/TVShowDetail"
-        android:name="com.intive.tmdbandroid.details.ui.TVShowDetail"
+        android:name="com.intive.tmdbandroid.details.ui.DetailFragment"
         android:label="fragment_tv_show_detail"
-        tools:layout="@layout/fragment_tv_show_detail"/>
+        tools:layout="@layout/fragment_detail"/>
 
 </navigation>
