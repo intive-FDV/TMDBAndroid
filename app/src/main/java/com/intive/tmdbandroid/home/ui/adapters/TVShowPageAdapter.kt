@@ -4,6 +4,8 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.model.TVShow
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,13 +69,22 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
 
                 binding.screeningPopularity.text = context.resources.getString(R.string.popularity, percentage)
                 binding.screeningTitle.text = original_name
+
+                binding.root.setOnClickListener() {
+                    it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail, bundleOf("id" to id))
+                }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder = TVShowHolder(
         ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
+    ).apply {
+        this.binding.root.setOnClickListener() {
+            Timber.d("Item clicked!",)
+            it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail)
+        }
+    }
 
     inner class TVShowHolder (val binding: ItemScreeningBinding) : RecyclerView.ViewHolder(binding.root)
 }
