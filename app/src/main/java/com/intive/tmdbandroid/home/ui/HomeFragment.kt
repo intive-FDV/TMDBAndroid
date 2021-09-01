@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -46,20 +45,24 @@ class HomeFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { resultTVShows ->
                 Log.i("MAS", "popular tvshows status: $resultTVShows")
+
                 when (resultTVShows) {
                     is State.Success -> {
-                        //binding.tvshowsProgress.visibility = View.GONE
+                        binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
                         tvShowPageAdapter.submitData(resultTVShows.data)
+
+                        if (tvShowPageAdapter.itemCount == 0) {
+                            binding.layoutEmpty.root.visibility = View.VISIBLE
+                        } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
-                        //binding.tvshowsProgress.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG).show()
+                        binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
-                    State.Loading -> {
+                    is State.Loading -> {
                         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
-                        //binding.tvshowsProgress.visibility = View.VISIBLE
+                        binding.layoutError.errorContainer.visibility = View.GONE
                     }
                 }
             }
