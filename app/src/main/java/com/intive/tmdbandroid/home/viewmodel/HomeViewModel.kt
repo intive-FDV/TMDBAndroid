@@ -6,10 +6,7 @@ import androidx.paging.PagingData
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +26,8 @@ class HomeViewModel @Inject internal constructor(
                     _state.value = State.Error(e)
                 }
                 .collect { resultTVShows ->
-                    _state.value = State.Success(resultTVShows)
+                    if (_state.value !is State.Error)
+                        _state.value = State.Success(resultTVShows)
                 }
         }
     }
