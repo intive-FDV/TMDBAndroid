@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
-import com.intive.tmdbandroid.databinding.FragmentTvShowDetailBinding
+import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.home.ui.HomeActivity
 
 class DetailFragment : Fragment() {
     private var tvShowId : Int? = null
-    private lateinit var binding: FragmentTvShowDetailBinding
+    private lateinit var binding: FragmentDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTvShowDetailBinding.inflate(inflater,container,false)
+        binding = FragmentDetailBinding.inflate(inflater,container,false)
         with(activity as HomeActivity){
             setSupportActionBar(binding.toolbar)
             with(supportActionBar){
