@@ -51,12 +51,16 @@ class HomeFragment : Fragment() {
                     is State.Success -> {
                         binding.tvshowsProgress.visibility = View.GONE
                         tvShowPageAdapter.submitData(resultTVShows.data)
+                        if (tvShowPageAdapter.itemCount == 0) {
+                            binding.layoutEmpty.root.visibility = View.VISIBLE
+                        } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
                         binding.tvshowsProgress.visibility = View.GONE
-                        Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG)
+                            .show()
                     }
-                    State.Loading -> {
+                    is State.Loading -> {
                         binding.tvshowsProgress.visibility = View.VISIBLE
                     }
                 }
