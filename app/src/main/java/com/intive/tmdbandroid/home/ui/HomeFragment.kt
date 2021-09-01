@@ -46,18 +46,20 @@ class HomeFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { resultTVShows ->
                 Log.i("MAS", "popular tvshows status: $resultTVShows")
-
                 when (resultTVShows) {
                     is State.Success -> {
-                        binding.tvshowsProgress.visibility = View.GONE
+                        //binding.tvshowsProgress.visibility = View.GONE
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
                         tvShowPageAdapter.submitData(resultTVShows.data)
                     }
                     is State.Error -> {
-                        binding.tvshowsProgress.visibility = View.GONE
+                        //binding.tvshowsProgress.visibility = View.GONE
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
                         Toast.makeText(context, resultTVShows.exception.message, Toast.LENGTH_LONG).show()
                     }
                     State.Loading -> {
-                        binding.tvshowsProgress.visibility = View.VISIBLE
+                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        //binding.tvshowsProgress.visibility = View.VISIBLE
                     }
                 }
             }
