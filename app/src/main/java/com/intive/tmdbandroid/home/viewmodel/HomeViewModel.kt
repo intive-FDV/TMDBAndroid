@@ -26,8 +26,7 @@ class HomeViewModel @Inject internal constructor(
                     _state.value = State.Error(e)
                 }
                 .collect { resultTVShows ->
-                    if (_state.value !is State.Error)
-                        _state.value = State.Success(resultTVShows)
+                    _state.value = State.Success(resultTVShows)
                 }
         }
     }
