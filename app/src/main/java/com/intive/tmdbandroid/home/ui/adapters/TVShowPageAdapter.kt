@@ -14,7 +14,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.model.TVShow
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +29,6 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
         with(holder) {
             with(getItem(position) as TVShow) {
                 val options = RequestOptions()
-                    .override(150, 225)
                     .centerCrop()
                     .placeholder(R.drawable.ic_image)
                     .error(R.drawable.ic_image)
@@ -68,10 +66,10 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
                 }
 
                 binding.screeningPopularity.text = context.resources.getString(R.string.popularity, percentage)
-                binding.screeningTitle.text = original_name
+                binding.screeningTitle.text = name
 
                 binding.root.setOnClickListener() {
-                    it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail, bundleOf("id" to id))
+                    it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail, bundleOf("id" to id, "screeningTitle" to name))
                 }
             }
         }
