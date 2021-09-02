@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
                 Log.i("MAS", "popular tvshows status: $resultTVShows")
 
