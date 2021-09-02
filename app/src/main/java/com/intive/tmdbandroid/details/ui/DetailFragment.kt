@@ -78,9 +78,11 @@ class DetailFragment : Fragment() {
 
         binding.statusDetailTextView.text = tvShow.status
 
-        binding.genresDetailTextView.text = tvShow.genres.map {
+        val genresListText = tvShow.genres.map {
             it.name
         }.toString()
+        val genresTextWithoutCharacters = genresListText.subSequence(1,genresListText.lastIndex)
+        binding.genresDetailTextView.text = genresTextWithoutCharacters
 
         binding.numberOfSeasonsDetailTextView.text = String.format("%s %s",tvShow.number_of_seasons?.toString(),resources.getString(R.string.seasons))
         binding.numberOfEpisodesDetailTextView.text = String.format("%s %s",tvShow.number_of_episodes?.toString(),resources.getString(R.string.episodes))
