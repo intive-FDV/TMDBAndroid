@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.TVShowPagingSource
 import com.intive.tmdbandroid.datasource.network.Service
-import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -33,5 +32,9 @@ class CatalogRepository @Inject constructor(
 
     fun getTVShowByID(id:Int): Flow<TVShow>{
         return service.getTVShowByID(id)
+    }
+
+    fun search(): Flow<Any> {
+        TODO("Not yet implemented")
     }
 }
