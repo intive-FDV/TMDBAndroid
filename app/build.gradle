@@ -26,11 +26,6 @@ android {
         _patch = versionProps['PATCH'].toInteger()
         _major = versionProps['MAJOR'].toInteger()
         _minor = versionProps['MINOR'].toInteger()
-
-        versionProps['MAJOR']=_major.toString()
-        versionProps['MINOR']=_minor.toString()
-        versionProps['PATCH']=_patch.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
     }
     else {
         throw new GradleException("Could not read version.properties!")
