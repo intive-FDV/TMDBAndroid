@@ -4,6 +4,8 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -66,6 +68,10 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
 
                 binding.screeningPopularity.text = context.resources.getString(R.string.popularity, percentage)
                 binding.screeningTitle.text = original_name
+
+                binding.root.setOnClickListener() {
+                    it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail, bundleOf("id" to id))
+                }
             }
         }
     }

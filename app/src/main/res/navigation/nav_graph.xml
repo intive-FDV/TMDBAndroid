@@ -9,6 +9,16 @@
         android:id="@+id/homeFragmentDest"
         android:name="com.intive.tmdbandroid.home.ui.HomeFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragmentDest_to_TVShowDetail"
+            app:destination="@id/TVShowDetail"
+            app:popUpTo="@id/homeFragmentDest" />
+    </fragment>
+    <fragment
+        android:id="@+id/TVShowDetail"
+        android:name="com.intive.tmdbandroid.details.ui.DetailFragment"
+        android:label="fragment_tv_show_detail"
+        tools:layout="@layout/fragment_detail"/>
 
 </navigation>
