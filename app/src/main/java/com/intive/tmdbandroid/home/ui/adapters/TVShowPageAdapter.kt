@@ -14,7 +14,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.model.TVShow
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
