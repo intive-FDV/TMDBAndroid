@@ -3,12 +3,10 @@ package com.intive.tmdbandroid.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.intive.tmdbandroid.datasource.TVShowPagingSource
-import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.repository.CatalogRepository
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +22,7 @@ class HomeViewModel @Inject internal constructor(
     fun popularTVShows() {
         if (_state.value !is State.Success)
             viewModelScope.launch {
+                delay(1000L)
                 paginatedPopularTVShowsUseCase()
                     .cachedIn(viewModelScope)
                     .catch { e ->
