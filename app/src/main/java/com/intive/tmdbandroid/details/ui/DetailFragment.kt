@@ -98,9 +98,21 @@ class DetailFragment : Fragment() {
         binding.genresDetailTextView.text = genresTextWithoutCharacters
 
         binding.numberOfSeasonsDetailTextView.text =
-            resources.getString(R.string.seasons, tvShow.number_of_seasons)
+            tvShow.number_of_seasons?.let {
+                resources.getQuantityString(
+                    R.plurals.numberOfSeasons,
+                    it,
+                    it
+                )
+            }
         binding.numberOfEpisodesDetailTextView.text =
-            resources.getString(R.string.episodes, tvShow.number_of_episodes)
+            tvShow.number_of_episodes?.let {
+                resources.getQuantityString(
+                    R.plurals.numberOfEpisodes,
+                    it,
+                    it
+                )
+            }
 
         binding.overviewDetailTextView.text = tvShow.overview
         binding.root.visibility = View.VISIBLE
