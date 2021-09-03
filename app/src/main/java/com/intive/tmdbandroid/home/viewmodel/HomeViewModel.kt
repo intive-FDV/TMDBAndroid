@@ -2,15 +2,12 @@ package com.intive.tmdbandroid.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
+import androidx.paging.*
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,20 +17,21 @@ class HomeViewModel @Inject internal constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State>(State.Loading)
-
     val uiState: StateFlow<State> = _state
 
     fun popularTVShows() {
-        viewModelScope.launch {
-            delay(1000L)
-            paginatedPopularTVShowsUseCase()
-                .catch { e ->
-                    _state.value = State.Error(e)
-                }
-                .collect { resultTVShows ->
-                    _state.value = State.Success(resultTVShows)
-                }
-        }
+        if (_state.value !is State.Success)
+            viewModelScope.launch {
+                delay(1000L)
+                paginatedPopularTVShowsUseCase()
+                    .cachedIn(viewModelScope)
+                    .catch { e ->
+                        _state.value = State.Error(e)
+                    }
+                    .collect { resultTVShows ->
+                        _state.value = State.Success(resultTVShows)
+                    }
+            }
     }
 }
 
