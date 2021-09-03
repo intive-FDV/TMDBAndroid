@@ -6,7 +6,11 @@ import androidx.paging.PagingData
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +25,7 @@ class HomeViewModel @Inject internal constructor(
 
     fun popularTVShows() {
         viewModelScope.launch {
+            delay(1000L)
             paginatedPopularTVShowsUseCase()
                 .catch { e ->
                     _state.value = State.Error(e)
