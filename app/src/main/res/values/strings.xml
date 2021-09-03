@@ -10,6 +10,14 @@
     <string name="empty_message">Nothing to see here</string>
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
-    <string name="seasons">"%1$d Seasons"</string>
-    <string name="episodes">"%1$d Episodes"</string>
+    
+    <plurals name="numberOfSeasons">
+        <item quantity="one">%d Season</item>
+        <item quantity="other">%d Seasons</item>
+    </plurals>
+
+    <plurals name="numberOfEpisodes">
+        <item quantity="one">%d Episode</item>
+        <item quantity="other">%d Episodes</item>
+    </plurals>
 </resources>
