@@ -28,7 +28,6 @@ import java.util.*
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
     private var tvShowId: Int? = null
-    private var tvShowName: String? = null
 
     private val viewModel: DetailsViewModel by viewModels()
 
@@ -38,7 +37,6 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             tvShowId = it.getInt("id")
-            tvShowName = it.getString("screeningTitle")
         }
     }
 
@@ -51,10 +49,19 @@ class DetailFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
+        tvShowId?.let {
+            viewModel.tVShows(it)
+        }
+    }
+
     private fun collectDataFromViewModel() {
+        binding.root.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect {
-                when(it){
+                when (it) {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -63,6 +70,7 @@ class DetailFragment : Fragment() {
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
+                        binding.root.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
@@ -86,13 +94,16 @@ class DetailFragment : Fragment() {
         val genresListText = tvShow.genres.map {
             it.name
         }.toString()
-        val genresTextWithoutCharacters = genresListText.subSequence(1,genresListText.lastIndex)
+        val genresTextWithoutCharacters = genresListText.subSequence(1, genresListText.lastIndex)
         binding.genresDetailTextView.text = genresTextWithoutCharacters
 
-        binding.numberOfSeasonsDetailTextView.text = String.format("%s %s",tvShow.number_of_seasons?.toString(),resources.getString(R.string.seasons))
-        binding.numberOfEpisodesDetailTextView.text = String.format("%s %s",tvShow.number_of_episodes?.toString(),resources.getString(R.string.episodes))
+        binding.numberOfSeasonsDetailTextView.text =
+            resources.getString(R.string.seasons, tvShow.number_of_seasons?.toString())
+        binding.numberOfEpisodesDetailTextView.text =
+            resources.getString(R.string.episodes, tvShow.number_of_episodes?.toString())
 
         binding.overviewDetailTextView.text = tvShow.overview
+        binding.root.visibility = View.VISIBLE
     }
 
     private fun setPercentageToCircularPercentage(voteAverage: Double) {
@@ -149,14 +160,6 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-        tvShowId?.let {
-            viewModel.tVShows(it)
-        }
-    }
-
     private fun setupToolbar() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -166,7 +169,6 @@ class DetailFragment : Fragment() {
             navController,
             appBarConfiguration
         )
-        toolbar.title = tvShowName
         binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset < -500) {
                 binding.popularityCard.visibility = View.INVISIBLE

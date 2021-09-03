@@ -10,6 +10,6 @@
     <string name="empty_message">Nothing to see here</string>
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
-    <string name="seasons">Seasons</string>
-    <string name="episodes">Episodes</string>
+    <string name="seasons">"%1$s Seasons"</string>
+    <string name="episodes">"%1$s Episodes"</string>
 </resources>
