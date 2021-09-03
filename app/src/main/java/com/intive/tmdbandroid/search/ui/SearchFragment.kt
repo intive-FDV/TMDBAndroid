@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchFragment: Fragment() {
-    private val viewModel: SearchViewModel by viewModels()
+//    private val viewModel: SearchViewModel by viewModels()
 
     private lateinit var binding: FragmentSearchBinding
 
@@ -28,6 +28,6 @@ class SearchFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.search()
+//        viewModel.search()
     }
 }
