@@ -42,8 +42,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_home_toolbar" />
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/fragment_home_toolbar"/>
+
     <include layout="@layout/layout_progressbar"
         android:id="@+id/layout_progressbar" />
 

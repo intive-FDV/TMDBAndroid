@@ -28,6 +28,8 @@ import java.util.*
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
     private var tvShowId: Int? = null
+    private var tvShowName: String? = null
+
     private val viewModel: DetailsViewModel by viewModels()
 
     private lateinit var binding: FragmentDetailBinding
@@ -36,6 +38,7 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             tvShowId = it.getInt("id")
+            tvShowName = it.getString("screeningTitle")
         }
     }
 
@@ -53,13 +56,17 @@ class DetailFragment : Fragment() {
             viewModel.uiState.collect {
                 when(it){
                     is State.Success -> {
+                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
+                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         setupUI(it.data)
                     }
                     is State.Error -> {
-
+                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-
+                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
+                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
@@ -73,8 +80,6 @@ class DetailFragment : Fragment() {
         setDate(tvShow.first_air_date!!)
 
         setPercentageToCircularPercentage(tvShow.vote_average)
-
-        binding.toolbar.title = tvShow.original_name
 
         binding.statusDetailTextView.text = tvShow.status
 
@@ -161,6 +166,7 @@ class DetailFragment : Fragment() {
             navController,
             appBarConfiguration
         )
+        toolbar.title = tvShowName
         binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset < -500) {
                 binding.popularityCard.visibility = View.INVISIBLE

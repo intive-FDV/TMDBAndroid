@@ -165,5 +165,15 @@
 
     </androidx.cardview.widget.CardView>
 
+    <include layout="@layout/layout_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_error_detail"/>
+
+    <include layout="@layout/layout_progressbar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/layout_loading_detail"/>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
