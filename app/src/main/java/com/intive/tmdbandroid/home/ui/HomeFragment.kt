@@ -15,6 +15,8 @@ import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.home.viewmodel.State
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -42,24 +44,26 @@ class HomeFragment : Fragment() {
     }
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {
+        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collect { resultTVShows ->
+            viewModel.uiState.collectLatest { resultTVShows ->
                 Log.i("MAS", "popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
                     is State.Success -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
-
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
                         tvShowPageAdapter.submitData(resultTVShows.data)
-
                         if (tvShowPageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE
                         } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
                         binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
                 }

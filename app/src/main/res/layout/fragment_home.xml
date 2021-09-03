@@ -27,5 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <include layout="@layout/layout_progressbar"
+        android:id="@+id/layout_progressbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
