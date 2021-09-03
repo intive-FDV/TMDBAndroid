@@ -18,6 +18,7 @@
     <fragment
         android:id="@+id/detailFragmentDest"
         android:name="com.intive.tmdbandroid.details.ui.DetailFragment"
+        android:label="{screeningTitle}"
         tools:layout="@layout/fragment_detail">
         <argument
             android:name="screeningTitle"
