@@ -14,20 +14,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject internal constructor(
-    private val tVShowUseCase: DetailTVShowUseCase) : ViewModel() {
+    private val tVShowUseCase: DetailTVShowUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow<State>(State.Loading)
 
     val uiState: StateFlow<State> = _state
 
-    fun tVShows(id:Int) {
+    fun tVShows(id: Int) {
         viewModelScope.launch {
             tVShowUseCase(id)
-                .catch { e ->
-                    _state.value = State.Error(e)
+                .catch {
+                    _state.value = State.Error
                 }
-                .collect { TVShow ->
-                    _state.value = State.Success(TVShow)
+                .collect { tvShow ->
+                    _state.value = State.Success(tvShow)
                 }
         }
     }
@@ -36,5 +37,5 @@ class DetailsViewModel @Inject internal constructor(
 sealed class State {
     object Loading : State()
     data class Success(val data: TVShow) : State()
-    data class Error(val exception: Throwable) : State()
+    object Error : State()
 }

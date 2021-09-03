@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
@@ -24,26 +27,36 @@ class HomeFragment : Fragment() {
 
     private val tvShowPageAdapter = TVShowPageAdapter()
 
+    private lateinit var binding: FragmentHomeBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
-        initViews(binding)
-        subscribePopularData(binding)
+        initViews()
+        subscribePopularData()
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         viewModel.popularTVShows()
     }
 
-    private fun subscribePopularData(binding: FragmentHomeBinding) {
+    private fun setupToolbar() {
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val toolbar = binding.fragmentHomeToolbar
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+    }
+
+    private fun subscribePopularData() {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
@@ -54,6 +67,7 @@ class HomeFragment : Fragment() {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
                         tvShowPageAdapter.submitData(resultTVShows.data)
+
                         if (tvShowPageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE
                         } else binding.layoutEmpty.root.visibility = View.GONE
@@ -71,7 +85,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initViews(binding: FragmentHomeBinding) {
+    private fun initViews() {
         val rvTopTVShows = binding.rvPopularTVShows
 
         rvTopTVShows.apply {
