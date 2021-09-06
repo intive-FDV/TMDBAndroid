@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
@@ -30,14 +31,14 @@ class DetailFragment : Fragment() {
     private var tvShowId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
+    private val args: DetailFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            tvShowId = it.getInt("id")
-        }
+
+        tvShowId = args.screeningID
     }
 
     override fun onCreateView(
@@ -88,6 +89,8 @@ class DetailFragment : Fragment() {
         setDate(tvShow.first_air_date!!)
 
         setPercentageToCircularPercentage(tvShow.vote_average)
+
+        binding.toolbar.title = tvShow.name
 
         binding.statusDetailTextView.text = tvShow.status
 
