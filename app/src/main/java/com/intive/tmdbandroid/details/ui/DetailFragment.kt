@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.intive.tmdbandroid.R
+import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
-import com.intive.tmdbandroid.details.viewmodel.State
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -62,10 +62,10 @@ class DetailFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect {
                 when (it) {
-                    is State.Success -> {
+                    is State.Success<*> -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(it.data)
+                        setupUI(it.data as TVShow)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE

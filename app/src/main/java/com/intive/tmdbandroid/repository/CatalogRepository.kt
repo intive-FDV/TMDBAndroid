@@ -34,7 +34,7 @@ class CatalogRepository @Inject constructor(
         return service.getTVShowByID(id)
     }
 
-    fun search(): Flow<Any> {
-        TODO("Not yet implemented")
+    fun search(name:String): Flow<TVShow> {
+        return service.getTvShowByTitle(name)
     }
 }

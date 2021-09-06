@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.details.viewmodel
+package com.intive.tmdbandroid.search.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
@@ -7,7 +7,7 @@ import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
+import com.intive.tmdbandroid.usecase.SearchUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
@@ -18,7 +18,7 @@ import org.mockito.Mockito.*
 import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
-class DetailsViewModelTest{
+class SearchViewModelTest{
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
@@ -44,20 +44,20 @@ class DetailsViewModelTest{
         status = "Online"
     )
 
-    private lateinit var detailViewModel: DetailsViewModel
-    private lateinit var detailUseCase: DetailTVShowUseCase
+    private lateinit var searchViewModel: SearchViewModel
+    private lateinit var searchUseCase: SearchUseCase
 
 
     @Before
     fun setup() {
-        detailUseCase = mock(DetailTVShowUseCase::class.java)
-        detailViewModel = DetailsViewModel(detailUseCase)
+        searchUseCase = mock(SearchUseCase::class.java)
+        searchViewModel = SearchViewModel(searchUseCase)
     }
 
     @Test
     @ExperimentalTime
     fun tVShowsTest() = mainCoroutineRule.runBlockingTest {
-        `when`(detailUseCase.invoke(anyInt())).thenReturn(
+        `when`(searchUseCase.invoke(anyString())).thenReturn(
             flow {
                 emit(
                     tvShow
@@ -65,9 +65,9 @@ class DetailsViewModelTest{
             }
         )
 
-        detailViewModel.tVShows(2)
+        searchViewModel.search("Simona la Cacarisa")
 
-        detailViewModel.uiState.test {
+        searchViewModel.uiState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(tvShow))
         }
     }

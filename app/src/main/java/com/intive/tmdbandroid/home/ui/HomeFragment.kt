@@ -12,16 +12,16 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
+import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
-import com.intive.tmdbandroid.home.viewmodel.State
+import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -55,8 +55,8 @@ class HomeFragment : Fragment() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentHomeToolbar
-        toolbar.inflateMenu(R.menu.options_menu)
         toolbar.setupWithNavController(navController, appBarConfiguration)
+        toolbar.inflateMenu(R.menu.options_menu)
         toolbar.setOnMenuItemClickListener(){
             toolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
             true
@@ -70,10 +70,10 @@ class HomeFragment : Fragment() {
                 Log.i("MAS", "popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
-                    is State.Success -> {
+                    is State.Success<*> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        tvShowPageAdapter.submitData(resultTVShows.data)
+                        tvShowPageAdapter.submitData(resultTVShows.data as PagingData<TVShow>)
 
                         if (tvShowPageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE

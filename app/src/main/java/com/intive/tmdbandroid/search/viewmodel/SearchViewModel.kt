@@ -2,6 +2,7 @@ package com.intive.tmdbandroid.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.usecase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +21,11 @@ class SearchViewModel @Inject constructor(
 
     val uiState: StateFlow<State> = _state
 
-    fun search() {
+    fun search(name:String) {
         viewModelScope.launch {
-            searchUseCase()
-                .catch { e ->
-                    _state.value = State.Error(e)
+            searchUseCase(name)
+                .catch {
+                    _state.value = State.Error
                 }
                 .collect {
                     _state.value = State.Success(it)
@@ -32,10 +33,4 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-}
-
-sealed class State {
-    object Loading : State()
-    data class Success(val data: Any) : State()
-    data class Error(val exception: Throwable) : State()
 }

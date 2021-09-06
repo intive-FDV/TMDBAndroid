@@ -1,26 +1,28 @@
 package com.intive.tmdbandroid.search.ui
 
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import android.view.inputmethod.InputMethodManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.appbar.AppBarLayout
-import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
-import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
+import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchFragment: Fragment() {
-//    private val viewModel: SearchViewModel by viewModels()
+    // private val viewModel: SearchViewModel by viewModels()
 
-    private val searchAdapter = TVShowSearchAdapter()
+    // private val searchAdapter = SearchViewModel()
 
     private lateinit var binding: FragmentSearchBinding
+
+    private var tvShowName: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,14 +30,14 @@ class SearchFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
+
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-//        viewModel.search()
+        //viewModel.search()
     }
 
     private fun setupToolbar() {
