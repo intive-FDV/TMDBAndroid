@@ -10,7 +10,8 @@
     <string name="empty_message">Nothing to see here</string>
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
-    
+    <string name="add_to_watchlist">Add to Watchlist</string>
+
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
         <item quantity="other">%d Seasons</item>
