@@ -10,7 +10,7 @@
     <string name="empty_message">Nothing to see here</string>
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
-    <string name="search_text">Search</string>
+    <string name="search_text">Search TV shows or movies</string>
 
     
     <plurals name="numberOfSeasons">
