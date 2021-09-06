@@ -2,7 +2,7 @@ package com.intive.tmdbandroid.details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,10 +32,4 @@ class DetailsViewModel @Inject internal constructor(
                 }
         }
     }
-}
-
-sealed class State {
-    object Loading : State()
-    data class Success(val data: TVShow) : State()
-    object Error : State()
 }

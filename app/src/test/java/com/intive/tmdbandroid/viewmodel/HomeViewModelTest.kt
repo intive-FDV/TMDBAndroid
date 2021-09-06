@@ -5,8 +5,8 @@ import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
+import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
-import com.intive.tmdbandroid.home.viewmodel.State
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
@@ -72,7 +72,7 @@ class HomeViewModelTest {
     @ExperimentalTime
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchRestaurantSuccess() {
+    fun fetchTvShowsSuccess() {
         mainCoroutineRule.runBlockingTest {
             BDDMockito.given(popularTVShowsUseCase()).willReturn(flow {
                 emit(testTVShowPagingData)
@@ -90,7 +90,7 @@ class HomeViewModelTest {
     @ExperimentalTime
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchRestaurantError() {
+    fun fetchTvShowError() {
         mainCoroutineRule.runBlockingTest {
             val runtimeException = RuntimeException()
             BDDMockito.given(popularTVShowsUseCase()).willReturn(flow {
@@ -100,7 +100,7 @@ class HomeViewModelTest {
             viewModel.popularTVShows()
 
             viewModel.uiState.test {
-                Truth.assertThat(awaitItem()).isEqualTo(State.Error(runtimeException))
+                Truth.assertThat(awaitItem()).isEqualTo(State.Error)
             }
         }
 
