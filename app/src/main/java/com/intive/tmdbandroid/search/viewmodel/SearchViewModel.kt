@@ -20,9 +20,9 @@ class SearchViewModel @Inject constructor(
 
     val uiState: StateFlow<State> = _state
 
-    fun search() {
+    fun search(name:String) {
         viewModelScope.launch {
-            searchUseCase()
+            searchUseCase(name)
                 .catch { e ->
                     _state.value = State.Error(e)
                 }

@@ -16,6 +16,8 @@ class SearchFragment: Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
 
+    private var tvShowName: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,6 +30,8 @@ class SearchFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.search()
+        tvShowName?.let {
+            viewModel.search(it)
+        }
     }
 }
