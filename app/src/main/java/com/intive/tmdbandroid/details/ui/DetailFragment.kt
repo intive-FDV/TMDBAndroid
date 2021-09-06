@@ -59,7 +59,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun collectDataFromViewModel() {
-        binding.root.visibility = View.INVISIBLE
+        binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect {
                 when (it) {
@@ -71,7 +71,7 @@ class DetailFragment : Fragment() {
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
-                        binding.root.visibility = View.VISIBLE
+                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
@@ -118,7 +118,7 @@ class DetailFragment : Fragment() {
             }
 
         binding.overviewDetailTextView.text = tvShow.overview
-        binding.root.visibility = View.VISIBLE
+        binding.coordinatorContainerDetail.visibility = View.VISIBLE
     }
 
     private fun setPercentageToCircularPercentage(voteAverage: Double) {
