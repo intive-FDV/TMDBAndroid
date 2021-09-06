@@ -15,14 +15,14 @@
             app:destination="@id/detailFragmentDest"
             app:popUpTo="@id/homeFragmentDest" />
     </fragment>
+
     <fragment
         android:id="@+id/detailFragmentDest"
         android:name="com.intive.tmdbandroid.details.ui.DetailFragment"
-        android:label="{screeningTitle}"
         tools:layout="@layout/fragment_detail">
         <argument
-            android:name="screeningTitle"
-            app:argType="string" />
+            android:name="screeningID"
+            app:argType="integer" />
     </fragment>
 
 </navigation>
