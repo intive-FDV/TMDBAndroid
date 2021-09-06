@@ -32,4 +32,12 @@ class DetailsViewModel @Inject internal constructor(
                 }
         }
     }
+
+    fun addToWatchlist() {
+        //TODO implement after enable the Use Case for Room
+    }
+
+    fun removeFromWatchlist() {
+        //TODO implement after enable the Use Case for Room
+    }
 }

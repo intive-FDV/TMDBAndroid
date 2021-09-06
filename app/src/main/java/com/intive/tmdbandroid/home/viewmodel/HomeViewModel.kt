@@ -34,4 +34,8 @@ class HomeViewModel @Inject internal constructor(
                     }
             }
     }
+
+    fun watchlistTVShows() {
+        //TODO implement after enable the Use Case for Room
+    }
 }
