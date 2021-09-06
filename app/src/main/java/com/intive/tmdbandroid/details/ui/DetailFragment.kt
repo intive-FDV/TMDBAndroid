@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
@@ -30,14 +31,14 @@ class DetailFragment : Fragment() {
     private var tvShowId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
+    private val args: DetailFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            tvShowId = it.getInt("id")
-        }
+
+        tvShowId = args.screeningID
     }
 
     override fun onCreateView(
@@ -58,7 +59,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun collectDataFromViewModel() {
-        binding.root.visibility = View.INVISIBLE
+        binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect {
                 when (it) {
@@ -70,7 +71,7 @@ class DetailFragment : Fragment() {
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
-                        binding.root.visibility = View.VISIBLE
+                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
@@ -88,6 +89,8 @@ class DetailFragment : Fragment() {
         setDate(tvShow.first_air_date!!)
 
         setPercentageToCircularPercentage(tvShow.vote_average)
+
+        binding.toolbar.title = tvShow.name
 
         binding.statusDetailTextView.text = tvShow.status
 
@@ -115,7 +118,7 @@ class DetailFragment : Fragment() {
             }
 
         binding.overviewDetailTextView.text = tvShow.overview
-        binding.root.visibility = View.VISIBLE
+        binding.coordinatorContainerDetail.visibility = View.VISIBLE
     }
 
     private fun setPercentageToCircularPercentage(voteAverage: Double) {
