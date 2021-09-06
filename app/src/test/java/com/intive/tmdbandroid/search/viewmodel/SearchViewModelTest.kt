@@ -4,9 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
+import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
 import com.intive.tmdbandroid.usecase.SearchUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
