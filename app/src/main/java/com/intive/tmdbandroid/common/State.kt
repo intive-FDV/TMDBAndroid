@@ -1,7 +1,7 @@
 package com.intive.tmdbandroid.common
 
-sealed class State {
-    object Loading : State()
-    data class Success<T>(val data: T) : State()
-    object Error : State()
+sealed class State<out T> {
+    object Loading : State<Nothing>()
+    data class Success<T>(val data: T) : State<T>()
+    object Error : State<Nothing>()
 }

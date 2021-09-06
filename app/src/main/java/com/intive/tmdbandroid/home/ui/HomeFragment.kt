@@ -31,6 +31,12 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.popularTVShows()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +54,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        viewModel.popularTVShows()
     }
 
     private fun setupToolbar() {
@@ -70,10 +75,10 @@ class HomeFragment : Fragment() {
                 Log.i("MAS", "popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
-                    is State.Success<*> -> {
+                    is State.Success<PagingData<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        tvShowPageAdapter.submitData(resultTVShows.data as PagingData<TVShow>)
+                        tvShowPageAdapter.submitData(resultTVShows.data)
 
                         if (tvShowPageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE
