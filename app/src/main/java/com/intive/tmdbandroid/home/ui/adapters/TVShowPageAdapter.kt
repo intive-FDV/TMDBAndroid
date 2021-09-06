@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.navigation.NavArgs
 import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,6 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
+import com.intive.tmdbandroid.details.ui.DetailFragmentArgs
+import com.intive.tmdbandroid.home.ui.HomeFragmentDirections
 import com.intive.tmdbandroid.model.TVShow
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,7 +72,8 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
                 binding.screeningTitle.text = name
 
                 binding.root.setOnClickListener() {
-                    it.findNavController().navigate(R.id.action_homeFragmentDest_to_TVShowDetail, bundleOf("id" to id, "screeningTitle" to name))
+                    val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(id)
+                    it.findNavController().navigate(action)
                 }
             }
         }
