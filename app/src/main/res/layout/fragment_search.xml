@@ -43,5 +43,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_search_toolbar"
-        tools:listitem="@layout/item_found_search" />
+        tools:listitem="@layout/item_found_search"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
