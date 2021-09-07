@@ -19,8 +19,13 @@ class DetailsViewModel @Inject internal constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<TVShow>>(State.Loading)
-
     val uiState: StateFlow<State<TVShow>> = _state
+
+    private val _addToWatchlistState = MutableStateFlow<State<Any>>(State.Loading)
+    val addToWatchlistUIState: StateFlow<State<Any>> = _addToWatchlistState
+
+    private val _removeFromWatchlistState = MutableStateFlow<State<Any>>(State.Loading)
+    val removeFromWatchlistUIState: StateFlow<State<Any>> = _removeFromWatchlistState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -35,10 +40,16 @@ class DetailsViewModel @Inject internal constructor(
     }
 
     fun addToWatchlist() {
-        //TODO implement after enable the Use Case for Room
+        //TODO implement to Use Case for Room
+        viewModelScope.launch {
+            _addToWatchlistState.value = State.Success<Any>("Add to watchlist")
+        }
     }
 
     fun removeFromWatchlist() {
-        //TODO implement after enable the Use Case for Room
+        //TODO implement to Use Case for Room
+        viewModelScope.launch {
+            _removeFromWatchlistState.value = State.Success<Any>("Remove from watchlist")
+        }
     }
 }

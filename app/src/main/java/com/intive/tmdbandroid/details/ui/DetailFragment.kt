@@ -23,6 +23,7 @@ import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,7 +49,8 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
-        collectDataFromViewModel()
+        collectTVShowDetailFromViewModel()
+        collectWatchlistDataFromViewModel()
         return binding.root
     }
 
@@ -60,7 +62,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun collectDataFromViewModel() {
+    private fun collectTVShowDetailFromViewModel() {
         binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { state ->
@@ -68,7 +70,7 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(state.data)
+                        setupTVShowDetailUI(state.data)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -84,7 +86,49 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(tvShow: TVShow) {
+    private fun collectWatchlistDataFromViewModel() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.addToWatchlistUIState.collectLatest {
+                when(it) {
+                    is State.Success -> {
+                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
+                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        //TODO Add to Room
+                    }
+                    is State.Error -> {
+                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
+                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
+                    }
+                    is State.Loading -> {
+                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
+                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            viewModel.removeFromWatchlistUIState.collectLatest {
+                when(it) {
+                    is State.Success -> {
+                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
+                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        //TODO Remove from Room
+                    }
+                    is State.Error -> {
+                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
+                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
+                    }
+                    is State.Loading -> {
+                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
+                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupTVShowDetailUI(tvShow: TVShow) {
 
         setImages(tvShow)
 

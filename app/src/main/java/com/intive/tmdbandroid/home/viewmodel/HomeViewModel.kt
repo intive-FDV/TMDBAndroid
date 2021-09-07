@@ -23,8 +23,8 @@ class HomeViewModel @Inject internal constructor(
     private val _state = MutableStateFlow<State<PagingData<TVShow>>>(State.Loading)
     val uiState: StateFlow<State<PagingData<TVShow>>> = _state
 
-    private val _watchlistState = MutableStateFlow<State>(State.Loading)
-    val watchlistUIState: StateFlow<State> = _watchlistState
+    private val _watchlistState = MutableStateFlow<State<Any>>(State.Loading)
+    val watchlistUIState: StateFlow<State<Any>> = _watchlistState
 
     fun popularTVShows() {
         viewModelScope.launch {
@@ -40,11 +40,9 @@ class HomeViewModel @Inject internal constructor(
     }
 
     fun watchlistTVShows() {
-        if (_watchlistState.value !is State.Success<*>){
-            viewModelScope.launch {
-                //TODO Use Case Room here
-                _watchlistState.value = State.Success("Data Room")
-            }
+        viewModelScope.launch {
+            //TODO Use Case Room here
+            _watchlistState.value = State.Success("Data Room")
         }
     }
 }

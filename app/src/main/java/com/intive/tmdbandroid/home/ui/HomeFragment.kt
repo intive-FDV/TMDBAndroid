@@ -1,7 +1,6 @@
 package com.intive.tmdbandroid.home.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -33,6 +33,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel.popularTVShows()
+        viewModel.watchlistTVShows()
     }
 
     override fun onCreateView(
@@ -66,7 +67,7 @@ class HomeFragment : Fragment() {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
-                Log.i("MAS", "popular tvshows status: $resultTVShows")
+                Timber.tag("MAS").i("popular tvshows status: %s", resultTVShows)
 
                 when (resultTVShows) {
                     is State.Success<PagingData<TVShow>> -> {
@@ -95,7 +96,19 @@ class HomeFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.watchlistUIState.collectLatest {
                 when(it) {
-
+                    is State.Success<Any> -> {
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        //TODO Mostrar datos en la lista de watchlists.
+                    }
+                    is State.Error -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                    }
+                    is State.Loading -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                    }
                 }
             }
         }
