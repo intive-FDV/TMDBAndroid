@@ -1,31 +1,23 @@
 package com.intive.tmdbandroid.search.ui.adapters
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemFoundSearchBinding
-import com.intive.tmdbandroid.databinding.ItemScreeningBinding
-import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
+import com.intive.tmdbandroid.databinding.SearchResultsHeaderBinding
 import com.intive.tmdbandroid.model.TVShow
+import timber.log.Timber
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
-private const val TYPE_HEADER : Int = 0
-private const val TYPE_LIST : Int = 1
-
-
-class TVShowSearchAdapter(private val searchResults : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHolder>) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     private val TYPE_HEADER : Int = 0
     private val TYPE_LIST : Int = 1
@@ -40,8 +32,10 @@ class TVShowSearchAdapter(private val searchResults : PagingDataAdapter<TVShow, 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             TYPE_HEADER -> {
-                val header = LayoutInflater.from(parent.context).inflate(R.layout.search_results_header,parent,false)
-                SearchResultsHeaderHolder(header)
+                val header = SearchResultsHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val holder = SearchResultsHeaderHolder(header)
+                holder.headerText.text = "Results"
+                return holder
             } else -> {
                 val header = ItemFoundSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 SearchResultHolder(header)
@@ -51,21 +45,70 @@ class TVShowSearchAdapter(private val searchResults : PagingDataAdapter<TVShow, 
     }
 
     override fun getItemCount(): Int {
-        return searchResults.itemCount + 1
+        return tvShowList.size + 1
+    }
+
+    fun refresh(result: List<TVShow>){
+        tvShowList.clear()
+        tvShowList.addAll(result)
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is SearchResultsHeaderHolder)
-        {
-            holder.headerText.text = "Results:"
+        when(holder){
+            is SearchResultsHeaderHolder -> holder.bind()
+            is SearchResultHolder -> holder.bind(tvShowList[position - 1])
         }
     }
 
-    inner class SearchResultHolder (val binding: ItemFoundSearchBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class SearchResultHolder (val binding: ItemFoundSearchBinding) : RecyclerView.ViewHolder(binding.root){
 
-    class SearchResultsHeaderHolder(itemView : View) : RecyclerView.ViewHolder(itemView)
+        private val itemTitle = binding.itemTitleSearch
+        private val itemYear = binding.itemYearSearch
+        private val itemSeasons = binding.itemSeasonsSearch
+        private val itemRating = binding.itemRatingSearch
+
+        fun bind(item: TVShow){
+            try {
+                val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
+                itemYear.text = date.year.toString()
+            } catch (e : Exception){
+                Timber.e(e)
+            }
+
+            itemTitle.text = item.name
+            itemSeasons.text = item.number_of_seasons?.let {
+                binding.root.resources.getQuantityString(
+                    R.plurals.numberOfSeasons,
+                    it,
+                    it
+                )
+            }
+            itemRating.rating = item.vote_average.toFloat()/2
+
+            val options = RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_image)
+                .error(R.drawable.ic_image)
+
+            val posterURL = binding.root.resources.getString(R.string.base_imageURL) + item.poster_path
+
+            Glide.with(binding.root.context)
+                .load(posterURL)
+                .apply(options)
+                .into(binding.itemPosterSearch)
+
+
+        }
+    }
+
+    inner class SearchResultsHeaderHolder(binding: SearchResultsHeaderBinding) : RecyclerView.ViewHolder(binding.root)
     {
-        val headerText = R.layout.search_results_header as TextView
+        val headerText = binding.searchHeader
+
+        fun bind(){
+            headerText.text = "Results for:"
+        }
     }
 
 }
