@@ -45,6 +45,7 @@ ext {
     constraintLayoutVersion = '2.1.0'
     coreKTXVersion = '1.6.0'
     timberVersion = '5.0.1'
+    roomVersion='2.2.5'
 
     mockitoVersion = '3.6.28'
     archTestingVersion = '2.1.0'
