@@ -1,7 +1,7 @@
 package com.intive.tmdbandroid.home.ui
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +20,7 @@ import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -29,7 +30,13 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
+    override fun onAttach(context: Context) {
+        Timber.d("Lifecycle Fragment -> onAttach")
+        super.onAttach(context)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.d("Lifecycle Fragment -> onCreate")
         super.onCreate(savedInstanceState)
 
         viewModel.popularTVShows()
@@ -40,6 +47,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        Timber.d("Lifecycle Fragment -> onCreateView")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
@@ -50,8 +58,49 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.d("Lifecycle Fragment -> onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+    }
+
+    override fun onStart() {
+        Timber.d("Lifecycle Fragment -> onStart")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Timber.d("Lifecycle Fragment -> onResume")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Timber.d("Lifecycle Fragment -> onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Timber.d("Lifecycle Fragment -> onStop")
+        super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Timber.d("Lifecycle Fragment -> onSaveInstanceState")
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroyView() {
+        Timber.d("Lifecycle Fragment -> onDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        Timber.d("Lifecycle Fragment -> onDestroy")
+        super.onDestroy()
+    }
+
+    override fun onDetach() {
+        Timber.d("Lifecycle Fragment -> onDetach")
+        super.onDetach()
     }
 
     private fun setupToolbar() {
@@ -65,8 +114,6 @@ class HomeFragment : Fragment() {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
-                Log.i("MAS", "popular tvshows status: $resultTVShows")
-
                 when (resultTVShows) {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
