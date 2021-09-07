@@ -28,6 +28,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
+
+    private var isSaveOnWatchlist: Boolean = false
     private var tvShowId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
@@ -43,7 +45,7 @@ class DetailFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
         collectDataFromViewModel()
@@ -61,12 +63,12 @@ class DetailFragment : Fragment() {
     private fun collectDataFromViewModel() {
         binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
-            viewModel.uiState.collect {
-                when (it) {
-                    is State.Success<*> -> {
+            viewModel.uiState.collect { state ->
+                when (state) {
+                    is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(it.data as TVShow)
+                        setupUI(state.data)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -179,6 +181,16 @@ class DetailFragment : Fragment() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
+        toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
+        toolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.ic_heart_watchlist -> {
+                    selectOrUnselectWatchlistFav()
+                    true
+                }
+                else -> false
+            }
+        }
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
@@ -189,5 +201,15 @@ class DetailFragment : Fragment() {
                 binding.popularityCard.visibility = View.INVISIBLE
             } else binding.popularityCard.visibility = View.VISIBLE
         })
+    }
+
+    private fun selectOrUnselectWatchlistFav() {
+        isSaveOnWatchlist = !isSaveOnWatchlist
+        val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
+        if (isSaveOnWatchlist){
+            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
+        }else {
+            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
+        }
     }
 }
