@@ -7,6 +7,7 @@ import com.intive.tmdbandroid.datasource.TVShowPagingSource
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +35,7 @@ class CatalogRepository @Inject constructor(
         return service.getTVShowByID(id)
     }
 
-    fun search(name:String): Flow<TVShow> {
-        return service.getTvShowByTitle(name)
+    fun search(name:String): Flow<List<TVShow>> {
+        return service.getTvShowByTitle(name).map { it.toTVShowList() }
     }
 }
