@@ -22,7 +22,7 @@ class Service {
         }
     }
 
-    fun getTvShowByTitle(tvShowTitle: String): Flow<TVShow> {
+    fun getTvShowByTitle(tvShowTitle: String): Flow<ResultTVShowsEntity> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getTVShowByName(BuildConfig.API_KEY, tvShowTitle))
         }
