@@ -21,6 +21,9 @@ class HomeViewModel @Inject internal constructor(
     private val _state = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _state
 
+    private val _watchlistState = MutableStateFlow<State>(State.Loading)
+    val watchlistUIState: StateFlow<State> = _watchlistState
+
     fun popularTVShows() {
         if (_state.value !is State.Success<*>)
             viewModelScope.launch {
@@ -36,6 +39,11 @@ class HomeViewModel @Inject internal constructor(
     }
 
     fun watchlistTVShows() {
-        //TODO implement after enable the Use Case for Room
+        if (_watchlistState.value !is State.Success<*>){
+            viewModelScope.launch {
+                //TODO Use Case Room here
+                _watchlistState.value = State.Success("Data Room")
+            }
+        }
     }
 }

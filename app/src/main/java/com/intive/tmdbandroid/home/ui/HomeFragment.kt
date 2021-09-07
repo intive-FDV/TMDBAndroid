@@ -39,6 +39,7 @@ class HomeFragment : Fragment() {
 
         initViews()
         subscribePopularData()
+        subscribeWatchlistData()
 
         return binding.root
     }
@@ -80,6 +81,16 @@ class HomeFragment : Fragment() {
                         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
+                }
+            }
+        }
+    }
+
+    private fun subscribeWatchlistData() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.watchlistUIState.collectLatest {
+                when(it) {
+
                 }
             }
         }
