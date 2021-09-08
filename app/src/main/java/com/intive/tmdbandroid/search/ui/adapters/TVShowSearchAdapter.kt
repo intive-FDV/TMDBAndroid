@@ -53,9 +53,7 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
     }
 
     override fun getItemCount(): Int {
-        val count = super.getItemCount() + 1
-        println(count)
-        return count
+        return super.getItemCount() + 1
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -75,13 +73,12 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
         private val itemSeasons = binding.itemSeasonsSearch
         private val itemRating = binding.itemRatingSearch
 
-        init {
-            itemView.setOnClickListener {
-                getItem(absoluteAdapterPosition - 1)?.let { it1 -> clickListener?.invoke(it1) }
-            }
-        }
-
         fun bind(item: TVShow){
+
+            itemView.setOnClickListener {
+                clickListener?.invoke(item)
+            }
+
             try {
                 if(item.first_air_date.toString().isNotEmpty()){
                     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
