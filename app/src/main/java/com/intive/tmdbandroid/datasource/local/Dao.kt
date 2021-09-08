@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface Dao{
     @Query("SELECT * FROM TVShow")
-    suspend fun allFavorite(): Flow<List<TVShow>>
+    suspend fun allFavorite(): List<TVShow>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavorite(tvShowLocal: TVShow)
@@ -20,6 +20,6 @@ interface Dao{
     suspend fun deleteFavorite(tvShowLocal: TVShow)
 
     @Query("SELECT * FROM TVShow WHERE id=:id LIMIT 1")
-    suspend fun existAsFavorite(id: String): Flow<List<TVShow>>
+    suspend fun existAsFavorite(id: String): List<TVShow>
 
 }
