@@ -49,7 +49,7 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
 
                 try {
                     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(first_air_date)
-                    val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date!!)
+                    val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date)
                     binding.screeningDate.text = stringDate
                 } catch (e: Exception) {
                     binding.screeningDate.text = ""
@@ -58,14 +58,10 @@ class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHold
                 binding.circularPercentage.progress = percentage
 
                 when {
-                    percentage < 25 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.red))
-                    percentage < 45 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.orange))
-                    percentage < 75 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.yellow))
-                    else -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.green))
+                    percentage < 25 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.red)
+                    percentage < 45 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.orange)
+                    percentage < 75 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                    else -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.green)
                 }
 
                 binding.screeningPopularity.text = context.resources.getString(R.string.popularity, percentage)

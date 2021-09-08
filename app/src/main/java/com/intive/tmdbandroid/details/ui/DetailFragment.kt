@@ -88,7 +88,7 @@ class DetailFragment : Fragment() {
 
         setImages(tvShow)
 
-        setDate(tvShow.first_air_date!!)
+        tvShow.first_air_date?.let { setDate(it) }
 
         setPercentageToCircularPercentage(tvShow.vote_average)
 
@@ -131,18 +131,10 @@ class DetailFragment : Fragment() {
         val context = binding.root.context
 
         when {
-            percentage < 25 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.red)
-            )
-            percentage < 45 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.orange)
-            )
-            percentage < 75 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.yellow)
-            )
-            else -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.green)
-            )
+            percentage < 25 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.red)
+            percentage < 45 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.orange)
+            percentage < 75 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+            else -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.green)
         }
         binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
     }
@@ -151,7 +143,7 @@ class DetailFragment : Fragment() {
         try {
             val date =
                 SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstAirDate)
-            val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date!!)
+            val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date)
             binding.firstAirDateDetailTextView.text = stringDate
         } catch (e: Exception) {
             binding.firstAirDateDetailTextView.text = ""
