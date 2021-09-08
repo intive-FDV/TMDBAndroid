@@ -1,7 +1,6 @@
 package com.intive.tmdbandroid.home.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,8 @@ import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
-                Log.i("MAS", "popular tvshows status: $resultTVShows")
+                Timber.i("popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
                     is State.Success<PagingData<TVShow>> -> {
@@ -94,7 +95,13 @@ class HomeFragment : Fragment() {
         val rvTopTVShows = binding.rvPopularTVShows
 
         rvTopTVShows.apply {
-            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val columnCount = floor(dpWidth / 200).toInt()
+            Timber.i("columnCount: $columnCount")
+
+            layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
             adapter = tvShowPageAdapter
         }
     }
