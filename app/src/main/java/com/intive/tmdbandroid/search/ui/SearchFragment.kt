@@ -26,13 +26,9 @@ import kotlinx.coroutines.flow.collectLatest
 class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val searchList = arrayListOf<TVShow>()
-
-    private val searchAdapter = TVShowSearchAdapter(searchList)
+    private val searchAdapter = TVShowSearchAdapter()
 
     private lateinit var binding: FragmentSearchBinding
-
-    private var tvShowName: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,8 +76,8 @@ class SearchFragment: Fragment() {
             viewModel.uiState.collectLatest { resultTVShow ->
 
                 when (resultTVShow) {
-                    is State.Success<List<TVShow>> -> {
-                        searchAdapter.refresh(resultTVShow.data)
+                    is State.Success<PagingData<TVShow>> -> {
+                        searchAdapter.submitData(resultTVShow.data)
                         println("ta bien")
                     }
                     is State.Error -> {

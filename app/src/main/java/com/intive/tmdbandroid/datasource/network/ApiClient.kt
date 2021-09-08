@@ -17,5 +17,6 @@ interface ApiClient {
 
     @GET("search/tv")
     suspend fun getTVShowByName(@Query("api_key") apiKey: String,
-                                @Query("query") query: String) : ResultTVShowsEntity
+                                @Query("query") query: String,
+                                @Query("page") page: Int) : ResultTVShowsEntity
 }

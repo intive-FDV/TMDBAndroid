@@ -1,9 +1,11 @@
 package com.intive.tmdbandroid.search.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.paging.PagingData
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -15,10 +17,14 @@ import timber.log.Timber
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
-class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
+class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+    companion object {
+    private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
+        override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
+        override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
+    }
+}
     private val TYPE_HEADER : Int = 0
     private val TYPE_LIST : Int = 1
 
@@ -45,19 +51,18 @@ class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : Recycler
     }
 
     override fun getItemCount(): Int {
-        return tvShowList.size + 1
-    }
-
-    fun refresh(result: List<TVShow>){
-        tvShowList.clear()
-        tvShowList.addAll(result)
-        notifyDataSetChanged()
+        val count = super.getItemCount() + 1
+        println(count)
+        return count
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
             is SearchResultsHeaderHolder -> holder.bind()
-            is SearchResultHolder -> holder.bind(tvShowList[position - 1])
+            is SearchResultHolder -> {
+                val tvShowItem = getItem(position - 1) as TVShow
+                holder.bind(tvShowItem)
+            }
         }
     }
 
@@ -70,8 +75,10 @@ class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : Recycler
 
         fun bind(item: TVShow){
             try {
-                val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
-                itemYear.text = date.year.toString()
+                if(item.first_air_date.toString().isNotEmpty()){
+                    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
+                    itemYear.text = date.year.toString()
+                }
             } catch (e : Exception){
                 Timber.e(e)
             }
