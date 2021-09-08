@@ -28,6 +28,8 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
     private val TYPE_HEADER : Int = 0
     private val TYPE_LIST : Int = 1
 
+    var clickListener: ((TVShow) -> Unit)? = null
+
     override fun getItemViewType(position: Int): Int {
         return when(position){
             0 -> TYPE_HEADER
@@ -72,6 +74,12 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
         private val itemYear = binding.itemYearSearch
         private val itemSeasons = binding.itemSeasonsSearch
         private val itemRating = binding.itemRatingSearch
+
+        init {
+            itemView.setOnClickListener {
+                getItem(absoluteAdapterPosition - 1)?.let { it1 -> clickListener?.invoke(it1) }
+            }
+        }
 
         fun bind(item: TVShow){
             try {
