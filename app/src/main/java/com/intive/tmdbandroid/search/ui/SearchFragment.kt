@@ -9,6 +9,7 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -16,6 +17,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
+import com.intive.tmdbandroid.home.ui.HomeFragmentDirections
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
@@ -100,6 +102,11 @@ class SearchFragment: Fragment() {
 
         resultsList.apply {
             layoutManager = GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false)
+
+            searchAdapter.clickListener = { tvShow ->
+                val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
+                findNavController().navigate(action)
+            }
             adapter = searchAdapter
         }
     }

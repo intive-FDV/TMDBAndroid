@@ -22,6 +22,8 @@ class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : Recycler
     private val TYPE_HEADER : Int = 0
     private val TYPE_LIST : Int = 1
 
+    var clickListener: ((TVShow) -> Unit)? = null
+
     override fun getItemViewType(position: Int): Int {
         return when(position){
             0 -> TYPE_HEADER
@@ -57,7 +59,9 @@ class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : Recycler
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
             is SearchResultsHeaderHolder -> holder.bind()
-            is SearchResultHolder -> holder.bind(tvShowList[position - 1])
+            is SearchResultHolder -> {
+                holder.bind(tvShowList[position - 1])
+            }
         }
     }
 
@@ -67,6 +71,12 @@ class TVShowSearchAdapter (private val tvShowList: ArrayList<TVShow>) : Recycler
         private val itemYear = binding.itemYearSearch
         private val itemSeasons = binding.itemSeasonsSearch
         private val itemRating = binding.itemRatingSearch
+
+        init {
+            itemView.setOnClickListener {
+                clickListener?.invoke(tvShowList[absoluteAdapterPosition - 1])
+            }
+        }
 
         fun bind(item: TVShow){
             try {
