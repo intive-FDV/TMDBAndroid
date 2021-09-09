@@ -61,6 +61,13 @@ class SearchFragment: Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(binding.searchView.query.isNotEmpty()){
+            binding.layoutSearchHint.hintContainer.visibility = View.GONE
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
