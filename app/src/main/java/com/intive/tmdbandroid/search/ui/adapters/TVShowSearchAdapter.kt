@@ -55,7 +55,7 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
     }
 
     override fun getItemCount(): Int {
-        return super.getItemCount() + 1
+        return super.getItemCount()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

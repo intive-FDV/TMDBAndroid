@@ -28,7 +28,6 @@
             android:iconifiedByDefault="false"
             android:queryHint="@string/search_text"
             android:searchIcon="@null"
-            android:translationX="-32dp"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="4dp" />
 
@@ -38,11 +37,12 @@
         android:id="@+id/search_results"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_search_toolbar"
-        tools:listitem="@layout/item_found_search"
-        />
+        tools:listitem="@layout/item_found_search" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,9 +48,9 @@ class SearchFragment: Fragment() {
                 if (query.isNotEmpty()){
                     searchAdapter.query = query
                     viewModel.search(query)
+                    binding.searchView.clearFocus()
                     subscribeViewModel()
                     initViews()
-                    println("ya busque")
                     return true
                 }
                 return false

@@ -19,7 +19,7 @@ class TVShowSearchSource(private val service: Service, private val query: String
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TVShow> {
         return try {
             val pageNumber = params.key ?: DEFAULT_PAGE_INDEX
-            Timber.d("$pageNumber")
+            Timber.d("pageNumber: $pageNumber")
             lateinit var response: ResultTVShowsEntity
             service.getTvShowByTitle(query, pageNumber).collect { response = it }
 
