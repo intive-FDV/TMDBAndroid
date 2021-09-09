@@ -45,4 +45,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_search_toolbar"
         tools:listitem="@layout/item_found_search" />
+
+    <include
+        android:id="@+id/layout_error"
+        layout="@layout/layout_error"
+        android:padding="5dp" />
+
+    <include
+        android:id="@+id/layout_empty"
+        layout="@layout/layout_empty"
+        android:padding="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar"/>
+
+    <include
+        android:id="@+id/layout_progressbar"
+        layout="@layout/layout_progressbar" />
+
+    <include
+        android:id="@+id/layout_search_hint"
+        layout="@layout/layout_search_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

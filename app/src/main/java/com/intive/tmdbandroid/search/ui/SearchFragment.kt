@@ -38,6 +38,7 @@ class SearchFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
+        binding.layoutProgressbar.progressBar.visibility = View.GONE
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
@@ -80,14 +81,17 @@ class SearchFragment: Fragment() {
 
                 when (resultTVShow) {
                     is State.Success<PagingData<TVShow>> -> {
+                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
                         searchAdapter.submitData(resultTVShow.data)
-                        println("ta bien")
                     }
                     is State.Error -> {
-                        println("ta mal")
+                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
                     }
                     is State.Loading -> {
-                        println("ta cargando")
+                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
