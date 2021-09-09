@@ -32,7 +32,6 @@
     <fragment
         android:id="@+id/searchFragmentDest"
         android:name="com.intive.tmdbandroid.search.ui.SearchFragment"
-        android:label="SearchFragment"
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_TVShowDetail"
