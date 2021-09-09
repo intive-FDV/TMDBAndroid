@@ -50,13 +50,13 @@ class SearchFragment: Fragment() {
                     viewModel.search(query)
                     binding.searchView.clearFocus()
                     subscribeViewModel()
-                    initViews()
                     return true
                 }
                 return false
             }
 
         })
+        initViews()
         return binding.root
     }
 
