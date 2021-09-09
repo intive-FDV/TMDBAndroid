@@ -1,9 +1,7 @@
 package com.intive.tmdbandroid.search.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +26,8 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
     private val TYPE_HEADER : Int = 0
     private val TYPE_LIST : Int = 1
 
+    lateinit var query: String
+
     var clickListener: ((TVShow) -> Unit)? = null
 
     override fun getItemViewType(position: Int): Int {
@@ -40,10 +40,12 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             TYPE_HEADER -> {
-                val header = SearchResultsHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                val holder = SearchResultsHeaderHolder(header)
-                holder.headerText.text = "Results"
-                return holder
+                val header = SearchResultsHeaderBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return SearchResultsHeaderHolder(header)
             } else -> {
                 val header = ItemFoundSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 SearchResultHolder(header)
@@ -119,7 +121,7 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
         val headerText = binding.searchHeader
 
         fun bind(){
-            headerText.text = "Results for:"
+            headerText.text = "Results for: $query"
         }
     }
 

@@ -46,6 +46,7 @@ class SearchFragment: Fragment() {
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotEmpty()){
+                    searchAdapter.query = query
                     viewModel.search(query)
                     subscribeViewModel()
                     initViews()
