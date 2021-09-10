@@ -31,7 +31,11 @@ class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>
     var clickListener: ((TVShow) -> Unit)? = null
 
     override fun getItemCount(): Int {
-        return super.getItemCount() + 1
+        var retorno = super.getItemCount()
+        if(retorno == 1){
+            retorno+=1
+        }
+        return retorno
     }
 
     override fun getItemViewType(position: Int): Int {
