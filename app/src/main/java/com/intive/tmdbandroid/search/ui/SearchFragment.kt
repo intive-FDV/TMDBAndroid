@@ -1,9 +1,11 @@
 package com.intive.tmdbandroid.search.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -56,20 +58,22 @@ class SearchFragment: Fragment() {
                 return false
             }
         })
+        binding.searchView.requestFocus()
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if(binding.searchView.query.isNotEmpty()){
-            binding.layoutSearchHint.hintContainer.visibility = View.GONE
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+    }
 
+    override fun onStart() {
+        super.onStart()
+        val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        println(binding.searchView.isFocused)
+        if(imm.isActive(binding.searchView) && binding.searchView.query.isEmpty()){
+            imm.toggleSoftInput(0,0)
+        }
     }
 
     private fun setupToolbar() {
@@ -77,7 +81,6 @@ class SearchFragment: Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentSearchToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.searchView.requestFocus()
     }
 
     fun subscribeViewModel(){
