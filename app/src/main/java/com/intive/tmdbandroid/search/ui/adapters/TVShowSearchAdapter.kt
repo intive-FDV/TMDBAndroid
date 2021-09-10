@@ -16,7 +16,7 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
     companion object {
     private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
         override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
@@ -26,9 +26,13 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
     private val TYPE_HEADER : Int = 0
     private val TYPE_LIST : Int = 1
 
-    lateinit var query: String
+    var query: String = ""
 
     var clickListener: ((TVShow) -> Unit)? = null
+
+    override fun getItemCount(): Int {
+        return super.getItemCount() + 1
+    }
 
     override fun getItemViewType(position: Int): Int {
         return when(position){
@@ -52,10 +56,6 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
             }
         }
 
-    }
-
-    override fun getItemCount(): Int {
-        return super.getItemCount()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -82,7 +82,7 @@ class TVShowSearchAdapter : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(R
             }
 
             try {
-                if(item.first_air_date.toString().isNotEmpty()){
+                if(!item.first_air_date.isNullOrBlank()){
                     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
                     itemYear.text = date.year.toString()
                 }

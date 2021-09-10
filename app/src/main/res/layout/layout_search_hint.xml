@@ -10,11 +10,12 @@
         android:id="@+id/ic_warning_empty_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="-24dp"
+        android:contentDescription="Search Hint Icon"
         android:src="@drawable/ic_search_hint"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="Search Hint Icon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

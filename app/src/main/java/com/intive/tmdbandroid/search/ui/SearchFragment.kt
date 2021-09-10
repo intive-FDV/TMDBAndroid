@@ -1,7 +1,6 @@
 package com.intive.tmdbandroid.search.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +16,12 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
-import com.intive.tmdbandroid.home.ui.HomeFragmentDirections
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SearchFragment: Fragment() {
@@ -48,16 +47,15 @@ class SearchFragment: Fragment() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotEmpty()){
                     searchAdapter.query = query
-                    viewModel.search(query)
                     binding.searchView.clearFocus()
+                    viewModel.search(query)
                     subscribeViewModel()
+                    initViews()
                     return true
                 }
                 return false
             }
-
         })
-        initViews()
         return binding.root
     }
 
@@ -98,6 +96,7 @@ class SearchFragment: Fragment() {
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
                     }
                     is State.Loading -> {
+                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
                     }
                 }
@@ -109,12 +108,12 @@ class SearchFragment: Fragment() {
         val resultsList = binding.searchResults
 
         resultsList.apply {
-            layoutManager = GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false)
-
             searchAdapter.clickListener = { tvShow ->
                 val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
                 findNavController().navigate(action)
             }
+
+            layoutManager = GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false)
             adapter = searchAdapter
         }
     }
