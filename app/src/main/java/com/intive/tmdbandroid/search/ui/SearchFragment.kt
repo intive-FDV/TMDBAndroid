@@ -23,7 +23,6 @@ import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SearchFragment: Fragment() {
@@ -52,12 +51,12 @@ class SearchFragment: Fragment() {
                     binding.searchView.clearFocus()
                     viewModel.search(query)
                     subscribeViewModel()
-                    initViews()
                     return true
                 }
                 return false
             }
         })
+        initViews()
         binding.searchView.requestFocus()
         return binding.root
     }
