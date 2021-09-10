@@ -69,10 +69,9 @@ class SearchFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        println(binding.searchView.isFocused)
         if(imm.isActive(binding.searchView) && binding.searchView.query.isEmpty()){
             imm.toggleSoftInput(0,0)
-        }
+        } else binding.layoutSearchHint.hintContainer.visibility = View.GONE
     }
 
     private fun setupToolbar() {
