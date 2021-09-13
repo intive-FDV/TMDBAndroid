@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.HomeAdapter
+import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +29,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var homeAdapter: HomeAdapter
-    //private val tvShowPageAdapter = TVShowPageAdapter()
+    private lateinit var tvShowPageAdapter: TVShowPageAdapter
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -74,12 +75,13 @@ class HomeFragment : Fragment() {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        //tvShowPageAdapter.submitData(resultTVShows.data)
-                        homeAdapter.refreshPopularAdapter(resultTVShows.data)
 
-//                        if (tvShowPageAdapter.itemCount == 0) {
-//                            binding.layoutEmpty.root.visibility = View.VISIBLE
-//                        } else binding.layoutEmpty.root.visibility = View.GONE
+                        tvShowPageAdapter.submitData(resultTVShows.data)
+//                        homeAdapter.submitList(resultTVShows.data)
+
+                        if (tvShowPageAdapter.itemCount == 0) {
+                            binding.layoutEmpty.root.visibility = View.VISIBLE
+                        } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
@@ -101,11 +103,28 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
             findNavController().navigate(action)
         }
-        homeAdapter = HomeAdapter(requireContext(), clickListener)
+        tvShowPageAdapter = TVShowPageAdapter(clickListener)
 
         rvTopTVShows.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = homeAdapter
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = 200
+            val columnCount = floor(dpWidth / scaling).toInt()
+            Timber.i("MAS - columnCount: $columnCount")
+
+            val manager = GridLayoutManager(context, columnCount)
+            manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (position) {
+                        0, 1, 2 -> columnCount
+                        else -> 1
+                    }
+                }
+            }
+
+            layoutManager = manager
+            adapter = tvShowPageAdapter
         }
     }
 }
