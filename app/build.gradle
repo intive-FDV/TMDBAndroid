@@ -5,21 +5,20 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
-    id "org.sonarqube" version "3.3"
 }
 
 android {
     compileSdk 30
 
-    def _major=0
-    def _minor=0
-    def _patch=0
+    def _major
+    def _minor
+    def _patch
 
     def versionPropsFile = file('version.properties')
     def _versionCodeHash   = 'git rev-parse --verify --short HEAD'.execute().text.trim()
     def _versionCode   = 'git rev-list --all --count'.execute().text.trim().toInteger()
     if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
+        Properties versionProps = new Properties()
 
         versionProps.load(new FileInputStream(versionPropsFile))
 
