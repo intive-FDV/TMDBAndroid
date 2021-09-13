@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.model.Genre
-import com.intive.tmdbandroid.model.TVShow
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.*
@@ -41,7 +41,7 @@ class LocalStorageTest : TestCase() {
     // is present in the db -- if the item is present then our test cases pass
     @Test
     fun writeAndReadTvShow() = runBlocking {
-        val tvShow = TVShow(
+        val tvShow = TVShowORMEntity(
             backdrop_path = "BACKDROP_PATH",
             first_air_date = "1983-10-20",
             genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
