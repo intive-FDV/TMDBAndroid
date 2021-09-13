@@ -11,23 +11,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.HomeAdapter
-import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var homeAdapter: HomeAdapter
-    private val tvShowPageAdapter = TVShowPageAdapter()
+    //private val tvShowPageAdapter = TVShowPageAdapter()
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -44,8 +45,6 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        homeAdapter = HomeAdapter(requireContext())
 
         initViews()
         subscribePopularData()
@@ -78,9 +77,9 @@ class HomeFragment : Fragment() {
                         //tvShowPageAdapter.submitData(resultTVShows.data)
                         homeAdapter.refreshPopularAdapter(resultTVShows.data)
 
-                        if (tvShowPageAdapter.itemCount == 0) {
-                            binding.layoutEmpty.root.visibility = View.VISIBLE
-                        } else binding.layoutEmpty.root.visibility = View.GONE
+//                        if (tvShowPageAdapter.itemCount == 0) {
+//                            binding.layoutEmpty.root.visibility = View.VISIBLE
+//                        } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
@@ -97,6 +96,12 @@ class HomeFragment : Fragment() {
 
     private fun initViews() {
         val rvTopTVShows = binding.rvPopularTVShows
+
+        val clickListener = { tvShow: TVShow ->
+            val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
+            findNavController().navigate(action)
+        }
+        homeAdapter = HomeAdapter(requireContext(), clickListener)
 
         rvTopTVShows.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

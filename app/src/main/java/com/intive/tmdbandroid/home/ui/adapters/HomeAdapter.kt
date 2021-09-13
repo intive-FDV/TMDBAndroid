@@ -18,15 +18,15 @@ import kotlin.math.floor
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 
-class HomeAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HomeAdapter(val context: Context, clickListener: (TVShow) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val HEADER = 0
         private const val WATCHLIST = 1
         private const val POPULAR = 2
     }
 
-    private val watchlistAdapter = WatchlistAdapter()
-    private val popularAdapter = TVShowPageAdapter()
+    private val watchlistAdapter = WatchlistAdapter(clickListener)
+    private val popularAdapter = TVShowPageAdapter(clickListener)
 
     fun refreshWatchlistAdapter(list: List<TVShow>) {
         watchlistAdapter.submitList(list)

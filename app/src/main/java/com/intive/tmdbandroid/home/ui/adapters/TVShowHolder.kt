@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.model.TVShow
@@ -11,7 +12,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TVShowHolder(binding: ItemScreeningBinding) : RecyclerView.ViewHolder(binding.root) {
+class TVShowHolder(binding: ItemScreeningBinding, private val clickListener: ((TVShow) -> Unit)) : RecyclerView.ViewHolder(binding.root) {
     private val poster = binding.screeningPoster
     private val popularity = binding.screeningPopularity
     private val average = binding.circularPercentage
@@ -22,8 +23,10 @@ class TVShowHolder(binding: ItemScreeningBinding) : RecyclerView.ViewHolder(bind
     private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
     fun bind (item: TVShow) {
+        itemView.setOnClickListener {
+            clickListener.invoke(item)
+        }
         Timber.i("MAS - TVShowHolder.bind();")
-
 
         val options = RequestOptions()
             .centerCrop()

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.model.TVShow
 
-class TVShowPageAdapter() : PagingDataAdapter<TVShow, TVShowHolder>(COMPARATOR) {
+class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : PagingDataAdapter<TVShow, TVShowHolder>(COMPARATOR) {
     companion object {
         private val COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
             override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
@@ -20,6 +20,7 @@ class TVShowPageAdapter() : PagingDataAdapter<TVShow, TVShowHolder>(COMPARATOR) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder = TVShowHolder(
-        ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        clickListener
     )
 }
