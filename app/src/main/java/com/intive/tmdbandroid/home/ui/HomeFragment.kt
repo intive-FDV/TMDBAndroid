@@ -12,10 +12,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
-import com.intive.tmdbandroid.home.ui.adapters.HomeAdapter
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
@@ -28,7 +26,6 @@ import kotlin.math.floor
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
-    private lateinit var homeAdapter: HomeAdapter
     private lateinit var tvShowPageAdapter: TVShowPageAdapter
 
     private lateinit var binding: FragmentHomeBinding
@@ -76,8 +73,9 @@ class HomeFragment : Fragment() {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
 
+                        updateMockWatchlist()
+
                         tvShowPageAdapter.submitData(resultTVShows.data)
-//                        homeAdapter.submitList(resultTVShows.data)
 
                         if (tvShowPageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE
@@ -94,6 +92,17 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun updateMockWatchlist() {
+        val list = listOf(
+            TVShow("", emptyList(),"2021-09-13", emptyList(),0,"","Some TV Show 0", 1, 1, "","","","",2.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),1,"","Some TV Show 1", 2, 2, "","","","",4.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),2,"","Some TV Show 2", 3, 3, "","","","",6.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),3,"","Some TV Show 3", 4, 4, "","","","",8.0,10)
+        )
+
+        tvShowPageAdapter.refreshWatchlistAdapter(list)
     }
 
     private fun initViews() {

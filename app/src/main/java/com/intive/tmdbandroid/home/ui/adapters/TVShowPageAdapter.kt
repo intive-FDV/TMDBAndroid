@@ -12,7 +12,6 @@ import com.intive.tmdbandroid.databinding.ItemHorizontalListBinding
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.databinding.ItemTitleBinding
 import com.intive.tmdbandroid.model.TVShow
-import timber.log.Timber
 
 class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(COMPARATOR) {
     companion object {
@@ -41,12 +40,10 @@ class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : PagingD
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Timber.i("MAS - HomeAdapter.onBindViewHolder(); - position: $position")
-
         when (holder) {
             is HeaderHolder -> holder.bind(position)
             is WatchlistHolder -> holder.bind()
-            is TVShowHolder -> getItem(position)?.let { holder.bind(it) }
+            is TVShowHolder -> getItem(position - 3)?.let { holder.bind(it) }
         }
     }
 
