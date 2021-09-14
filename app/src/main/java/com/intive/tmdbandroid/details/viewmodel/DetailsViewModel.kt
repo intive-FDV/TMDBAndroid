@@ -26,11 +26,8 @@ class DetailsViewModel @Inject internal constructor(
     private val _state = MutableStateFlow<State<TVShow>>(State.Loading)
     val uiState: StateFlow<State<TVShow>> = _state
 
-    private val _addToWatchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
-    val addToWatchlistUIState: StateFlow<State<Boolean>> = _addToWatchlistState
-
-    private val _removeFromWatchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
-    val removeFromWatchlistUIState: StateFlow<State<Boolean>> = _removeFromWatchlistState
+    private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
+    val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -48,10 +45,10 @@ class DetailsViewModel @Inject internal constructor(
         viewModelScope.launch {
             addToWatchlistUseCase.addToWatchlist(id, tvShow)
                 .catch {
-                    _addToWatchlistState.value = State.Error
+                    _watchlistState.value = State.Error
                 }
                 .collect {
-                    _addToWatchlistState.value = State.Success(it)
+                    _watchlistState.value = State.Success(it)
                 }
         }
     }
@@ -60,10 +57,10 @@ class DetailsViewModel @Inject internal constructor(
         viewModelScope.launch {
             deleteFromWatchlistUseCase.deleteFavorite(id)
                 .catch {
-                    _removeFromWatchlistState.value = State.Error
+                    _watchlistState.value = State.Error
                 }
                 .collect {
-                    _removeFromWatchlistState.value = State.Success(it)
+                    _watchlistState.value = State.Success(it)
                 }
         }
     }

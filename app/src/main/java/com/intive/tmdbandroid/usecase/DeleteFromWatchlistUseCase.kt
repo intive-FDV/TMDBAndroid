@@ -13,7 +13,7 @@ class DeleteFromWatchlistUseCase @Inject constructor(
         val isExist: List<TVShowORMEntity> = repository.existAsFavorite(id)
         return if (isExist.isNotEmpty()) {
             repository.deleteFavorite(isExist.first())
-            flowOf(true)
-        } else flowOf(false)
+            flowOf(false)
+        } else flowOf(true)
     }
 }

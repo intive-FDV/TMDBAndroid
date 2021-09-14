@@ -24,6 +24,7 @@ import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,7 +53,6 @@ class DetailFragment : Fragment() {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
         collectTVShowDetailFromViewModel()
         collectWatchlistDataFromViewModel()
-        collectDeletedFromWatchlistFromViewModel()
         return binding.root
     }
 
@@ -90,36 +90,13 @@ class DetailFragment : Fragment() {
     }
 
     private fun collectWatchlistDataFromViewModel() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.addToWatchlistUIState.collectLatest {
+        lifecycleScope.launch {
+            viewModel.watchlistUIState.collectLatest {
                 when (it) {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        selectWatchlistFav()
-                    }
-                    State.Error -> {
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
-                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
-                    }
-                    State.Loading -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
-    }
-
-    private fun collectDeletedFromWatchlistFromViewModel() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.removeFromWatchlistUIState.collectLatest {
-                when (it) {
-                    is State.Success -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        unselectWatchlistFav()
+                        selectOrUnselectWatchlistFav(it.data)
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -239,7 +216,8 @@ class DetailFragment : Fragment() {
                     if (!isSaveOnWatchlist) {
                         isSaveOnWatchlist = !isSaveOnWatchlist
                         tvShow?.toTVShowORMEntity()?.let { tvShowORMEntity ->
-                            viewModel.addToWatchlist(tvShowId.toString(),
+                            viewModel.addToWatchlist(
+                                tvShowId.toString(),
                                 tvShowORMEntity
                             )
                         }
@@ -264,14 +242,12 @@ class DetailFragment : Fragment() {
         })
     }
 
-    private fun selectWatchlistFav() {
+    private fun selectOrUnselectWatchlistFav(isFav: Boolean) {
         val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
-        watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
-    }
+        if (isFav) {
+            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
+        } else watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
 
-    private fun unselectWatchlistFav() {
-        val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
-        watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
     }
 
 }
