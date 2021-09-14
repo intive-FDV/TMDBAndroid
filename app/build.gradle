@@ -75,6 +75,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
@@ -95,6 +96,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "androidx.palette:palette-ktx:$paletteVersion"
     implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
 
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
@@ -104,7 +106,9 @@ dependencies {
     testImplementation "androidx.test.ext:truth:$truthVersion"
     testImplementation "app.cash.turbine:turbine:$turbineVersion"
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "androidx.room:room-testing:$roomVersion"
+    testImplementation "androidx.test.ext:junit-ktx:$junit"
 
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation "androidx.test.ext:junit:$junit"
 }
