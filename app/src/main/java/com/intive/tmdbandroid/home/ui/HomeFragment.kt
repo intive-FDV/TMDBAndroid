@@ -1,7 +1,6 @@
 package com.intive.tmdbandroid.home.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +19,14 @@ import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
-    private val tvShowPageAdapter = TVShowPageAdapter()
+    private lateinit var tvShowPageAdapter: TVShowPageAdapter
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -65,12 +66,15 @@ class HomeFragment : Fragment() {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
-                Log.i("MAS", "popular tvshows status: $resultTVShows")
+                Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
+
+                        updateMockWatchlist()
+
                         tvShowPageAdapter.submitData(resultTVShows.data)
 
                         if (tvShowPageAdapter.itemCount == 0) {
@@ -90,11 +94,45 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun updateMockWatchlist() {
+        val list = listOf(
+            TVShow("", emptyList(),"2021-09-13", emptyList(),0,"","Some TV Show 0", 1, 1, "","","","",2.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),1,"","Some TV Show 1", 2, 2, "","","","",4.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),2,"","Some TV Show 2", 3, 3, "","","","",6.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),3,"","Some TV Show 3", 4, 4, "","","","",8.0,10)
+        )
+
+        tvShowPageAdapter.refreshWatchlistAdapter(list)
+    }
+
     private fun initViews() {
         val rvTopTVShows = binding.rvPopularTVShows
 
+        val clickListener = { tvShow: TVShow ->
+            val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
+            findNavController().navigate(action)
+        }
+        tvShowPageAdapter = TVShowPageAdapter(clickListener)
+
         rvTopTVShows.apply {
-            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = 200
+            val columnCount = floor(dpWidth / scaling).toInt()
+            Timber.i("MAS - columnCount: $columnCount")
+
+            val manager = GridLayoutManager(context, columnCount)
+            manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (position) {
+                        0, 1, 2 -> columnCount
+                        else -> 1
+                    }
+                }
+            }
+
+            layoutManager = manager
             adapter = tvShowPageAdapter
         }
     }
