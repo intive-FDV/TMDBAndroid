@@ -8,6 +8,7 @@ import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.AddToWatchlistUseCase
 import com.intive.tmdbandroid.usecase.DeleteFromWatchlistUseCase
 import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
+import com.intive.tmdbandroid.usecase.ExistAsFavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class DetailsViewModel @Inject internal constructor(
     private val tVShowUseCase: DetailTVShowUseCase,
     private val addToWatchlistUseCase: AddToWatchlistUseCase,
-    private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase
+    private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
+    private val existAsFavoriteUseCase: ExistAsFavoriteUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<TVShow>>(State.Loading)
@@ -56,6 +58,18 @@ class DetailsViewModel @Inject internal constructor(
     fun deleteFromWatchlist(id: String) {
         viewModelScope.launch {
             deleteFromWatchlistUseCase.deleteFavorite(id)
+                .catch {
+                    _watchlistState.value = State.Error
+                }
+                .collect {
+                    _watchlistState.value = State.Success(it)
+                }
+        }
+    }
+
+    fun existAsFavorite(id: String) {
+        viewModelScope.launch {
+            existAsFavoriteUseCase.existAsFavorite(id)
                 .catch {
                     _watchlistState.value = State.Error
                 }

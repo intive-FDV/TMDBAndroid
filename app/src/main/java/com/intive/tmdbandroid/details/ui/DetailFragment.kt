@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,7 +34,6 @@ class DetailFragment : Fragment() {
 
     private var isSaveOnWatchlist: Boolean = false
     private var tvShowId: Int? = null
-    private var tvShow: TVShow? = null
 
     private val viewModel: DetailsViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
@@ -58,7 +58,6 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
         tvShowId?.let {
             viewModel.tVShows(it)
         }
@@ -72,7 +71,6 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        tvShow = state.data
                         setupTVShowDetailUI(state.data)
                     }
                     is State.Error -> {
@@ -97,6 +95,7 @@ class DetailFragment : Fragment() {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         selectOrUnselectWatchlistFav(it.data)
+                        isSaveOnWatchlist = it.data
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -119,6 +118,8 @@ class DetailFragment : Fragment() {
         setDate(tvShow.first_air_date!!)
 
         setPercentageToCircularPercentage(tvShow.vote_average)
+
+        setupToolbar(tvShow)
 
         binding.toolbar.title = tvShow.name
 
@@ -149,6 +150,8 @@ class DetailFragment : Fragment() {
 
         binding.overviewDetailTextView.text = tvShow.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
+
+        viewModel.existAsFavorite(tvShowId.toString())
     }
 
     private fun setPercentageToCircularPercentage(voteAverage: Double) {
@@ -205,7 +208,7 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar(tvShow: TVShow) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -214,15 +217,8 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
-                        isSaveOnWatchlist = !isSaveOnWatchlist
-                        tvShow?.toTVShowORMEntity()?.let { tvShowORMEntity ->
-                            viewModel.addToWatchlist(
-                                tvShowId.toString(),
-                                tvShowORMEntity
-                            )
-                        }
+                        viewModel.addToWatchlist(tvShowId.toString(), tvShow.toTVShowORMEntity())
                     } else {
-                        isSaveOnWatchlist = !isSaveOnWatchlist
                         viewModel.deleteFromWatchlist(tvShowId.toString())
                     }
                     true
@@ -245,8 +241,10 @@ class DetailFragment : Fragment() {
     private fun selectOrUnselectWatchlistFav(isFav: Boolean) {
         val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
         if (isFav) {
-            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
-        } else watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
+            watchlistItem.icon =
+                AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_selected)
+        } else watchlistItem.icon =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
 
     }
 

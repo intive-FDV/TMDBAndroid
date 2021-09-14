@@ -17,12 +17,15 @@ abstract class LocalStorage : RoomDatabase() {
     companion object {
         private var INSTANCE: LocalStorage? = null
 
+        private const val DB_NAME = "watchlist.db"
+
         fun getDB(context: Context): LocalStorage {
             if (INSTANCE == null) {
                 synchronized(LocalStorage::class) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
-                        LocalStorage::class.java, "watchlist.db"
+                        LocalStorage::class.java,
+                        DB_NAME
                     )
                         .build()
                 }
