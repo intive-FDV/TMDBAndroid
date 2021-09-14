@@ -32,6 +32,7 @@ class DetailFragment : Fragment() {
 
     private var isSaveOnWatchlist: Boolean = false
     private var tvShowId: Int? = null
+    private var tvShow: TVShow? = null
 
     private val viewModel: DetailsViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
@@ -51,6 +52,7 @@ class DetailFragment : Fragment() {
         binding = FragmentDetailBinding.inflate(inflater, container, false)
         collectTVShowDetailFromViewModel()
         collectWatchlistDataFromViewModel()
+        collectDeletedFromWatchlistFromViewModel()
         return binding.root
     }
 
@@ -70,6 +72,7 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        tvShow = state.data
                         setupTVShowDetailUI(state.data)
                     }
                     is State.Error -> {
@@ -89,37 +92,41 @@ class DetailFragment : Fragment() {
     private fun collectWatchlistDataFromViewModel() {
         lifecycleScope.launchWhenStarted {
             viewModel.addToWatchlistUIState.collectLatest {
-                when(it) {
+                when (it) {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        //TODO Add to Room
+                        selectWatchlistFav()
                     }
-                    is State.Error -> {
+                    State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    State.Loading -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
                 }
             }
+        }
+    }
 
+    private fun collectDeletedFromWatchlistFromViewModel() {
+        lifecycleScope.launchWhenStarted {
             viewModel.removeFromWatchlistUIState.collectLatest {
-                when(it) {
+                when (it) {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        //TODO Remove from Room
+                        unselectWatchlistFav()
                     }
-                    is State.Error -> {
+                    State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    State.Loading -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
@@ -227,9 +234,19 @@ class DetailFragment : Fragment() {
         val toolbar = binding.toolbar
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.setOnMenuItemClickListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
-                    selectOrUnselectWatchlistFav()
+                    if (!isSaveOnWatchlist) {
+                        isSaveOnWatchlist = !isSaveOnWatchlist
+                        tvShow?.toTVShowORMEntity()?.let { tvShowORMEntity ->
+                            viewModel.addToWatchlist(tvShowId.toString(),
+                                tvShowORMEntity
+                            )
+                        }
+                    } else {
+                        isSaveOnWatchlist = !isSaveOnWatchlist
+                        viewModel.deleteFromWatchlist(tvShowId.toString())
+                    }
                     true
                 }
                 else -> false
@@ -247,13 +264,14 @@ class DetailFragment : Fragment() {
         })
     }
 
-    private fun selectOrUnselectWatchlistFav() {
-        isSaveOnWatchlist = !isSaveOnWatchlist
+    private fun selectWatchlistFav() {
         val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
-        if (isSaveOnWatchlist){
-            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
-        }else {
-            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
-        }
+        watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
     }
+
+    private fun unselectWatchlistFav() {
+        val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
+        watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
+    }
+
 }

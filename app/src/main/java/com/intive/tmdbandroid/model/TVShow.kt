@@ -1,10 +1,6 @@
 package com.intive.tmdbandroid.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.intive.tmdbandroid.model.converter.CreatedByConverter
-
+import com.intive.tmdbandroid.entity.TVShowORMEntity
 
 data class TVShow(
 
@@ -23,4 +19,24 @@ data class TVShow(
     val status: String?,
     val vote_average: Double,
     val vote_count: Int
-)
+) {
+    fun toTVShowORMEntity(): TVShowORMEntity {
+        return TVShowORMEntity(
+            backdrop_path,
+            created_by,
+            first_air_date,
+            genres,
+            id,
+            last_air_date,
+            name,
+            number_of_episodes,
+            number_of_seasons,
+            original_name,
+            overview,
+            poster_path,
+            status,
+            vote_average,
+            vote_count
+        )
+    }
+}
