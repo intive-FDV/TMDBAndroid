@@ -1,5 +1,6 @@
 package com.intive.tmdbandroid.search.ui.adapters
 
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -13,8 +14,8 @@ import com.intive.tmdbandroid.databinding.SearchResultsHeaderBinding
 import com.intive.tmdbandroid.model.TVShow
 import timber.log.Timber
 import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
     companion object {
@@ -31,11 +32,7 @@ class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>
     var clickListener: ((TVShow) -> Unit)? = null
 
     override fun getItemCount(): Int {
-        var retorno = super.getItemCount()
-        if(retorno == 1){
-            retorno+=1
-        }
-        return retorno
+        return super.getItemCount() + 1
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -53,7 +50,7 @@ class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>
                     parent,
                     false
                 )
-                return SearchResultsHeaderHolder(header)
+                SearchResultsHeaderHolder(header)
             } else -> {
                 val header = ItemFoundSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 SearchResultHolder(header)
@@ -87,7 +84,9 @@ class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>
 
             try {
                 if(!item.first_air_date.isNullOrBlank()){
-                    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
+                    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val dateStr = item.first_air_date
+                    val date: LocalDate = LocalDate.parse(dateStr, formatter)
                     itemYear.text = date.year.toString()
                 }
             } catch (e : Exception){
@@ -125,7 +124,7 @@ class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>
         val headerText = binding.searchHeader
 
         fun bind(){
-            headerText.text = "Results for: $query"
+            headerText.text = headerText.context.resources.getString(R.string.search_result_header, query)
         }
     }
 
