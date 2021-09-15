@@ -1,15 +1,11 @@
 package com.intive.tmdbandroid.datasource
 
-import android.util.Log
 import androidx.paging.PagingSource
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import androidx.paging.PagingState
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.collect
-import retrofit2.HttpException
-import timber.log.Timber
-import java.io.IOException
 
 class TVShowSearchSource(private val service: Service, private val query: String) : PagingSource<Int, TVShow>() {
     companion object {
@@ -19,7 +15,6 @@ class TVShowSearchSource(private val service: Service, private val query: String
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TVShow> {
         return try {
             val pageNumber = params.key ?: DEFAULT_PAGE_INDEX
-            Timber.d("pageNumber: $pageNumber")
             lateinit var response: ResultTVShowsEntity
             service.getTvShowByTitle(query, pageNumber).collect { response = it }
 

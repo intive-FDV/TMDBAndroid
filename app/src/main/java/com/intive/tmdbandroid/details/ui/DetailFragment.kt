@@ -88,7 +88,7 @@ class DetailFragment : Fragment() {
 
         setImages(tvShow)
 
-        setDate(tvShow.first_air_date!!)
+        tvShow.first_air_date?.let { setDate(it) }
 
         setPercentageToCircularPercentage(tvShow.vote_average)
 

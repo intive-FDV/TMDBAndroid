@@ -2,7 +2,6 @@ package com.intive.tmdbandroid.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagedList
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.intive.tmdbandroid.common.State
