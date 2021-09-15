@@ -1,7 +1,5 @@
 package com.intive.tmdbandroid.model
 
-
-
 data class TVShow(
     val backdrop_path: String?,
     val created_by: List<CreatedBy>,
