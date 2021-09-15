@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.di
 
-import android.content.Context
+import android.app.Application
 import androidx.room.Room
 import com.intive.tmdbandroid.common.Constants
 import com.intive.tmdbandroid.datasource.local.Dao
@@ -23,11 +23,10 @@ class ServiceModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(context: Context): LocalStorage = Room.databaseBuilder(
-        context,
+    fun provideDatabase(app: Application): LocalStorage = Room.databaseBuilder(
+        app,
         LocalStorage::class.java, Constants.DATABASE
     )
-        .fallbackToDestructiveMigration()
         .build()
 
     @Provides
