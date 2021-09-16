@@ -1,87 +1,85 @@
 package com.intive.tmdbandroid.home.ui.adapters
 
-import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.navigation.NavArgs
-import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
+import com.intive.tmdbandroid.databinding.ItemHorizontalListBinding
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
-import com.intive.tmdbandroid.details.ui.DetailFragmentArgs
-import com.intive.tmdbandroid.home.ui.HomeFragmentDirections
+import com.intive.tmdbandroid.databinding.ItemTitleBinding
 import com.intive.tmdbandroid.model.TVShow
-import java.text.SimpleDateFormat
-import java.util.*
 
-class TVShowPageAdapter : PagingDataAdapter<TVShow, TVShowPageAdapter.TVShowHolder>(REPO_COMPARATOR) {
+class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(COMPARATOR) {
     companion object {
-        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
+        private val COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
             override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
             override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
         }
+
+        private const val HEADER = 0
+        private const val WATCHLIST = 1
+        private const val POPULAR = 2
     }
 
-    override fun onBindViewHolder(holder: TVShowHolder, position: Int) {
-        with(holder) {
-            with(getItem(position) as TVShow) {
-                val options = RequestOptions()
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_image)
-                    .error(R.drawable.ic_image)
+    private val watchlistAdapter = WatchlistAdapter(clickListener)
 
-                val posterURL = binding.root.resources.getString(R.string.base_imageURL) + poster_path
+    fun refreshWatchlistAdapter(list: List<TVShow>) {
+        watchlistAdapter.submitList(list)
+    }
 
-                val context = binding.root.context
+    override fun getItemViewType(position: Int): Int {
+        return when (position) {
+            0,2 -> HEADER
+            1 -> WATCHLIST
+            else -> POPULAR
+        }
+    }
 
-                Glide.with(context)
-                    .load(posterURL)
-                    .apply(options)
-                    .into(binding.screeningPoster)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is HeaderHolder -> holder.bind(position)
+            is WatchlistHolder -> holder.bind()
+            is TVShowHolder -> getItem(position - 3)?.let { holder.bind(it) }
+        }
+    }
 
-                val percentage = (vote_average * 10).toInt()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            HEADER -> HeaderHolder(ItemTitleBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            WATCHLIST -> WatchlistHolder(ItemHorizontalListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            POPULAR -> TVShowHolder(ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickListener )
+            else -> throw Exception("Illegal ViewType")
+        }
+    }
 
-                try {
-                    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(first_air_date)
-                    val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date!!)
-                    binding.screeningDate.text = stringDate
-                } catch (e: Exception) {
-                    binding.screeningDate.text = ""
-                }
+    inner class HeaderHolder(binding: ItemTitleBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val header = binding.tvTitle
 
-                binding.circularPercentage.progress = percentage
+        private val res: Resources = binding.root.resources
+        private val watchlist = res.getString(R.string.watchlist)
+        private val popularTVShow = res.getString(R.string.popular_tvShows)
 
-                when {
-                    percentage < 25 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.red))
-                    percentage < 45 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.orange))
-                    percentage < 75 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.yellow))
-                    else -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.green))
-                }
-
-                binding.screeningPopularity.text = context.resources.getString(R.string.popularity, percentage)
-                binding.screeningTitle.text = name
-
-                binding.root.setOnClickListener() {
-                    val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(id)
-                    it.findNavController().navigate(action)
-                }
+        fun bind(position: Int) {
+            when (position) {
+                0 -> header.text = watchlist
+                2 -> header.text = popularTVShow
+                else -> throw IndexOutOfBoundsException("Illegal position")
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder = TVShowHolder(
-        ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
+    inner class WatchlistHolder(binding: ItemHorizontalListBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val rvWatchlist = binding.rvWatchlistTVShows
 
-    inner class TVShowHolder (val binding: ItemScreeningBinding) : RecyclerView.ViewHolder(binding.root)
+        fun bind() {
+            rvWatchlist.apply {
+                layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = watchlistAdapter
+            }
+        }
+    }
 }
