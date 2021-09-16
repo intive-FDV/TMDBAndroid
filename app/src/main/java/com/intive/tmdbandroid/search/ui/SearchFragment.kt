@@ -30,15 +30,16 @@ class SearchFragment: Fragment() {
 
     private val searchAdapter = TVShowSearchAdapter()
 
-    private lateinit var binding: FragmentSearchBinding
+    private var searchViewQuery: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        val binding = FragmentSearchBinding.inflate(inflater, container, false)
         binding.layoutProgressbar.progressBar.visibility = View.GONE
+        setupToolbar(binding)
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
@@ -50,39 +51,35 @@ class SearchFragment: Fragment() {
                     searchAdapter.query = query
                     binding.searchView.clearFocus()
                     viewModel.search(query)
-                    subscribeViewModel()
+                    subscribeViewModel(binding)
+                    searchViewQuery = query
                     return true
                 }
                 return false
             }
         })
-        initViews()
-        if(binding.searchView.query.isEmpty()) binding.searchView.requestFocus()
-        else binding.searchView.clearFocus()
+        initViews(binding)
+        if(searchViewQuery.isNullOrEmpty()){
+            binding.searchView.requestFocus()
+            val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            binding.searchView.postDelayed(  {
+                imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT)
+            }, 100)
+        }
+        else{
+            binding.layoutSearchHint.hintContainer.visibility = View.GONE
+        }
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if(imm.isActive(binding.searchView) && binding.searchView.query.isEmpty()){
-            imm.toggleSoftInput(0,0)
-        } else binding.layoutSearchHint.hintContainer.visibility = View.GONE
-    }
-
-    private fun setupToolbar() {
+    private fun setupToolbar(binding: FragmentSearchBinding) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentSearchToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
-    fun subscribeViewModel(){
+    fun subscribeViewModel(binding: FragmentSearchBinding){
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShow ->
 
@@ -106,7 +103,7 @@ class SearchFragment: Fragment() {
         }
     }
 
-    private fun initViews() {
+    private fun initViews(binding: FragmentSearchBinding) {
         val resultsList = binding.searchResults
 
         resultsList.apply {
