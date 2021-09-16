@@ -1,10 +1,10 @@
 package com.intive.tmdbandroid.details.ui
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,13 +33,11 @@ class DetailFragment : Fragment() {
     private var tvShowId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
-    private val args: DetailFragmentArgs by navArgs()
-
-    private lateinit var binding: FragmentDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val args: DetailFragmentArgs by navArgs()
         tvShowId = args.screeningID
     }
 
@@ -47,20 +45,27 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentDetailBinding.inflate(inflater, container, false)
-        collectDataFromViewModel()
+        val binding = FragmentDetailBinding.inflate(inflater, container, false)
+
+        collectDataFromViewModel(binding)
+        setupToolbar(binding)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
         tvShowId?.let {
             viewModel.tVShows(it)
         }
     }
 
-    private fun collectDataFromViewModel() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Glide.get(requireContext()).clearMemory()
+    }
+
+    private fun collectDataFromViewModel(binding: FragmentDetailBinding) {
         binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { state ->
@@ -68,7 +73,7 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(state.data)
+                        setupUI(binding, state.data)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -84,13 +89,13 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(tvShow: TVShow) {
+    private fun setupUI(binding: FragmentDetailBinding, tvShow: TVShow) {
 
-        setImages(tvShow)
+        setImages(binding, tvShow)
 
-        tvShow.first_air_date?.let { setDate(it) }
+        tvShow.first_air_date?.let { setDate(binding, it) }
 
-        setPercentageToCircularPercentage(tvShow.vote_average)
+        setPercentageToCircularPercentage(binding, tvShow.vote_average)
 
         binding.toolbar.title = tvShow.name
 
@@ -123,7 +128,10 @@ class DetailFragment : Fragment() {
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
     }
 
-    private fun setPercentageToCircularPercentage(voteAverage: Double) {
+    private fun setPercentageToCircularPercentage(
+        binding: FragmentDetailBinding,
+        voteAverage: Double
+    ) {
         val percentage = (voteAverage * 10).toInt()
 
         binding.circularPercentage.progress = percentage
@@ -131,34 +139,25 @@ class DetailFragment : Fragment() {
         val context = binding.root.context
 
         when {
-            percentage < 25 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.red)
-            )
-            percentage < 45 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.orange)
-            )
-            percentage < 75 -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.yellow)
-            )
-            else -> binding.circularPercentage.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(context, R.color.green)
-            )
+            percentage < 25 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.red)
+            percentage < 45 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.orange)
+            percentage < 75 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+            else -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.green)
         }
         binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
     }
 
-    private fun setDate(firstAirDate: String) {
+    private fun setDate(binding: FragmentDetailBinding, firstAirDate: String) {
         try {
-            val date =
-                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstAirDate)
-            val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(date!!)
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstAirDate)
+            val stringDate = date?.let { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it) }
             binding.firstAirDateDetailTextView.text = stringDate
         } catch (e: Exception) {
             binding.firstAirDateDetailTextView.text = ""
         }
     }
 
-    private fun setImages(tvShow: TVShow) {
+    private fun setImages(binding: FragmentDetailBinding, tvShow: TVShow) {
         val options = RequestOptions()
             .placeholder(R.drawable.ic_image)
             .error(R.drawable.ic_image)
@@ -166,18 +165,18 @@ class DetailFragment : Fragment() {
         val posterURL = resources.getString(R.string.base_imageURL) + tvShow.poster_path
         val backdropPosterURL = resources.getString(R.string.base_imageURL) + tvShow.backdrop_path
 
-        Glide.with(this)
-            .load(posterURL)
+        val glide = Glide.with(this)
+
+        glide.load(posterURL)
             .apply(options)
             .into(binding.imageDetailImageView)
 
-        Glide.with(this)
-            .load(backdropPosterURL)
+        glide.load(backdropPosterURL)
             .apply(options)
             .into(binding.backgroundImageToolbarLayout)
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar(binding: FragmentDetailBinding) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -185,7 +184,7 @@ class DetailFragment : Fragment() {
         toolbar.setOnMenuItemClickListener {
             when(it.itemId) {
                 R.id.ic_heart_watchlist -> {
-                    selectOrUnselectWatchlistFav()
+                    selectOrUnselectWatchlistFav(binding)
                     true
                 }
                 else -> false
@@ -203,13 +202,13 @@ class DetailFragment : Fragment() {
         })
     }
 
-    private fun selectOrUnselectWatchlistFav() {
+    private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding) {
         isSaveOnWatchlist = !isSaveOnWatchlist
         val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
         if (isSaveOnWatchlist){
-            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_selected)
+            watchlistItem.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_selected)
         }else {
-            watchlistItem.icon = requireContext().getDrawable(R.drawable.ic_heart_unselected)
+            watchlistItem.icon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
         }
     }
 }
