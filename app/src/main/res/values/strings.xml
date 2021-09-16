@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TMDB Android</string>
+    <string name="app_name">To Watch</string>
 
     <string name="popular_movies">Popular movies</string>
     <string name="popular_tvShows">Popular TV shows</string>
