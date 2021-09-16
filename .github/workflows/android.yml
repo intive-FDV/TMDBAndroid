@@ -2,9 +2,9 @@ name: TMDB CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, feature/github_actions ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, feature/github_actions ]
 
 jobs:
   test:
