@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.intive.tmdbandroid.common.State
+import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.usecase.GetAllFromWatchlistUseCase
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,13 +20,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject internal constructor(
     private val paginatedPopularTVShowsUseCase: PaginatedPopularTVShowsUseCase,
+    private val getAllFromWatchlistUseCase: GetAllFromWatchlistUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<PagingData<TVShow>>>(State.Loading)
     val uiState: StateFlow<State<PagingData<TVShow>>> = _state
 
-    private val _watchlistState = MutableStateFlow<State<Any>>(State.Loading)
-    val watchlistUIState: StateFlow<State<Any>> = _watchlistState
+    private val _watchlistState = MutableStateFlow<State<List<TVShowORMEntity>>>(State.Loading)
+    val watchlistUIState: StateFlow<State<List<TVShowORMEntity>>> = _watchlistState
 
     fun popularTVShows() {
         viewModelScope.launch {
@@ -41,8 +44,13 @@ class HomeViewModel @Inject internal constructor(
 
     fun watchlistTVShows() {
         viewModelScope.launch {
-            //TODO Use Case Room here
-            _watchlistState.value = State.Success("Data Room")
+            getAllFromWatchlistUseCase.allFavorites()
+                .catch {
+                    _watchlistState.value = State.Error
+                }
+                .collect {
+                    _watchlistState.value = State.Success(it)
+                }
         }
     }
 }
