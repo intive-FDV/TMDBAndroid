@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,14 +21,13 @@ import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
-    private val tvShowPageAdapter = TVShowPageAdapter()
-
-    private lateinit var binding: FragmentHomeBinding
+    private lateinit var tvShowPageAdapter: TVShowPageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,38 +41,36 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
-        initViews()
-        subscribePopularData()
-        subscribeWatchlistData()
-
+        initViews(binding)
+        subscribePopularData(binding)
+        setupToolbar(binding)
+        subscribeWatchlistData(binding)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-    }
-
-    private fun setupToolbar() {
+    private fun setupToolbar(binding: FragmentHomeBinding) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentHomeToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
-    private fun subscribePopularData() {
+    private fun subscribePopularData(binding: FragmentHomeBinding) {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
-                Timber.tag("MAS").i("popular tvshows status: %s", resultTVShows)
+                Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
+
+                        updateMockWatchlist()
+
                         tvShowPageAdapter.submitData(resultTVShows.data)
 
                         if (tvShowPageAdapter.itemCount == 0) {
@@ -92,7 +90,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun subscribeWatchlistData() {
+    private fun subscribeWatchlistData(binding: FragmentHomeBinding) {
         lifecycleScope.launchWhenStarted {
             viewModel.watchlistUIState.collectLatest {
                 when(it) {
@@ -114,11 +112,45 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initViews() {
+    private fun updateMockWatchlist() {
+        val list = listOf(
+            TVShow("", emptyList(),"2021-09-13", emptyList(),0,"","Some TV Show 0", 1, 1, "","","","",2.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),1,"","Some TV Show 1", 2, 2, "","","","",4.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),2,"","Some TV Show 2", 3, 3, "","","","",6.0,10),
+            TVShow("", emptyList(),"2021-09-13", emptyList(),3,"","Some TV Show 3", 4, 4, "","","","",8.0,10)
+        )
+
+        tvShowPageAdapter.refreshWatchlistAdapter(list)
+    }
+
+    private fun initViews(binding: FragmentHomeBinding) {
         val rvTopTVShows = binding.rvPopularTVShows
 
+        val clickListener = { tvShow: TVShow ->
+            val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
+            findNavController().navigate(action)
+        }
+        tvShowPageAdapter = TVShowPageAdapter(clickListener)
+
         rvTopTVShows.apply {
-            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = 200
+            val columnCount = floor(dpWidth / scaling).toInt()
+            Timber.i("MAS - columnCount: $columnCount")
+
+            val manager = GridLayoutManager(context, columnCount)
+            manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (position) {
+                        0, 1, 2 -> columnCount
+                        else -> 1
+                    }
+                }
+            }
+
+            layoutManager = manager
             adapter = tvShowPageAdapter
         }
     }

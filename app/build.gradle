@@ -73,7 +73,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-    implementation "androidx.test.ext:junit-ktx:$junit"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
@@ -108,6 +107,7 @@ dependencies {
     testImplementation "app.cash.turbine:turbine:$turbineVersion"
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.room:room-testing:$roomVersion"
+    testImplementation "androidx.test.ext:junit-ktx:$junit"
 
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.ext:junit:$junit"
