@@ -155,7 +155,7 @@ class DetailFragment : Fragment() {
         binding.overviewDetailTextView.text = tvShow.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
-        viewModel.existAsFavorite(tvShowId.toString())
+        tvShowId?.let { viewModel.existAsFavorite(it) }
     }
 
     private fun setPercentageToCircularPercentage(
@@ -169,10 +169,14 @@ class DetailFragment : Fragment() {
         val context = binding.root.context
 
         when {
-            percentage < 25 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.red)
-            percentage < 45 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.orange)
-            percentage < 75 -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.yellow)
-            else -> binding.circularPercentage.progressTintList = ContextCompat.getColorStateList(context, R.color.green)
+            percentage < 25 -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.red)
+            percentage < 45 -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.orange)
+            percentage < 75 -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.yellow)
+            else -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.green)
         }
         binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
     }
@@ -180,7 +184,8 @@ class DetailFragment : Fragment() {
     private fun setDate(binding: FragmentDetailBinding, firstAirDate: String) {
         try {
             val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(firstAirDate)
-            val stringDate = date?.let { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it) }
+            val stringDate =
+                date?.let { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it) }
             binding.firstAirDateDetailTextView.text = stringDate
         } catch (e: Exception) {
             binding.firstAirDateDetailTextView.text = ""
@@ -215,9 +220,9 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
-                        viewModel.addToWatchlist(tvShowId.toString(), tvShow.toTVShowORMEntity())
+                        viewModel.addToWatchlist(tvShow.toTVShowORMEntity())
                     } else {
-                        viewModel.deleteFromWatchlist(tvShowId.toString())
+                        viewModel.deleteFromWatchlist(tvShow.toTVShowORMEntity())
                     }
                     true
                 }

@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.usecase.AddToWatchlistUseCase
-import com.intive.tmdbandroid.usecase.DeleteFromWatchlistUseCase
 import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
-import com.intive.tmdbandroid.usecase.ExistAsFavoriteUseCase
+import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
+import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
+import com.intive.tmdbandroid.usecase.SaveTVShowInWatchlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +20,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject internal constructor(
     private val tVShowUseCase: DetailTVShowUseCase,
-    private val addToWatchlistUseCase: AddToWatchlistUseCase,
-    private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
-    private val existAsFavoriteUseCase: ExistAsFavoriteUseCase
+    private val saveTVShowInWatchlistUseCase: SaveTVShowInWatchlistUseCase,
+    private val removeTVShowFromWatchlistUseCase: RemoveTVShowFromWatchlistUseCase,
+    private val getIfExistsUseCase: GetIfExistsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<TVShow>>(State.Loading)
@@ -43,9 +43,9 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun addToWatchlist(id: String, tvShow: TVShowORMEntity) {
+    fun addToWatchlist(tvShow: TVShowORMEntity) {
         viewModelScope.launch {
-            addToWatchlistUseCase.addToWatchlist(id, tvShow)
+            saveTVShowInWatchlistUseCase(tvShow)
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -55,9 +55,9 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun deleteFromWatchlist(id: String) {
+    fun deleteFromWatchlist(tvShow: TVShowORMEntity) {
         viewModelScope.launch {
-            deleteFromWatchlistUseCase.deleteFavorite(id)
+            removeTVShowFromWatchlistUseCase(tvShow)
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -67,9 +67,9 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun existAsFavorite(id: String) {
+    fun existAsFavorite(id: Int) {
         viewModelScope.launch {
-            existAsFavoriteUseCase.existAsFavorite(id)
+            getIfExistsUseCase(id)
                 .catch {
                     _watchlistState.value = State.Error
                 }

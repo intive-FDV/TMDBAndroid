@@ -14,7 +14,6 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
-import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.TVShow
@@ -95,12 +94,10 @@ class HomeFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.watchlistUIState.collectLatest {
                 when(it) {
-                    is State.Success<List<TVShowORMEntity>> -> {
+                    is State.Success<List<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        tvShowPageAdapter.refreshWatchlistAdapter(it.data.map { tvShowORMEntity ->
-                            tvShowORMEntity.toTVShow()
-                        })
+                        tvShowPageAdapter.refreshWatchlistAdapter(it.data)
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
