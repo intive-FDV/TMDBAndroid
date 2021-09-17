@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
 import com.intive.tmdbandroid.model.TVShow
@@ -30,7 +31,7 @@ class SearchFragment: Fragment() {
 
     private val searchAdapter = TVShowSearchAdapter()
 
-    private var searchViewQuery: String? = null
+    private var searchViewQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,15 +52,15 @@ class SearchFragment: Fragment() {
                     searchAdapter.query = query
                     binding.searchView.clearFocus()
                     viewModel.search(query)
-                    subscribeViewModel(binding)
                     searchViewQuery = query
+                    subscribeViewModel(binding)
                     return true
                 }
                 return false
             }
         })
         initViews(binding)
-        if(searchViewQuery.isNullOrEmpty()){
+        if(searchViewQuery.isEmpty()){
             binding.searchView.requestFocus()
             val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             binding.searchView.postDelayed(  {
@@ -87,6 +88,8 @@ class SearchFragment: Fragment() {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.searchHeaderContainer.visibility = View.VISIBLE
+                        binding.searchHeaderText.text = binding.searchHeaderText.context.getString(R.string.search_result_header, searchViewQuery)
                         searchAdapter.submitData(resultTVShow.data)
                     }
                     is State.Error -> {

@@ -1,6 +1,5 @@
 package com.intive.tmdbandroid.search.ui.adapters
 
-import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -10,63 +9,32 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemFoundSearchBinding
-import com.intive.tmdbandroid.databinding.SearchResultsHeaderBinding
 import com.intive.tmdbandroid.model.TVShow
 import timber.log.Timber
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+class TVShowSearchAdapter() : PagingDataAdapter<TVShow, TVShowSearchAdapter.SearchResultHolder>(REPO_COMPARATOR) {
     companion object {
     private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
         override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
         override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
     }
 }
-    private val TYPE_HEADER : Int = 0
-    private val TYPE_LIST : Int = 1
-
     var query: String = ""
 
     var clickListener: ((TVShow) -> Unit)? = null
 
-    override fun getItemCount(): Int {
-        return super.getItemCount() + 1
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when(position){
-            0 -> TYPE_HEADER
-            else -> TYPE_LIST
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
-            TYPE_HEADER -> {
-                val header = SearchResultsHeaderBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                SearchResultsHeaderHolder(header)
-            } else -> {
-                val header = ItemFoundSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                SearchResultHolder(header)
-            }
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowSearchAdapter.SearchResultHolder {
+        val resultHolder = ItemFoundSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SearchResultHolder(resultHolder)
 
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
-            is SearchResultsHeaderHolder -> holder.bind()
-            is SearchResultHolder -> {
-                val tvShowItem = getItem(position - 1) as TVShow
-                holder.bind(tvShowItem)
-            }
-        }
+    override fun onBindViewHolder(holder: TVShowSearchAdapter.SearchResultHolder, position: Int) {
+        val tvShowItem = getItem(position) as TVShow
+        holder.bind(tvShowItem)
     }
 
     inner class SearchResultHolder (val binding: ItemFoundSearchBinding) : RecyclerView.ViewHolder(binding.root){
@@ -116,15 +84,6 @@ class TVShowSearchAdapter() : PagingDataAdapter<TVShow, RecyclerView.ViewHolder>
                 .into(binding.itemPosterSearch)
 
 
-        }
-    }
-
-    inner class SearchResultsHeaderHolder(binding: SearchResultsHeaderBinding) : RecyclerView.ViewHolder(binding.root)
-    {
-        val headerText = binding.searchHeader
-
-        fun bind(){
-            headerText.text = headerText.context.resources.getString(R.string.search_result_header, query)
         }
     }
 
