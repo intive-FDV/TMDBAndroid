@@ -11,6 +11,9 @@ import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,10 +46,14 @@ class CatalogRepository @Inject constructor(
         return dao.insertFavorite(tVShowORMEntity)
     }
 
-    suspend fun allFavoriteMovie(): List<TVShowORMEntity> {
-        return dao.allFavorite()
+    suspend fun getFullWatchlist(): Flow<List<TVShow>> {
+        return flowOf(dao.allFavorite().map { it.toTVShow() })
     }
     suspend fun delete(movie: TVShowORMEntity) {
         return dao.deleteFavorite(movie)
+    }
+
+    suspend fun checkIfExistAsFavorite(id: Int): List<TVShowORMEntity>{
+        return dao.existAsFavorite(id.toString())
     }
 }
