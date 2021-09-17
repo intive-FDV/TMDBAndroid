@@ -24,7 +24,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: unit-tests-results
-          path: app/build/reports/tests/testDebugUnitTest/unit-test-results.html
+          path: app/build/reports/tests/testDebugUnitTest/index.html
 
   lint:
     name: Lint Check
@@ -42,8 +42,8 @@ jobs:
       - name: Lint results
         uses: actions/upload-artifact@v1
         with:
-          name: lint-results
-          path: app/build/reports/lint-results.html
+          name: app
+          path: app/build/reports/lint-results-debug.html
 
   build:
     runs-on: ubuntu-latest
