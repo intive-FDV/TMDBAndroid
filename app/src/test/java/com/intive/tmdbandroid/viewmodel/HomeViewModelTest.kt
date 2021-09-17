@@ -9,6 +9,7 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.usecase.GetAllItemsInWatchlistUseCase
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -56,6 +57,9 @@ class HomeViewModelTest {
     @Mock
     private lateinit var popularTVShowsUseCase: PaginatedPopularTVShowsUseCase
 
+    @Mock
+    private lateinit var getAllItemsInWatchlistUseCase: GetAllItemsInWatchlistUseCase
+
     // Set the main coroutines dispatcher for unit testing.
     @ExperimentalCoroutinesApi
     @get:Rule
@@ -67,7 +71,7 @@ class HomeViewModelTest {
 
     @Before
     fun setupViewModel() {
-        viewModel = HomeViewModel(popularTVShowsUseCase)
+        viewModel = HomeViewModel(popularTVShowsUseCase, getAllItemsInWatchlistUseCase)
     }
 
     @ExperimentalTime
