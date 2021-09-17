@@ -1,6 +1,4 @@
 name: TMDB CI
-author: 'Francisco Beccuti'
-description: 'Github Action example for TMDB team'
 
 on:
   push:
