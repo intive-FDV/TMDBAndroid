@@ -29,7 +29,7 @@ data class TVShowORMEntity(
     val vote_count: Int
 ) {
     fun toTVShow() : TVShow {
-        return TVShow(backdrop_path, emptyList(), first_air_date, emptyList(), id, last_air_date, name,
+        return TVShow(backdrop_path, created_by, first_air_date, genres, id, last_air_date, name,
             number_of_episodes, number_of_seasons, original_name, overview, poster_path, status,
             vote_average, vote_count)
     }
