@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v2.2.3
         with:
           name: app
-          path: app\APKBUILD\app-debug.apk
+          path: app/build/outputs/apk/debug/*.apk
 
       - name: Send mail
         if: always()
