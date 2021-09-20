@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
+import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
@@ -108,9 +109,13 @@ class HomeFragment : Fragment() {
 
         rvTopTVShows.apply {
             val displayMetrics = context.resources.displayMetrics
-            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+            Timber.i("MAS - density: $displayMetrics")
 
-            val scaling = 200
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+            Timber.i("MAS - dpWidth: $dpWidth")
+
+            val scaling = resources.getInteger(R.integer.screening_width)
+            Timber.i("MAS - scaling: $scaling")
             val columnCount = floor(dpWidth / scaling).toInt()
             Timber.i("MAS - columnCount: $columnCount")
 
@@ -123,6 +128,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+
+            tvShowPageAdapter.widthSize = ((floor(dpWidth / columnCount) - 8) * displayMetrics.density).toInt()
 
             layoutManager = manager
             adapter = tvShowPageAdapter

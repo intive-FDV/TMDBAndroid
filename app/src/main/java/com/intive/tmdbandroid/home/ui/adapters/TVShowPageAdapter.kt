@@ -7,40 +7,40 @@ import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.*
 import com.intive.tmdbandroid.R
+import com.intive.tmdbandroid.common.TVShowAsyncPagingDataDiffCallback
 import com.intive.tmdbandroid.databinding.ItemHorizontalListBinding
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.databinding.ItemTitleBinding
 import com.intive.tmdbandroid.model.TVShow
 
 class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    val adapterCallback = AdapterListUpdateCallback(this)
-
     companion object {
         private const val HEADER = 0
         private const val WATCHLIST = 1
         private const val POPULAR = 2
     }
 
+    var widthSize: Int = 0
+    val adapterCallback = AdapterListUpdateCallback(this)
+
     private val differ = AsyncPagingDataDiffer(
         TVShowAsyncPagingDataDiffCallback(),
         object : ListUpdateCallback {
             override fun onInserted(position: Int, count: Int) {
-                adapterCallback.onInserted(position + 1, count);
+                adapterCallback.onInserted(position + 1, count)
             }
 
             override fun onRemoved(position: Int, count: Int) {
-                adapterCallback.onRemoved(position + 1, count);
+                adapterCallback.onRemoved(position + 1, count)
             }
 
             override fun onMoved(fromPosition: Int, toPosition: Int) {
-                adapterCallback.onMoved(fromPosition + 1, toPosition + 1);
+                adapterCallback.onMoved(fromPosition + 1, toPosition + 1)
             }
 
             override fun onChanged(position: Int, count: Int, payload: Any?) {
-                adapterCallback.onChanged(position + 1, count, payload);
+                adapterCallback.onChanged(position + 1, count, payload)
             }
-
         }
     )
 
@@ -67,6 +67,7 @@ class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Recycle
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
         when (holder) {
             is HeaderHolder -> holder.bind(position)
             is WatchlistHolder -> holder.bind()
@@ -105,19 +106,9 @@ class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Recycle
         fun bind() {
             rvWatchlist.apply {
                 layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                watchlistAdapter.widthSize = widthSize
                 adapter = watchlistAdapter
             }
         }
-    }
-}
-
-
-private class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<TVShow>() {
-    override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean {
-        return oldItem == newItem
     }
 }
