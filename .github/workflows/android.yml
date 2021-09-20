@@ -21,7 +21,7 @@ jobs:
       - name: Unit tests
         run: bash ./gradlew test --stacktrace
       - name: Unit tests results
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2.2.3
         with:
           name: unit-tests-results
           path: app/build/reports/tests/testDebugUnitTest/index.html
@@ -40,9 +40,9 @@ jobs:
       - name: Lint debug flavor
         run: bash ./gradlew lintDebug --stacktrace
       - name: Lint results
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2.2.3
         with:
-          name: app
+          name: lint-result
           path: app/build/reports/lint-results-debug.html
 
   build:
