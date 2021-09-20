@@ -15,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
+import androidx.paging.insertHeaderItem
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
@@ -81,6 +83,14 @@ class SearchFragment: Fragment() {
     }
 
     fun subscribeViewModel(binding: FragmentSearchBinding){
+        searchAdapter.addLoadStateListener { loadState ->
+            if ( loadState.append.endOfPaginationReached ){
+                if ( searchAdapter.itemCount < 1)
+                    binding.layoutEmpty.root.visibility = View.VISIBLE
+                else
+                    binding.layoutEmpty.root.visibility = View.GONE
+            }
+        }
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShow ->
 
