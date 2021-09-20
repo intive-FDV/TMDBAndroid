@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,8 +29,6 @@ class HomeFragment : Fragment() {
 
     private lateinit var tvShowPageAdapter: TVShowPageAdapter
 
-    private lateinit var binding: FragmentHomeBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,28 +40,24 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
-        initViews()
-        subscribePopularData()
+        initViews(binding)
+        subscribePopularData(binding)
+        setupToolbar(binding)
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-    }
-
-    private fun setupToolbar() {
+    private fun setupToolbar(binding: FragmentHomeBinding) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentHomeToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
-    private fun subscribePopularData() {
+    private fun subscribePopularData(binding: FragmentHomeBinding) {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultTVShows ->
@@ -105,7 +100,7 @@ class HomeFragment : Fragment() {
         tvShowPageAdapter.refreshWatchlistAdapter(list)
     }
 
-    private fun initViews() {
+    private fun initViews(binding: FragmentHomeBinding) {
         val rvTopTVShows = binding.rvPopularTVShows
 
         val clickListener = { tvShow: TVShow ->

@@ -52,8 +52,8 @@ class TVShowHolder(binding: ItemScreeningBinding, private val clickListener: ((T
         title.text = item.name
 
         try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(item.first_air_date)
-            val stringDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(dateFormat)
+            val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
+            val stringDate = dateFormat?.let { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it) }
             date.text = stringDate
         } catch (e: Exception) {
             date.text = ""

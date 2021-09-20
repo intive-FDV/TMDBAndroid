@@ -8,10 +8,10 @@
     tools:context=".details.ui.DetailFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
         android:id="@+id/coordinatorContainer_detail"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayoutDetail"
@@ -34,11 +34,11 @@
                     android:id="@+id/background_image_toolbar_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
                     android:alpha="0.3"
+                    android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
-                    tools:src="@drawable/ic_launcher_foreground"
-                    app:layout_collapseMode="parallax" />
+                    app:layout_collapseMode="parallax"
+                    tools:src="@drawable/ic_launcher_foreground" />
 
                 <ImageView
                     android:id="@+id/image_detail_imageView"
@@ -66,12 +66,12 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="16dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -127,6 +127,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="4dp"
                     android:textColor="@color/black"
                     tools:text="Taking inspiration from the comic books of the same name, each episode explores a pivotal moment from the Marvel Cinematic Universe and turns it on its head, leading the audience into uncharted territory." />
 
@@ -174,15 +175,17 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-    <include layout="@layout/layout_error"
+    <include
+        android:id="@+id/layout_error_detail"
+        layout="@layout/layout_error"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_error_detail"/>
+        android:layout_height="match_parent" />
 
-    <include layout="@layout/layout_progressbar"
-        android:layout_height="match_parent"
+    <include
+        android:id="@+id/layout_loading_detail"
+        layout="@layout/layout_progressbar"
         android:layout_width="match_parent"
-        android:id="@+id/layout_loading_detail"/>
+        android:layout_height="match_parent" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
