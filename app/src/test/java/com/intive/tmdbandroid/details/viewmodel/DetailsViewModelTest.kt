@@ -8,6 +8,9 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
+import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
+import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
+import com.intive.tmdbandroid.usecase.SaveTVShowInWatchlistUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
@@ -18,7 +21,7 @@ import org.mockito.Mockito.*
 import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
-class DetailsViewModelTest{
+class DetailsViewModelTest {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
@@ -26,10 +29,10 @@ class DetailsViewModelTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val tvShow =  TVShow(
+    private val tvShow = TVShow(
         backdrop_path = "BACKDROP_PATH",
         first_air_date = "1983-10-20",
-        genres = listOf(Genre(1, "genre1"), Genre(2,"genre2")),
+        genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
         id = 1,
         name = "Simona la Cacarisa",
         original_name = "El cochiloco",
@@ -45,19 +48,30 @@ class DetailsViewModelTest{
     )
 
     private lateinit var detailViewModel: DetailsViewModel
-    private lateinit var detailUseCase: DetailTVShowUseCase
+    private lateinit var tVShowUseCase: DetailTVShowUseCase
+    private lateinit var saveTVShowInWatchlistUseCase: SaveTVShowInWatchlistUseCase
+    private lateinit var removeTVShowFromWatchlistUseCase: RemoveTVShowFromWatchlistUseCase
+    private lateinit var getIfExistsUseCase: GetIfExistsUseCase
 
 
     @Before
     fun setup() {
-        detailUseCase = mock(DetailTVShowUseCase::class.java)
-        detailViewModel = DetailsViewModel(detailUseCase)
+        tVShowUseCase = mock(DetailTVShowUseCase::class.java)
+        saveTVShowInWatchlistUseCase = mock(SaveTVShowInWatchlistUseCase::class.java)
+        removeTVShowFromWatchlistUseCase = mock(RemoveTVShowFromWatchlistUseCase::class.java)
+        getIfExistsUseCase = mock(GetIfExistsUseCase::class.java)
+        detailViewModel = DetailsViewModel(
+            tVShowUseCase,
+            saveTVShowInWatchlistUseCase,
+            removeTVShowFromWatchlistUseCase,
+            getIfExistsUseCase
+        )
     }
 
     @Test
     @ExperimentalTime
     fun tVShowsTest() = mainCoroutineRule.runBlockingTest {
-        `when`(detailUseCase.invoke(anyInt())).thenReturn(
+        `when`(tVShowUseCase.invoke(anyInt())).thenReturn(
             flow {
                 emit(
                     tvShow

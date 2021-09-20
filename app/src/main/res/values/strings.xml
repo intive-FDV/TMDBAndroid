@@ -14,6 +14,8 @@
     <string name="search_text">Search a TV Show or Movie</string>
     <string name="search_hint">Start typing to find awesome TV shows</string>
     <string name="hint_layout_description">Search Hint Icon</string>
+    <string name="collapsing_toolbar_description">Backdrop Poster Header</string>
+    <string name="details_poster_description">TV Show Poster</string>
     <string name="search_result_header">Results for: %1$s</string>
 
     <plurals name="numberOfSeasons">

@@ -8,7 +8,7 @@ import com.intive.tmdbandroid.model.converter.CreatedByConverter
 import com.intive.tmdbandroid.model.converter.GenreConverter
 
 @Database(entities = [(TVShowORMEntity::class)], version = 1, exportSchema = false)
-@TypeConverters(CreatedByConverter::class,GenreConverter::class)
+@TypeConverters(CreatedByConverter::class, GenreConverter::class)
 abstract class LocalStorage : RoomDatabase() {
     abstract fun tvShowDao(): Dao
 }

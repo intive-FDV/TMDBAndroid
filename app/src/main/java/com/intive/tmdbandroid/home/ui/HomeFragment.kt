@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +36,11 @@ class HomeFragment : Fragment() {
         viewModel.popularTVShows()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.watchlistTVShows()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,18 +52,17 @@ class HomeFragment : Fragment() {
         initViews(binding)
         subscribePopularData(binding)
         setupToolbar(binding)
-
+        subscribeWatchlistData(binding)
         return binding.root
     }
 
     private fun setupToolbar(binding: FragmentHomeBinding) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar = binding.fragmentHomeToolbar
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-        toolbar.inflateMenu(R.menu.options_menu)
-        toolbar.setOnMenuItemClickListener(){
-            toolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
+        binding.fragmentHomeToolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.fragmentHomeToolbar.inflateMenu(R.menu.options_menu)
+        binding.fragmentHomeToolbar.setOnMenuItemClickListener(){
+            binding.fragmentHomeToolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
             true
         }
     }
@@ -74,8 +77,6 @@ class HomeFragment : Fragment() {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-
-                        updateMockWatchlist()
 
                         tvShowPageAdapter.submitData(resultTVShows.data)
 
@@ -96,15 +97,26 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateMockWatchlist() {
-        val list = listOf(
-            TVShow("", emptyList(),"2021-09-13", emptyList(),0,"","Some TV Show 0", 1, 1, "","","","",2.0,10),
-            TVShow("", emptyList(),"2021-09-13", emptyList(),1,"","Some TV Show 1", 2, 2, "","","","",4.0,10),
-            TVShow("", emptyList(),"2021-09-13", emptyList(),2,"","Some TV Show 2", 3, 3, "","","","",6.0,10),
-            TVShow("", emptyList(),"2021-09-13", emptyList(),3,"","Some TV Show 3", 4, 4, "","","","",8.0,10)
-        )
-
-        tvShowPageAdapter.refreshWatchlistAdapter(list)
+    private fun subscribeWatchlistData(binding: FragmentHomeBinding) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.watchlistUIState.collectLatest {
+                when(it) {
+                    is State.Success<List<TVShow>> -> {
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        tvShowPageAdapter.refreshWatchlistAdapter(it.data)
+                    }
+                    is State.Error -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                    }
+                    is State.Loading -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
     private fun initViews(binding: FragmentHomeBinding) {
