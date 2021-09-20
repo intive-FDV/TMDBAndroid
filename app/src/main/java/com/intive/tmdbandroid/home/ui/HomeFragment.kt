@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +26,11 @@ import kotlin.math.floor
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
-    private lateinit var tvShowPageAdapter: TVShowPageAdapter
+    private val clickListener = { tvShow: TVShow ->
+        val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
+        findNavController().navigate(action)
+    }
+    private val tvShowPageAdapter = TVShowPageAdapter(clickListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,10 +94,10 @@ class HomeFragment : Fragment() {
 
     private fun updateMockWatchlist() {
         val list = listOf(
-            TVShow("", emptyList(),"2021-09-13", emptyList(),0,"","Some TV Show 0", 1, 1, "","","","",2.0,10),
-            TVShow("", emptyList(),"2021-09-13", emptyList(),1,"","Some TV Show 1", 2, 2, "","","","",4.0,10),
-            TVShow("", emptyList(),"2021-09-13", emptyList(),2,"","Some TV Show 2", 3, 3, "","","","",6.0,10),
-            TVShow("", emptyList(),"2021-09-13", emptyList(),3,"","Some TV Show 3", 4, 4, "","","","",8.0,10)
+            TVShow("", emptyList(), "2021-09-13", emptyList(), 0, "", "Some TV Show 0", 1, 1, "", "", "", "", 2.0, 10),
+            TVShow("", emptyList(), "2021-09-13", emptyList(), 1, "", "Some TV Show 1", 2, 2, "", "", "", "", 4.0, 10),
+            TVShow("", emptyList(), "2021-09-13", emptyList(), 2, "", "Some TV Show 2", 3, 3, "", "", "", "", 6.0, 10),
+            TVShow("", emptyList(), "2021-09-13", emptyList(), 3, "", "Some TV Show 3", 4, 4, "", "", "", "", 8.0, 10)
         )
 
         tvShowPageAdapter.refreshWatchlistAdapter(list)
@@ -102,12 +105,6 @@ class HomeFragment : Fragment() {
 
     private fun initViews(binding: FragmentHomeBinding) {
         val rvTopTVShows = binding.rvPopularTVShows
-
-        val clickListener = { tvShow: TVShow ->
-            val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
-            findNavController().navigate(action)
-        }
-        tvShowPageAdapter = TVShowPageAdapter(clickListener)
 
         rvTopTVShows.apply {
             val displayMetrics = context.resources.displayMetrics
