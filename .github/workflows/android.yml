@@ -56,10 +56,14 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: bash ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app
+          path: app/build/outputs/apk/debug/*.apk
 
       - name: Send mail
         if: always()
