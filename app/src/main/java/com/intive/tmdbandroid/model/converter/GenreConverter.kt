@@ -1,7 +1,6 @@
 package com.intive.tmdbandroid.model.converter
 
 import androidx.room.TypeConverter
-import com.intive.tmdbandroid.model.CreatedBy
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.intive.tmdbandroid.model.Genre
@@ -25,7 +24,7 @@ class GenreConverter {
             return null
         }
         val gson = Gson()
-        val type: Type = object : TypeToken<List<Genre?>?>() {}.getType()
+        val type: Type = object : TypeToken<List<Genre?>?>() {}.type
         return gson.toJson(genre, type)
     }
 }

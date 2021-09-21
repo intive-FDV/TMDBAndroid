@@ -1,9 +1,9 @@
 package com.intive.tmdbandroid.model.converter
 
 import androidx.room.TypeConverter
-import com.intive.tmdbandroid.model.CreatedBy
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.intive.tmdbandroid.model.CreatedBy
 import java.lang.reflect.Type
 
 
@@ -24,7 +24,7 @@ class CreatedByConverter {
             return null
         }
         val gson = Gson()
-        val type: Type = object : TypeToken<List<CreatedBy?>?>() {}.getType()
+        val type: Type = object : TypeToken<List<CreatedBy?>?>() {}.type
         return gson.toJson(createdBy, type)
     }
 }
