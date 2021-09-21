@@ -28,7 +28,11 @@ import kotlin.math.floor
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
-    private lateinit var tvShowPageAdapter: TVShowPageAdapter
+    private val clickListener = { tvShow: TVShow ->
+        val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
+        findNavController().navigate(action)
+    }
+    private val tvShowPageAdapter = TVShowPageAdapter(clickListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,17 +126,12 @@ class HomeFragment : Fragment() {
     private fun initViews(binding: FragmentHomeBinding) {
         val rvTopTVShows = binding.rvPopularTVShows
 
-        val clickListener = { tvShow: TVShow ->
-            val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
-            findNavController().navigate(action)
-        }
-        tvShowPageAdapter = TVShowPageAdapter(clickListener)
-
         rvTopTVShows.apply {
             val displayMetrics = context.resources.displayMetrics
             val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+            Timber.i("MAS - dpWidth: $dpWidth")
 
-            val scaling = 200
+            val scaling = resources.getInteger(R.integer.screening_width)
             val columnCount = floor(dpWidth / scaling).toInt()
             Timber.i("MAS - columnCount: $columnCount")
 
@@ -145,6 +144,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+
+            tvShowPageAdapter.widthSize = ((floor(dpWidth / columnCount) - resources.getInteger(R.integer.short_padding)) * displayMetrics.density).toInt()
 
             layoutManager = manager
             adapter = tvShowPageAdapter
