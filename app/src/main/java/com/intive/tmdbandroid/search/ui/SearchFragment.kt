@@ -10,15 +10,11 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
-import androidx.paging.insertHeaderItem
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
 import com.intive.tmdbandroid.model.TVShow
@@ -31,7 +27,12 @@ import kotlinx.coroutines.flow.collectLatest
 class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val searchAdapter = TVShowSearchAdapter()
+    private val clickListener = { tvShow: TVShow ->
+        val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
+        findNavController().navigate(action)
+    }
+
+    private val searchAdapter = TVShowSearchAdapter(clickListener)
 
     private var searchViewQuery: String = ""
 
@@ -67,7 +68,7 @@ class SearchFragment: Fragment() {
             val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             binding.searchView.postDelayed(  {
                 imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT)
-            }, 100)
+            }, 50)
         }
         else{
             binding.layoutSearchHint.hintContainer.visibility = View.GONE
@@ -83,12 +84,12 @@ class SearchFragment: Fragment() {
     }
 
     fun subscribeViewModel(binding: FragmentSearchBinding){
-        searchAdapter.addLoadStateListener { loadState ->
-            if ( loadState.append.endOfPaginationReached ){
-                if ( searchAdapter.itemCount < 1)
+        searchAdapter.notifyItemChanged(0)
+        searchAdapter.differ.addLoadStateListener { loadState ->
+            if(loadState.append.endOfPaginationReached){
+                if (searchAdapter.itemCount < 1 + 1) {
                     binding.layoutEmpty.root.visibility = View.VISIBLE
-                else
-                    binding.layoutEmpty.root.visibility = View.GONE
+                } else binding.layoutEmpty.root.visibility = View.GONE
             }
         }
         lifecycleScope.launchWhenStarted {
@@ -98,8 +99,6 @@ class SearchFragment: Fragment() {
                     is State.Success<PagingData<TVShow>> -> {
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        binding.searchHeaderContainer.visibility = View.VISIBLE
-                        binding.searchHeaderText.text = binding.searchHeaderText.context.getString(R.string.search_result_header, searchViewQuery)
                         searchAdapter.submitData(resultTVShow.data)
                     }
                     is State.Error -> {
@@ -120,11 +119,6 @@ class SearchFragment: Fragment() {
         val resultsList = binding.searchResults
 
         resultsList.apply {
-            searchAdapter.clickListener = { tvShow ->
-                val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
-                findNavController().navigate(action)
-            }
-
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = searchAdapter
         }

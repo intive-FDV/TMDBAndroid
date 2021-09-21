@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.fragmentHomeToolbar.setupWithNavController(navController, appBarConfiguration)
         binding.fragmentHomeToolbar.inflateMenu(R.menu.options_menu)
-        binding.fragmentHomeToolbar.setOnMenuItemClickListener(){
+        binding.fragmentHomeToolbar.setOnMenuItemClickListener{
             binding.fragmentHomeToolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
             true
         }
