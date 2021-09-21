@@ -129,7 +129,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            tvShowPageAdapter.widthSize = ((floor(dpWidth / columnCount) - 8) * displayMetrics.density).toInt()
+            tvShowPageAdapter.widthSize = ((floor(dpWidth / columnCount) - resources.getInteger(R.integer.short_padding)) * displayMetrics.density).toInt()
 
             layoutManager = manager
             adapter = tvShowPageAdapter

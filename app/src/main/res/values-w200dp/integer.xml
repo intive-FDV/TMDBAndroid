@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="screening_width">100</integer>
+    <integer name="short_padding">8</integer>
 </resources>
