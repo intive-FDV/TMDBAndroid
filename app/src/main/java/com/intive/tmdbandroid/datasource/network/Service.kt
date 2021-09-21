@@ -10,15 +10,21 @@ import kotlinx.coroutines.flow.flow
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
 
-    fun getPaginatedPopularTVShows(page: Int) : Flow<ResultTVShowsEntity> {
+    fun getPaginatedPopularTVShows(page: Int): Flow<ResultTVShowsEntity> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getPaginatedPopularTVShows(BuildConfig.API_KEY, page))
         }
     }
 
-    fun getTVShowByID(tvShowID: Int) : Flow<TVShow> {
+    fun getTVShowByID(tvShowID: Int): Flow<TVShow> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getTVShowByID(tvShowID, BuildConfig.API_KEY))
+        }
+    }
+
+    fun getTvShowByTitle(tvShowTitle: String, page: Int): Flow<ResultTVShowsEntity> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getTVShowByName(BuildConfig.API_KEY, tvShowTitle, page))
         }
     }
 }

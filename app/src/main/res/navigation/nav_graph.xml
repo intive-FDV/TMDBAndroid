@@ -14,6 +14,10 @@
             android:id="@+id/action_homeFragmentDest_to_TVShowDetail"
             app:destination="@id/detailFragmentDest"
             app:popUpTo="@id/homeFragmentDest" />
+        <action
+            android:id="@+id/action_homeFragmentDest_to_searchFragment"
+            app:destination="@id/searchFragmentDest"
+            app:popUpTo="@id/homeFragmentDest" />
     </fragment>
 
     <fragment
@@ -23,6 +27,16 @@
         <argument
             android:name="screeningID"
             app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragmentDest"
+        android:name="com.intive.tmdbandroid.search.ui.SearchFragment"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_TVShowDetail"
+            app:destination="@id/detailFragmentDest"
+            app:popUpTo="@id/searchFragmentDest" />
     </fragment>
 
 </navigation>

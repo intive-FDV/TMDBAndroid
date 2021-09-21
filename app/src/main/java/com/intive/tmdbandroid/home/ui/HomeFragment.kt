@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
+import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
@@ -58,6 +60,11 @@ class HomeFragment : Fragment() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.fragmentHomeToolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.fragmentHomeToolbar.inflateMenu(R.menu.options_menu)
+        binding.fragmentHomeToolbar.setOnMenuItemClickListener{
+            binding.fragmentHomeToolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
+            true
+        }
     }
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {

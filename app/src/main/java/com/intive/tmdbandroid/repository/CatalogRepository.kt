@@ -4,9 +4,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.TVShowPagingSource
+import com.intive.tmdbandroid.datasource.TVShowSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,5 +34,17 @@ class CatalogRepository @Inject constructor(
 
     fun getTVShowByID(id:Int): Flow<TVShow>{
         return service.getTVShowByID(id)
+    }
+
+    fun search(name:String): Flow<PagingData<TVShow>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = DEFAULT_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                TVShowSearchSource(service = service, name)
+            }
+        ).flow
     }
 }
