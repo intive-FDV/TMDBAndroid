@@ -18,7 +18,7 @@ Pattern
 - [MVVM]
 
 Tech
-----------
+----
 - [Android]
 - [Coroutines]
 - [Flow]
@@ -31,7 +31,9 @@ Tech
 
 ScreenShot
 ----------
+## Home
 ![Home](https://github.com/intive-FDV/TMDBAndroid/blob/feature/readme_license/screenshot/home.jpg)
+## Details
 ![Details](https://github.com/intive-FDV/TMDBAndroid/blob/feature/readme_license/screenshot/details.jpg)
 
 [TMDB]: <https://www.themoviedb.org>
