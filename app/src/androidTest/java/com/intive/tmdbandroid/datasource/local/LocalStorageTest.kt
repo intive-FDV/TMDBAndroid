@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.*
 import org.junit.runner.RunWith
+import timber.log.Timber
 
 @RunWith(AndroidJUnit4::class) // Annotate with @RunWith
 class LocalStorageTest : TestCase() {
@@ -73,9 +74,9 @@ class LocalStorageTest : TestCase() {
         db.close()
     }
 
-    // create a test function and annotate it with @Test
     // here we are first adding an item to the db and then checking if that item
-    // is present in the db -- if the item is present then our test cases pass
+    // is present in the db -- if the item is present then we try to delete it and
+    // check the db once more -- if the item is not present, our test case passes
     @Test
     fun writeAndReadAllAndDeleteTest() = runBlocking {
         dao.insertFavorite(tvShow)
@@ -87,5 +88,32 @@ class LocalStorageTest : TestCase() {
         val tvShowsDeleted = dao.allFavorite()
 
         assertThat("Expecting NOT to find item in list", !tvShowsDeleted.contains(tvShow))
+    }
+
+    // here we are first adding an item to the db and then checking if that item
+    // is present in the db -- if the item is present then we try to update it and
+    // check the db once more -- if the old item is not present and the new one is,
+    // our test case passes
+    @Test
+    fun writeAndReadOneSuccessAndUpdateTest() = runBlocking {
+        dao.insertFavorite(tvShow)
+        val exists = dao.existAsFavorite(tvShow.id)
+
+        assertThat("Expecting result to be true", exists)
+
+        dao.updateFavorite(tvShowUpdate)
+        val tvShowsDeleted = dao.allFavorite()
+
+        assertThat("Expecting NOT to find old item in list", !tvShowsDeleted.contains(tvShow))
+        assertThat("Expecting to find new item in list", tvShowsDeleted.contains(tvShowUpdate))
+    }
+
+    // here we are first checking if an item is present in the db  without adding it
+    // -- if the item is NOT present, our test case passes
+    @Test
+    fun writeAndReadOneFailureTest() = runBlocking {
+        val exists = dao.existAsFavorite(tvShow.id)
+
+        assertThat("Expecting result to be true", !exists)
     }
 }
