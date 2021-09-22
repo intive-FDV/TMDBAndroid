@@ -127,13 +127,13 @@ class DetailFragment : Fragment() {
 
     private fun setupUITVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
 
-        setImages(binding, tvShow)
+        setImagesTVShow(binding, tvShow)
 
         tvShow.first_air_date?.let { setDate(binding, it) }
 
         setPercentageToCircularPercentage(binding, tvShow.vote_average)
 
-        setupToolbar(binding, tvShow)
+        setupToolbarTVShow(binding, tvShow)
 
         binding.toolbar.title = tvShow.name
 
@@ -170,13 +170,13 @@ class DetailFragment : Fragment() {
 
     private fun setupUIMovie(binding: FragmentDetailBinding, movie: Movie) {
 
-        setImages(binding, movie)
+        setImagesMovie(binding, movie)
 
-        setDate(binding, movie.release_date)
+        movie.release_date?.let { setDate(binding, it) }
 
         setPercentageToCircularPercentage(binding, movie.vote_average)
 
-        setupToolbar(binding, movie)
+        setupToolbarMovie(binding, movie)
 
         binding.toolbar.title = movie.original_title
 
@@ -190,6 +190,8 @@ class DetailFragment : Fragment() {
 
         binding.overviewDetailTextView.text = movie.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
+
+        tvShowId?.let { viewModel.existAsFavorite(it) }
     }
 
     private fun setPercentageToCircularPercentage(
@@ -226,7 +228,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setImages(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setImagesTVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
         val options = RequestOptions()
             .placeholder(R.drawable.ic_image)
             .error(R.drawable.ic_image)
@@ -245,7 +247,26 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
     }
 
-    private fun setupToolbar(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setImagesMovie(binding: FragmentDetailBinding, movie: Movie) {
+        val options = RequestOptions()
+            .placeholder(R.drawable.ic_image)
+            .error(R.drawable.ic_image)
+
+        val posterURL = resources.getString(R.string.base_imageURL) + movie.poster_path
+        val backdropPosterURL = resources.getString(R.string.base_imageURL) + movie.backdrop_path
+
+        val glide = Glide.with(this)
+
+        glide.load(posterURL)
+            .apply(options)
+            .into(binding.imageDetailImageView)
+
+        glide.load(backdropPosterURL)
+            .apply(options)
+            .into(binding.backgroundImageToolbarLayout)
+    }
+
+    private fun setupToolbarTVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -274,6 +295,24 @@ class DetailFragment : Fragment() {
             } else binding.popularityCard.visibility = View.VISIBLE
         })
     }
+
+    private fun setupToolbarMovie(binding: FragmentDetailBinding, movie: Movie) {
+        val navController = findNavController()
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val toolbar = binding.toolbar
+        toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
+        binding.collapsingToolbarLayout.setupWithNavController(
+            toolbar,
+            navController,
+            appBarConfiguration
+        )
+        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            if (verticalOffset < -500) {
+                binding.popularityCard.visibility = View.INVISIBLE
+            } else binding.popularityCard.visibility = View.VISIBLE
+        })
+    }
+
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {
         val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)
