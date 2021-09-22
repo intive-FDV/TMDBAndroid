@@ -21,7 +21,7 @@ Tech
 ----------
 - [Android]
 - [Coroutines]
-- [Flow]  
+- [Flow]
 - [JUnit]
 - [Kotlin]
 - [mockito]
@@ -29,7 +29,10 @@ Tech
 - [Paging v3]
 - [Room]
 
-
+ScreenShot
+----------
+![Home](https://github.com/intive-FDV/TMDBAndroid/tree/feature/readme_license/screenshot/home.png)
+![Details](https://github.com/intive-FDV/TMDBAndroid/tree/feature/readme_license/screenshot/details.png)
 
 [TMDB]: <https://www.themoviedb.org>
 [Clean Architecture]: <https://www.raywenderlich.com/3595916-clean-architecture-tutorial-for-android-getting-started>
@@ -43,6 +46,3 @@ Tech
 [Paging v3]: <https://developer.android.com/topic/libraries/architecture/paging/v3-overview>
 [Coroutines]: <https://developer.android.com/kotlin/coroutines>
 [Flow]: <https://developer.android.com/kotlin/flow>
-
-
-
