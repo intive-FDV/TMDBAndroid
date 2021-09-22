@@ -8,7 +8,6 @@ import com.intive.tmdbandroid.model.CreatedBy
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.repository.WatchlistRepository
 import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
-import com.intive.tmdbandroid.usecase.SaveTVShowInWatchlistUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert

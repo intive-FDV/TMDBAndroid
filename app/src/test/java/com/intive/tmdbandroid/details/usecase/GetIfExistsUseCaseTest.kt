@@ -2,17 +2,13 @@ package com.intive.tmdbandroid.details.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
-import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.model.CreatedBy
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.repository.WatchlistRepository
 import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
-import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
@@ -23,7 +19,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 

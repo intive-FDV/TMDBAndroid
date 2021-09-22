@@ -9,9 +9,10 @@ import com.intive.tmdbandroid.model.Genre
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
-import timber.log.Timber
 
 @RunWith(AndroidJUnit4::class) // Annotate with @RunWith
 class LocalStorageTest : TestCase() {
