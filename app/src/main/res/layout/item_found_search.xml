@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="3dp"
+    android:layout_marginVertical="8dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-    android:layout_marginVertical="8dp"
+    android:layout_marginBottom="24dp"
     app:cardCornerRadius="5dp"
-    android:layout_marginBottom="24dp">
+    app:cardElevation="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,15 +17,36 @@
         app:cardCornerRadius="5dp">
 
         <TextView
+            android:id="@+id/itemMediaTypeSearch"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/border_text_view"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/itemTitleSearch"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="MOVIE" />
+
+        <TextView
             android:id="@+id/itemTitleSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            tools:text="Title"
             android:textSize="16sp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@+id/itemMediaTypeSearch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/itemPosterSearch"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="aasdasfsdvfddvfdasdadasdasdaaaa" />
 
         <RatingBar
             android:id="@+id/itemRatingSearch"
@@ -34,35 +54,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:numStars="5"
             android:layout_marginTop="12dp"
+            android:numStars="5"
+            app:layout_constraintBottom_toTopOf="@+id/itemYearSearch"
             app:layout_constraintStart_toEndOf="@+id/itemPosterSearch"
-            app:layout_constraintTop_toBottomOf="@+id/itemTitleSearch" />
+            app:layout_constraintTop_toBottomOf="@+id/itemTitleSearch"
+            app:layout_constraintVertical_chainStyle="spread" />
 
         <TextView
             android:id="@+id/itemYearSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="12dp"
-            tools:text="FE Year"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemPosterSearch" />
-
-        <TextView
-            android:id="@+id/itemSeasonsSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="12dp"
-            tools:text="TextView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/itemYearSearch" />
+            app:layout_constraintStart_toEndOf="@+id/itemPosterSearch"
+            app:layout_constraintTop_toBottomOf="@+id/itemRatingSearch"
+            tools:text="2021" />
 
         <ImageView
             android:id="@+id/itemPosterSearch"
             android:layout_width="66dp"
-            android:layout_height="104dp"
+            android:layout_height="114dp"
             android:contentDescription="TV Show Poster"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"

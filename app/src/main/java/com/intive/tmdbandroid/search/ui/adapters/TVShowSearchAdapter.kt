@@ -91,6 +91,7 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
         private val itemTitle = binding.itemTitleSearch
         private val itemYear = binding.itemYearSearch
         private val itemRating = binding.itemRatingSearch
+        private val itemMediaType = binding.itemMediaTypeSearch
 
         fun bind(item: ResultTVShowOrMovie){
 
@@ -99,13 +100,17 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
             }
 
             try {
-                if(!item.first_air_date.isNullOrBlank()){
+                if(!item.first_air_date.isNullOrBlank() || !item.release_date.isNullOrBlank()){
                     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val dateStr = item.first_air_date
-                    val date: Date = formatter.parse(dateStr)!!
-                    itemYear.text = (formatter.parse(dateStr)?.let {
-                        date.year.toString()
-                    } ?: "No first_air_date")
+                    val dateStr = item.first_air_date ?: item.release_date
+                    val date: Date? = dateStr?.let {
+                        formatter.parse(it)
+                    }
+                    val formatter2 = SimpleDateFormat("yyyy", Locale.getDefault())
+                    val dateStr2 = date?.let {
+                        formatter2.format(it)
+                    }
+                    itemYear.text = dateStr2
                 }
             } catch (e : Exception){
                 Timber.e(e)
@@ -113,6 +118,7 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
 
             itemTitle.text = item.original_name ?: item.original_title
             itemRating.rating = item.vote_average.toFloat()/2
+            itemMediaType.text = item.media_type.uppercase()
 
             val options = RequestOptions()
                 .centerCrop()
