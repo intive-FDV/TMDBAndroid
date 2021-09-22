@@ -18,7 +18,7 @@ interface Dao{
     @Delete
     suspend fun deleteFavorite(tvShowLocal: TVShowORMEntity)
 
-    @Query("SELECT * FROM TVShowORMEntity WHERE id=:id LIMIT 1")
-    suspend fun existAsFavorite(id: String): List<TVShowORMEntity>
+    @Query("SELECT EXISTS(SELECT * FROM TVShowORMEntity WHERE id = :id)")
+    suspend fun existAsFavorite(id: Int): Boolean
 
 }
