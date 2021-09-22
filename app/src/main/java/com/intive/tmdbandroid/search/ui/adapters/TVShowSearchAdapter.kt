@@ -13,13 +13,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.HeaderResultsSearchBinding
 import com.intive.tmdbandroid.databinding.ItemFoundSearchBinding
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
 import timber.log.Timber
-import java.lang.Exception
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 
-class TVShowSearchAdapter(private val clickListener: ((TVShow) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var query: String = ""
 
     val adapterCallback = AdapterListUpdateCallback(this)
@@ -51,8 +50,8 @@ class TVShowSearchAdapter(private val clickListener: ((TVShow) -> Unit)) : Recyc
             }
     )
 
-    suspend fun submitData(tvShowPagingData: PagingData<TVShow>) {
-        differ.submitData(tvShowPagingData)
+    suspend fun submitData(tvShowOrMoviePagingData: PagingData<ResultTVShowOrMovie>) {
+        differ.submitData(tvShowOrMoviePagingData)
     }
 
     override fun getItemCount(): Int {
@@ -87,14 +86,13 @@ class TVShowSearchAdapter(private val clickListener: ((TVShow) -> Unit)) : Recyc
         }
     }
 
-    inner class SearchResultHolder (private val binding: ItemFoundSearchBinding, private val clickListener: ((TVShow) -> Unit)) : RecyclerView.ViewHolder(binding.root){
+    inner class SearchResultHolder (private val binding: ItemFoundSearchBinding, private val clickListener: ((ResultTVShowOrMovie) -> Unit)) : RecyclerView.ViewHolder(binding.root){
 
         private val itemTitle = binding.itemTitleSearch
         private val itemYear = binding.itemYearSearch
-        private val itemSeasons = binding.itemSeasonsSearch
         private val itemRating = binding.itemRatingSearch
 
-        fun bind(item: TVShow){
+        fun bind(item: ResultTVShowOrMovie){
 
             itemView.setOnClickListener {
                 clickListener.invoke(item)
@@ -102,23 +100,18 @@ class TVShowSearchAdapter(private val clickListener: ((TVShow) -> Unit)) : Recyc
 
             try {
                 if(!item.first_air_date.isNullOrBlank()){
-                    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     val dateStr = item.first_air_date
-                    val date: LocalDate = LocalDate.parse(dateStr, formatter)
-                    itemYear.text = date.year.toString()
+                    val date: Date = formatter.parse(dateStr)!!
+                    itemYear.text = (formatter.parse(dateStr)?.let {
+                        date.year.toString()
+                    } ?: "No first_air_date")
                 }
             } catch (e : Exception){
                 Timber.e(e)
             }
 
-            itemTitle.text = item.name
-            itemSeasons.text = item.number_of_seasons?.let {
-                binding.root.resources.getQuantityString(
-                    R.plurals.numberOfSeasons,
-                    it,
-                    it
-                )
-            }
+            itemTitle.text = item.original_name ?: item.original_title
             itemRating.rating = item.vote_average.toFloat()/2
 
             val options = RequestOptions()
@@ -137,12 +130,12 @@ class TVShowSearchAdapter(private val clickListener: ((TVShow) -> Unit)) : Recyc
         }
     }
 
-    private class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<TVShow>() {
-        override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean {
+    private class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<ResultTVShowOrMovie>() {
+        override fun areItemsTheSame(oldItem: ResultTVShowOrMovie, newItem: ResultTVShowOrMovie): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean {
+        override fun areContentsTheSame(oldItem: ResultTVShowOrMovie, newItem: ResultTVShowOrMovie): Boolean {
             return oldItem == newItem
         }
     }

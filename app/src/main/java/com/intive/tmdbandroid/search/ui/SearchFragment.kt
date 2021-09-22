@@ -17,7 +17,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
 import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,8 +27,8 @@ import kotlinx.coroutines.flow.collectLatest
 class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val clickListener = { tvShow: TVShow ->
-        val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
+    private val clickListener = { tvShowOrMovie: ResultTVShowOrMovie ->
+        val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShowOrMovie.id)
         findNavController().navigate(action)
     }
 
@@ -93,13 +93,13 @@ class SearchFragment: Fragment() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultTVShow ->
+            viewModel.uiState.collectLatest { resultTVShowOrMovie ->
 
-                when (resultTVShow) {
-                    is State.Success<PagingData<TVShow>> -> {
+                when (resultTVShowOrMovie) {
+                    is State.Success<PagingData<ResultTVShowOrMovie>> -> {
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        searchAdapter.submitData(resultTVShow.data)
+                        searchAdapter.submitData(resultTVShowOrMovie.data)
                     }
                     is State.Error -> {
                         binding.layoutError.errorContainer.visibility = View.VISIBLE

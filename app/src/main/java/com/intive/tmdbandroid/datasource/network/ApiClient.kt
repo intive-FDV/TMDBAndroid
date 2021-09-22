@@ -1,5 +1,6 @@
 package com.intive.tmdbandroid.datasource.network
 
+import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.TVShow
 import retrofit2.http.GET
@@ -15,8 +16,8 @@ interface ApiClient {
     suspend fun getTVShowByID(@Path("tv_id") tvShowID: Int,
                               @Query("api_key") apiKey: String) : TVShow
 
-    @GET("search/tv")
-    suspend fun getTVShowByName(@Query("api_key") apiKey: String,
+    @GET("search/multi")
+    suspend fun getTVShowAndMoviesByName(@Query("api_key") apiKey: String,
                                 @Query("query") query: String,
-                                @Query("page") page: Int) : ResultTVShowsEntity
+                                @Query("page") page: Int) : ResultListTVShowOrMovies
 }
