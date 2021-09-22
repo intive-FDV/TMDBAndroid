@@ -13,6 +13,7 @@ import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
 import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -67,12 +68,12 @@ class GetIfExistsUseCaseTest {
     @ExperimentalCoroutinesApi
     @ExperimentalTime
     fun invokeTestEmpty() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(watchlistRepository.checkIfExistAsFavorite(anyInt())).willReturn(tvShowEntityList)
+        BDDMockito.given(watchlistRepository.checkIfExistAsFavorite(anyInt())).willReturn(flowOf(false))
 
         val expected = getIfExistsUseCase(2)
 
         expected.test {
-            Assert.assertEquals(awaitItem(), true)
+            Assert.assertEquals(awaitItem(), false)
             awaitComplete()
         }
     }
@@ -81,12 +82,12 @@ class GetIfExistsUseCaseTest {
     @ExperimentalCoroutinesApi
     @ExperimentalTime
     fun invokeTestNotEmpty() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(watchlistRepository.checkIfExistAsFavorite(anyInt())).willReturn(emptyList())
+        BDDMockito.given(watchlistRepository.checkIfExistAsFavorite(anyInt())).willReturn(flowOf(true))
 
         val expected = getIfExistsUseCase(2)
 
         expected.test {
-            Assert.assertEquals(awaitItem(), false)
+            Assert.assertEquals(awaitItem(), true)
             awaitComplete()
         }
     }
