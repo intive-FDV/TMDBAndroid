@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class SaveTVShowInWatchlistUseCase @Inject constructor(private val watchlistRepository: WatchlistRepository) {
 
-    suspend operator fun invoke(tvShow: TVShowORMEntity): Flow<Boolean>{
+    suspend operator fun invoke(tvShow: TVShowORMEntity): Flow<Boolean> {
         watchlistRepository.insert(tvShow)
         return flowOf(true)
     }

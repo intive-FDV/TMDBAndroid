@@ -8,6 +8,7 @@ import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.model.Genre
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.*
 import org.junit.runner.RunWith
 
@@ -16,6 +17,42 @@ class LocalStorageTest : TestCase() {
     // get reference to the Database and Dao class
     private lateinit var db: LocalStorage
     private lateinit var dao: Dao
+
+    private val tvShow = TVShowORMEntity(
+        backdrop_path = "BACKDROP_PATH",
+        first_air_date = "1983-10-20",
+        genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
+        id = 1,
+        name = "Simona la Cacarisa",
+        original_name = "El cochiloco",
+        overview = "Simona la cacarisa, el cochiloco",
+        poster_path = "POSTER_PATH",
+        vote_average = 10.5,
+        vote_count = 100,
+        created_by = emptyList(),
+        last_air_date = "1990-09-25",
+        number_of_episodes = 5,
+        number_of_seasons = 2,
+        status = "Online"
+    )
+
+    private val tvShowUpdate = TVShowORMEntity(
+        backdrop_path = "BACKDROP_PATH_2",
+        first_air_date = "1983-10-20",
+        genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
+        id = 1,
+        name = "Simona la Cacarisa",
+        original_name = "El cochiloco",
+        overview = "Simona la cacarisa, el cochiloco",
+        poster_path = "POSTER_PATH_2",
+        vote_average = 5.0,
+        vote_count = 200,
+        created_by = emptyList(),
+        last_air_date = "1990-09-25",
+        number_of_episodes = 5,
+        number_of_seasons = 2,
+        status = "Online"
+    )
 
     // Override function setUp() and annotate it with @Before
     // this function will be called at first when this test class is called
@@ -40,26 +77,15 @@ class LocalStorageTest : TestCase() {
     // here we are first adding an item to the db and then checking if that item
     // is present in the db -- if the item is present then our test cases pass
     @Test
-    fun writeAndReadTvShow() = runBlocking {
-        val tvShow = TVShowORMEntity(
-            backdrop_path = "BACKDROP_PATH",
-            first_air_date = "1983-10-20",
-            genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
-            id = 1,
-            name = "Simona la Cacarisa",
-            original_name = "El cochiloco",
-            overview = "Simona la cacarisa, el cochiloco",
-            poster_path = "POSTER_PATH",
-            vote_average = 10.5,
-            vote_count = 100,
-            created_by = emptyList(),
-            last_air_date = "1990-09-25",
-            number_of_episodes = 5,
-            number_of_seasons = 2,
-            status = "Online"
-        )
+    fun writeAndReadAllAndDeleteTest() = runBlocking {
         dao.insertFavorite(tvShow)
         val tvShows = dao.allFavorite()
-        Assert.assertEquals(tvShows[0], tvShow)
+
+        assertThat("Expecting to find item in list", tvShows.contains(tvShow))
+
+        dao.deleteFavorite(tvShow)
+        val tvShowsDeleted = dao.allFavorite()
+
+        assertThat("Expecting NOT to find item in list", !tvShowsDeleted.contains(tvShow))
     }
 }
