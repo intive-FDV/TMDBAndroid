@@ -4,6 +4,7 @@ import com.intive.tmdbandroid.BuildConfig
 import com.intive.tmdbandroid.common.RetrofitHelper
 import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
+import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,6 +27,12 @@ class Service {
     fun getTvShowOrMovieByTitle(tvShowTitle: String, page: Int): Flow<ResultListTVShowOrMovies> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getTVShowAndMoviesByName(BuildConfig.API_KEY, tvShowTitle, page))
+        }
+    }
+
+    fun getMovieByID(movieID: Int): Flow<Movie> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getMovieByID(movieID, BuildConfig.API_KEY))
         }
     }
 }

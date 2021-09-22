@@ -4,11 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.entity.TVShowORMEntity
-import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
-import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
-import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
-import com.intive.tmdbandroid.usecase.SaveTVShowInWatchlistUseCase
+import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,13 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject internal constructor(
     private val tVShowUseCase: DetailTVShowUseCase,
+    private val movieUseCase: DetailMovieUseCase,
     private val saveTVShowInWatchlistUseCase: SaveTVShowInWatchlistUseCase,
     private val removeTVShowFromWatchlistUseCase: RemoveTVShowFromWatchlistUseCase,
     private val getIfExistsUseCase: GetIfExistsUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<TVShow>>(State.Loading)
-    val uiState: StateFlow<State<TVShow>> = _state
+    private val _state = MutableStateFlow<State<*>>(State.Loading)
+    val uiState: StateFlow<State<*>> = _state
 
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
@@ -39,6 +36,18 @@ class DetailsViewModel @Inject internal constructor(
                 }
                 .collect { tvShow ->
                     _state.value = State.Success(tvShow)
+                }
+        }
+    }
+
+    fun movie(id: Int) {
+        viewModelScope.launch {
+            movieUseCase(id)
+                .catch {
+                    _state.value = State.Error
+                }
+                .collect { movie ->
+                    _state.value = State.Success(movie)
                 }
         }
     }

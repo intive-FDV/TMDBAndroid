@@ -20,6 +20,7 @@ import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
+import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -57,8 +58,10 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val args: DetailFragmentArgs by navArgs()
         tvShowId?.let {
-            viewModel.tVShows(it)
+            if (args.isMovieBoolean) viewModel.movie(it)
+            else viewModel.tVShows(it)
         }
     }
 
@@ -75,7 +78,14 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(binding, state.data)
+                        when(state.data) {
+                            is TVShow -> {
+                                setupUITVShow(binding, state.data)
+                            }
+                            is Movie -> {
+                                setupUIMovie(binding, state.data)
+                            }
+                        }
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -115,7 +125,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setupUITVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
 
         setImages(binding, tvShow)
 
@@ -156,6 +166,30 @@ class DetailFragment : Fragment() {
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         tvShowId?.let { viewModel.existAsFavorite(it) }
+    }
+
+    private fun setupUIMovie(binding: FragmentDetailBinding, movie: Movie) {
+
+        setImages(binding, movie)
+
+        setDate(binding, movie.release_date)
+
+        setPercentageToCircularPercentage(binding, movie.vote_average)
+
+        setupToolbar(binding, movie)
+
+        binding.toolbar.title = movie.original_title
+
+        binding.statusDetailTextView.text = movie.status
+
+        val genresListText = movie.genres.map {
+            it.name
+        }.toString()
+        val genresTextWithoutCharacters = genresListText.subSequence(1, genresListText.lastIndex)
+        binding.genresDetailTextView.text = genresTextWithoutCharacters
+
+        binding.overviewDetailTextView.text = movie.overview
+        binding.coordinatorContainerDetail.visibility = View.VISIBLE
     }
 
     private fun setPercentageToCircularPercentage(

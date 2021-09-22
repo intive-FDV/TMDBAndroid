@@ -7,6 +7,7 @@ import com.intive.tmdbandroid.datasource.TVShowPagingSource
 import com.intive.tmdbandroid.datasource.TVShowSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
+import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -32,11 +33,15 @@ class CatalogRepository @Inject constructor(
         ).flow
     }
 
-    fun getTVShowByID(id:Int): Flow<TVShow>{
+    fun getTVShowByID(id: Int): Flow<TVShow> {
         return service.getTVShowByID(id)
     }
 
-    fun search(name:String): Flow<PagingData<ResultTVShowOrMovie>> {
+    fun getMovieByID(id: Int): Flow<Movie> {
+        return service.getMovieByID(id)
+    }
+
+    fun search(name: String): Flow<PagingData<ResultTVShowOrMovie>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,

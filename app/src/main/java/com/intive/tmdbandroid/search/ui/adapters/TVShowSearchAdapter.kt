@@ -18,7 +18,10 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TVShowSearchAdapter(
+    private val clickListener: ((ResultTVShowOrMovie) -> Unit)
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     var query: String = ""
 
     val adapterCallback = AdapterListUpdateCallback(this)
@@ -29,25 +32,25 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
     }
 
     val differ = AsyncPagingDataDiffer(
-            TVShowAsyncPagingDataDiffCallback(),
-            object : ListUpdateCallback {
-                override fun onInserted(position: Int, count: Int) {
-                    adapterCallback.onInserted(position + 1, count)
-                }
-
-                override fun onRemoved(position: Int, count: Int) {
-                    adapterCallback.onRemoved(position + 1, count)
-                }
-
-                override fun onMoved(fromPosition: Int, toPosition: Int) {
-                    adapterCallback.onMoved(fromPosition + 1, toPosition + 1)
-                }
-
-                override fun onChanged(position: Int, count: Int, payload: Any?) {
-                    adapterCallback.onChanged(position + 1, count, payload)
-                }
-
+        TVShowAsyncPagingDataDiffCallback(),
+        object : ListUpdateCallback {
+            override fun onInserted(position: Int, count: Int) {
+                adapterCallback.onInserted(position + 1, count)
             }
+
+            override fun onRemoved(position: Int, count: Int) {
+                adapterCallback.onRemoved(position + 1, count)
+            }
+
+            override fun onMoved(fromPosition: Int, toPosition: Int) {
+                adapterCallback.onMoved(fromPosition + 1, toPosition + 1)
+            }
+
+            override fun onChanged(position: Int, count: Int, payload: Any?) {
+                adapterCallback.onChanged(position + 1, count, payload)
+            }
+
+        }
     )
 
     suspend fun submitData(tvShowOrMoviePagingData: PagingData<ResultTVShowOrMovie>) {
@@ -67,8 +70,20 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            HEADER -> HeaderHolder(HeaderResultsSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            ITEM -> SearchResultHolder(ItemFoundSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickListener)
+            HEADER -> HeaderHolder(
+                HeaderResultsSearchBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+            ITEM -> SearchResultHolder(
+                ItemFoundSearchBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ), clickListener
+            )
             else -> throw Exception("Illegal ViewType")
         }
     }
@@ -80,27 +95,32 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
         }
     }
 
-    inner class HeaderHolder (private val binding: HeaderResultsSearchBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(query: String){
-            binding.searchHeader.text = binding.root.context.getString(R.string.search_result_header, query)
+    inner class HeaderHolder(private val binding: HeaderResultsSearchBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(query: String) {
+            binding.searchHeader.text =
+                binding.root.context.getString(R.string.search_result_header, query)
         }
     }
 
-    inner class SearchResultHolder (private val binding: ItemFoundSearchBinding, private val clickListener: ((ResultTVShowOrMovie) -> Unit)) : RecyclerView.ViewHolder(binding.root){
+    inner class SearchResultHolder(
+        private val binding: ItemFoundSearchBinding,
+        private val clickListener: ((ResultTVShowOrMovie) -> Unit)
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         private val itemTitle = binding.itemTitleSearch
         private val itemYear = binding.itemYearSearch
         private val itemRating = binding.itemRatingSearch
         private val itemMediaType = binding.itemMediaTypeSearch
 
-        fun bind(item: ResultTVShowOrMovie){
+        fun bind(item: ResultTVShowOrMovie) {
 
             itemView.setOnClickListener {
                 clickListener.invoke(item)
             }
 
             try {
-                if(!item.first_air_date.isNullOrBlank() || !item.release_date.isNullOrBlank()){
+                if (!item.first_air_date.isNullOrBlank() || !item.release_date.isNullOrBlank()) {
                     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     val dateStr = item.first_air_date ?: item.release_date
                     val date: Date? = dateStr?.let {
@@ -112,12 +132,12 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
                     }
                     itemYear.text = dateStr2
                 }
-            } catch (e : Exception){
+            } catch (e: Exception) {
                 Timber.e(e)
             }
 
             itemTitle.text = item.original_name ?: item.original_title
-            itemRating.rating = item.vote_average.toFloat()/2
+            itemRating.rating = item.vote_average.toFloat() / 2
             itemMediaType.text = item.media_type.uppercase()
 
             val options = RequestOptions()
@@ -125,7 +145,8 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
                 .placeholder(R.drawable.ic_image)
                 .error(R.drawable.ic_image)
 
-            val posterURL = binding.root.resources.getString(R.string.base_imageURL) + item.poster_path
+            val posterURL =
+                binding.root.resources.getString(R.string.base_imageURL) + item.poster_path
 
             Glide.with(binding.root.context)
                 .load(posterURL)
@@ -137,11 +158,17 @@ class TVShowSearchAdapter(private val clickListener: ((ResultTVShowOrMovie) -> U
     }
 
     private class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<ResultTVShowOrMovie>() {
-        override fun areItemsTheSame(oldItem: ResultTVShowOrMovie, newItem: ResultTVShowOrMovie): Boolean {
+        override fun areItemsTheSame(
+            oldItem: ResultTVShowOrMovie,
+            newItem: ResultTVShowOrMovie
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ResultTVShowOrMovie, newItem: ResultTVShowOrMovie): Boolean {
+        override fun areContentsTheSame(
+            oldItem: ResultTVShowOrMovie,
+            newItem: ResultTVShowOrMovie
+        ): Boolean {
             return oldItem == newItem
         }
     }
