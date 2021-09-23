@@ -5,14 +5,11 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.model.Genre
-import com.intive.tmdbandroid.model.CreatedBy
-import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.entity.TVShowORMEntity
-import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
-import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
-import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
-import com.intive.tmdbandroid.usecase.SaveTVShowInWatchlistUseCase
+import com.intive.tmdbandroid.model.CreatedBy
+import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.usecase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
@@ -22,7 +19,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
@@ -81,15 +79,27 @@ class DetailsViewModelTest {
     private lateinit var removeTVShowFromWatchlistUseCase: RemoveTVShowFromWatchlistUseCase
     @Mock
     private lateinit var getIfExistsUseCase: GetIfExistsUseCase
+    @Mock
+    private lateinit var movieUseCase: DetailMovieUseCase
+    @Mock
+    private lateinit var insertMovieToWatchlistUseCase: InsertMovieToWatchlistUseCase
+    @Mock
+    private lateinit var deleteMovieFromWatchlistUseCase: DeleteMovieFromWatchlistUseCase
+    @Mock
+    private lateinit var existMovieInWatchlistUseCase: ExistMovieInWatchlistUseCase
 
 
     @Before
     fun setup() {
         detailViewModel = DetailsViewModel(
             tVShowUseCase,
+            movieUseCase,
             saveTVShowInWatchlistUseCase,
             removeTVShowFromWatchlistUseCase,
-            getIfExistsUseCase
+            getIfExistsUseCase,
+            insertMovieToWatchlistUseCase,
+            deleteMovieFromWatchlistUseCase,
+            existMovieInWatchlistUseCase
         )
     }
 
