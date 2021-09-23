@@ -3,6 +3,7 @@ package com.intive.tmdbandroid.details.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
+import com.intive.tmdbandroid.entity.MovieORMEntity
 import com.intive.tmdbandroid.entity.TVShowORMEntity
 import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,10 @@ class DetailsViewModel @Inject internal constructor(
     private val movieUseCase: DetailMovieUseCase,
     private val saveTVShowInWatchlistUseCase: SaveTVShowInWatchlistUseCase,
     private val removeTVShowFromWatchlistUseCase: RemoveTVShowFromWatchlistUseCase,
-    private val getIfExistsUseCase: GetIfExistsUseCase
+    private val getIfExistsUseCase: GetIfExistsUseCase,
+    private val insertMovieToWatchlistUseCase: InsertMovieToWatchlistUseCase,
+    private val deleteMovieFromWatchlistUseCase: DeleteMovieFromWatchlistUseCase,
+    private val existMovieInWatchlistUseCase: ExistMovieInWatchlistUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<*>>(State.Loading)
@@ -79,6 +83,44 @@ class DetailsViewModel @Inject internal constructor(
     fun existAsFavorite(id: Int) {
         viewModelScope.launch {
             getIfExistsUseCase(id)
+                .catch {
+                    _watchlistState.value = State.Error
+                }
+                .collect {
+                    _watchlistState.value = State.Success(it)
+                }
+        }
+    }
+
+    // MOVIE MOETHODS
+
+    fun insertMovieToWatchlist(movieORMEntity: MovieORMEntity) {
+        viewModelScope.launch {
+            insertMovieToWatchlistUseCase(movieORMEntity)
+                .catch {
+                    _watchlistState.value = State.Error
+                }
+                .collect {
+                    _watchlistState.value = State.Success(it)
+                }
+        }
+    }
+
+    fun deleteMovieFromWatchlist(movieORMEntity: MovieORMEntity) {
+        viewModelScope.launch {
+            deleteMovieFromWatchlistUseCase(movieORMEntity)
+                .catch {
+                    _watchlistState.value = State.Error
+                }
+                .collect {
+                    _watchlistState.value = State.Success(it)
+                }
+        }
+    }
+
+    fun existMovieInWatchlist(id: Int) {
+        viewModelScope.launch {
+            existMovieInWatchlistUseCase(id)
                 .catch {
                     _watchlistState.value = State.Error
                 }

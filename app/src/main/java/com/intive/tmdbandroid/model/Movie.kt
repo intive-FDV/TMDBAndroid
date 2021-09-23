@@ -1,5 +1,7 @@
 package com.intive.tmdbandroid.model
 
+import com.intive.tmdbandroid.entity.MovieORMEntity
+
 data class Movie(
     val backdrop_path: String,
     val genres: List<Genre>,
@@ -13,4 +15,21 @@ data class Movie(
     val vote_average: Double,
     val vote_count: Int,
     val status: String
-)
+) {
+    fun toMovieORMEntity(): MovieORMEntity {
+        return MovieORMEntity(
+            backdrop_path,
+            genres,
+            id,
+            original_title,
+            overview,
+            popularity,
+            poster_path,
+            release_date,
+            title,
+            vote_average,
+            vote_count,
+            status
+        )
+    }
+}

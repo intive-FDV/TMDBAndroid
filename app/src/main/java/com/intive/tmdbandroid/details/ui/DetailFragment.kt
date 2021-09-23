@@ -33,7 +33,7 @@ import java.util.*
 class DetailFragment : Fragment() {
 
     private var isSaveOnWatchlist: Boolean = false
-    private var tvShowId: Int? = null
+    private var screeningItemId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
 
@@ -41,7 +41,7 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val args: DetailFragmentArgs by navArgs()
-        tvShowId = args.screeningID
+        screeningItemId = args.screeningID
     }
 
     override fun onCreateView(
@@ -59,7 +59,7 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: DetailFragmentArgs by navArgs()
-        tvShowId?.let {
+        screeningItemId?.let {
             if (args.isMovieBoolean) viewModel.movie(it)
             else viewModel.tVShows(it)
         }
@@ -165,7 +165,7 @@ class DetailFragment : Fragment() {
         binding.overviewDetailTextView.text = tvShow.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
-        tvShowId?.let { viewModel.existAsFavorite(it) }
+        screeningItemId?.let { viewModel.existAsFavorite(it) }
     }
 
     private fun setupUIMovie(binding: FragmentDetailBinding, movie: Movie) {
@@ -194,7 +194,7 @@ class DetailFragment : Fragment() {
         binding.overviewDetailTextView.text = movie.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
-        tvShowId?.let { viewModel.existAsFavorite(it) }
+        screeningItemId?.let { viewModel.existMovieInWatchlist(it) }
     }
 
     private fun setPercentageToCircularPercentage(
@@ -304,6 +304,19 @@ class DetailFragment : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.ic_heart_watchlist -> {
+                    if (!isSaveOnWatchlist) {
+                        viewModel.insertMovieToWatchlist(movie.toMovieORMEntity())
+                    } else {
+                        viewModel.deleteMovieFromWatchlist(movie.toMovieORMEntity())
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
