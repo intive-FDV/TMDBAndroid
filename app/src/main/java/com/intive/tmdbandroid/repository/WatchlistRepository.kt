@@ -22,7 +22,7 @@ class WatchlistRepository @Inject constructor(
         return dao.deleteFavorite(movie)
     }
 
-    suspend fun checkIfExistAsFavorite(id: Int): List<TVShowORMEntity>{
-        return dao.existAsFavorite(id.toString())
+    suspend fun checkIfExistAsFavorite(id: Int): Flow<Boolean>{
+        return flowOf(dao.existAsFavorite(id))
     }
 }
