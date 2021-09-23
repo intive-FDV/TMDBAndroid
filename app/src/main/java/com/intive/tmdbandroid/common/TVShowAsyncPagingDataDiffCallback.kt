@@ -1,14 +1,14 @@
 package com.intive.tmdbandroid.common
 
 import androidx.recyclerview.widget.DiffUtil
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 
-class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<TVShow>() {
-    override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean {
+class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<Screening>() {
+    override fun areItemsTheSame(oldItem: Screening, newItem: Screening): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean {
+    override fun areContentsTheSame(oldItem: Screening, newItem: Screening): Boolean {
         return oldItem == newItem
     }
 }

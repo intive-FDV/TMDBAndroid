@@ -6,8 +6,8 @@ import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.TVShowPagingSource
 import com.intive.tmdbandroid.datasource.TVShowSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
-import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
 import com.intive.tmdbandroid.model.Movie
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class CatalogRepository @Inject constructor(
         const val DEFAULT_PAGE_SIZE = 20
     }
 
-    fun paginatedPopularTVShows(): Flow<PagingData<TVShow>> {
+    fun paginatedPopularTVShows(): Flow<PagingData<Screening>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,
@@ -41,7 +41,7 @@ class CatalogRepository @Inject constructor(
         return service.getMovieByID(id)
     }
 
-    fun search(name: String): Flow<PagingData<ResultTVShowOrMovie>> {
+    fun search(name: String): Flow<PagingData<Screening>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,

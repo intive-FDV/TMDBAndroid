@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.GetAllItemsInWatchlistUseCase
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,11 +22,11 @@ class HomeViewModel @Inject internal constructor(
     private val getAllItemsInWatchlistUseCase: GetAllItemsInWatchlistUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<PagingData<TVShow>>>(State.Loading)
-    val uiState: StateFlow<State<PagingData<TVShow>>> = _state
+    private val _state = MutableStateFlow<State<PagingData<Screening>>>(State.Loading)
+    val uiState: StateFlow<State<PagingData<Screening>>> = _state
 
-    private val _watchlistState = MutableStateFlow<State<List<TVShow>>>(State.Loading)
-    val watchlistUIState: StateFlow<State<List<TVShow>>> = _watchlistState
+    private val _watchlistState = MutableStateFlow<State<List<Screening>>>(State.Loading)
+    val watchlistUIState: StateFlow<State<List<Screening>>> = _watchlistState
 
     fun popularTVShows() {
         viewModelScope.launch {

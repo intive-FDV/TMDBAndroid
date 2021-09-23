@@ -1,6 +1,7 @@
 package com.intive.tmdbandroid.entity
 
 import com.google.gson.annotations.SerializedName
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 
 data class ResultTVShowsEntity(
@@ -10,8 +11,10 @@ data class ResultTVShowsEntity(
     val total_pages: Int,
     val total_results: Int
 ) {
-    fun toTVShowList() : List<TVShow> {
+    fun toScreeningList() : List<Screening> {
         val tvShowList : ArrayList<TVShow> = arrayListOf()
-        return TVShows.mapTo(tvShowList, { it.toTVShow() })
+        TVShows.mapTo(tvShowList, { it.toTVShow() })
+        val screeningList: ArrayList<Screening> = arrayListOf()
+        return tvShowList.mapTo(screeningList,{it.toScreening()})
     }
 }

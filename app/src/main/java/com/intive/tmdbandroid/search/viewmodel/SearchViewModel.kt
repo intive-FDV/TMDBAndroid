@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,9 +20,9 @@ class SearchViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<PagingData<ResultTVShowOrMovie>>>(State.Loading)
+    private val _state = MutableStateFlow<State<PagingData<Screening>>>(State.Loading)
 
-    val uiState: StateFlow<State<PagingData<ResultTVShowOrMovie>>> = _state
+    val uiState: StateFlow<State<PagingData<Screening>>> = _state
 
     fun search(name:String) {
         viewModelScope.launch {

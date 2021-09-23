@@ -21,7 +21,6 @@ class RoomModule {
         app,
         LocalStorage::class.java, Constants.DATABASE
     )
-        .addMigrations(LocalStorage.MIGRATION_1_2)
         .build()
 
     @Provides

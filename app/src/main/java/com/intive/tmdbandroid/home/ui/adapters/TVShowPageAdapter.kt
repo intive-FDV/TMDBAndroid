@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
-import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.AdapterListUpdateCallback
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListUpdateCallback
+import androidx.recyclerview.widget.RecyclerView
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.TVShowAsyncPagingDataDiffCallback
 import com.intive.tmdbandroid.databinding.ItemHorizontalListBinding
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.databinding.ItemTitleBinding
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 
-class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TVShowPageAdapter(private val clickListener: ((Screening) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val HEADER = 0
         private const val WATCHLIST = 1
@@ -44,8 +47,8 @@ class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Recycle
         }
     )
 
-    suspend fun submitData(tvShowPagingData: PagingData<TVShow>) {
-        differ.submitData(tvShowPagingData)
+    suspend fun submitData(screeningPagingData: PagingData<Screening>) {
+        differ.submitData(screeningPagingData)
     }
 
     private val watchlistAdapter = WatchlistAdapter(clickListener)
@@ -54,7 +57,7 @@ class TVShowPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Recycle
         return differ.itemCount + 3
     }
 
-    fun refreshWatchlistAdapter(list: List<TVShow>) {
+    fun refreshWatchlistAdapter(list: List<Screening>) {
         watchlistAdapter.submitList(list)
     }
 

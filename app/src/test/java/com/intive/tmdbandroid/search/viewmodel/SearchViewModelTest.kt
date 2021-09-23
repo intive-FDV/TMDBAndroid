@@ -6,7 +6,8 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
+import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.SearchUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -28,26 +29,25 @@ class SearchViewModelTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val testResultTVShowOrMoviePagingData = PagingData.from(
+    private val screening = PagingData.from(
         listOf(
-            ResultTVShowOrMovie(
+            Screening(
                 backdrop_path = "BACKDROP_PATH",
-                first_air_date = "1983-10-20",
-                genre_ids = listOf(1,2),
+                release_date = "1983-10-20",
+                genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
                 id = 1,
                 name = "Simona la Cacarisa",
-                original_name = "El cochiloco",
+                number_of_episodes = 5,
+                number_of_seasons = 2,
                 overview = "Simona la cacarisa, el cochiloco",
                 poster_path = "POSTER_PATH",
+                status = "Online",
                 vote_average = 10.5,
                 vote_count = 100,
+                popularity = 34.0,
                 media_type = "tv",
                 adult = false,
-                original_language = "en-US",
-                original_title = "Simona la Cacarisa",
-                popularity = 56.0,
-                release_date = "1983-10-20",
-                title = "Simona la Cacarisa",
+                genre_ids = null,
                 video = false
             )
         )
@@ -71,7 +71,7 @@ class SearchViewModelTest{
         `when`(searchUseCase.invoke(anyString())).thenReturn(
             flow {
                 emit(
-                    testResultTVShowOrMoviePagingData
+                    screening
                 )
             }
         )
@@ -79,7 +79,7 @@ class SearchViewModelTest{
         searchViewModel.search("Simona la Cacarisa")
 
         searchViewModel.uiState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(State.Success(testResultTVShowOrMoviePagingData))
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(screening))
         }
 
     }

@@ -20,8 +20,7 @@ import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
-import com.intive.tmdbandroid.model.Movie
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -78,14 +77,7 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        when(state.data) {
-                            is TVShow -> {
-                                setupUITVShow(binding, state.data)
-                            }
-                            is Movie -> {
-                                setupUIMovie(binding, state.data)
-                            }
-                        }
+                        setupUI(binding, state.data)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -125,28 +117,32 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUITVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
 
-        setImagesTVShow(binding, tvShow)
+        setImages(binding, screening)
 
-        tvShow.first_air_date?.let { setDate(binding, it) }
+        screening.release_date?.let { setDate(binding, it) }
 
-        setPercentageToCircularPercentage(binding, tvShow.vote_average)
+        setPercentageToCircularPercentage(binding, screening.vote_average)
 
-        setupToolbarTVShow(binding, tvShow)
+        setupToolbar(binding, screening)
 
-        binding.toolbar.title = tvShow.name
+        binding.toolbar.title = screening.name
 
-        binding.statusDetailTextView.text = tvShow.status
+        binding.statusDetailTextView.text = screening.status
 
-        val genresListText = tvShow.genres.map {
+        val genresListText = screening.genres?.map {
             it.name
         }.toString()
         val genresTextWithoutCharacters = genresListText.subSequence(1, genresListText.lastIndex)
         binding.genresDetailTextView.text = genresTextWithoutCharacters
 
+        binding.numberOfEpisodesDetailTextView.visibility = View.GONE
+        binding.numberOfSeasonsDetailTextView.visibility = View.GONE
+
         binding.numberOfSeasonsDetailTextView.text =
-            tvShow.number_of_seasons?.let {
+            screening.number_of_seasons?.let {
+                binding.numberOfSeasonsDetailTextView.visibility = View.VISIBLE
                 resources.getQuantityString(
                     R.plurals.numberOfSeasons,
                     it,
@@ -154,7 +150,8 @@ class DetailFragment : Fragment() {
                 )
             }
         binding.numberOfEpisodesDetailTextView.text =
-            tvShow.number_of_episodes?.let {
+            screening.number_of_episodes?.let {
+                binding.numberOfEpisodesDetailTextView.visibility = View.VISIBLE
                 resources.getQuantityString(
                     R.plurals.numberOfEpisodes,
                     it,
@@ -162,39 +159,10 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        binding.overviewDetailTextView.text = tvShow.overview
+        binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
-    }
-
-    private fun setupUIMovie(binding: FragmentDetailBinding, movie: Movie) {
-
-        setImagesMovie(binding, movie)
-
-        movie.release_date?.let { setDate(binding, it) }
-
-        setPercentageToCircularPercentage(binding, movie.vote_average)
-
-        setupToolbarMovie(binding, movie)
-
-        binding.toolbar.title = movie.original_title
-
-        binding.statusDetailTextView.text = movie.status
-
-        binding.numberOfEpisodesDetailTextView.visibility = View.GONE
-        binding.numberOfSeasonsDetailTextView.visibility = View.GONE
-
-        val genresListText = movie.genres.map {
-            it.name
-        }.toString()
-        val genresTextWithoutCharacters = genresListText.subSequence(1, genresListText.lastIndex)
-        binding.genresDetailTextView.text = genresTextWithoutCharacters
-
-        binding.overviewDetailTextView.text = movie.overview
-        binding.coordinatorContainerDetail.visibility = View.VISIBLE
-
-        screeningItemId?.let { viewModel.existMovieInWatchlist(it) }
     }
 
     private fun setPercentageToCircularPercentage(
@@ -231,13 +199,13 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setImagesTVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setImages(binding: FragmentDetailBinding, screening: Screening) {
         val options = RequestOptions()
             .placeholder(R.drawable.ic_image)
             .error(R.drawable.ic_image)
 
-        val posterURL = resources.getString(R.string.base_imageURL) + tvShow.poster_path
-        val backdropPosterURL = resources.getString(R.string.base_imageURL) + tvShow.backdrop_path
+        val posterURL = resources.getString(R.string.base_imageURL) + screening.poster_path
+        val backdropPosterURL = resources.getString(R.string.base_imageURL) + screening.backdrop_path
 
         val glide = Glide.with(this)
 
@@ -250,26 +218,7 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
     }
 
-    private fun setImagesMovie(binding: FragmentDetailBinding, movie: Movie) {
-        val options = RequestOptions()
-            .placeholder(R.drawable.ic_image)
-            .error(R.drawable.ic_image)
-
-        val posterURL = resources.getString(R.string.base_imageURL) + movie.poster_path
-        val backdropPosterURL = resources.getString(R.string.base_imageURL) + movie.backdrop_path
-
-        val glide = Glide.with(this)
-
-        glide.load(posterURL)
-            .apply(options)
-            .into(binding.imageDetailImageView)
-
-        glide.load(backdropPosterURL)
-            .apply(options)
-            .into(binding.backgroundImageToolbarLayout)
-    }
-
-    private fun setupToolbarTVShow(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -278,9 +227,9 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
-                        viewModel.addToWatchlist(tvShow.toTVShowORMEntity())
+                        viewModel.addToWatchlist(screening)
                     } else {
-                        viewModel.deleteFromWatchlist(tvShow.toTVShowORMEntity())
+                        viewModel.deleteFromWatchlist(screening)
                     }
                     true
                 }
@@ -298,37 +247,6 @@ class DetailFragment : Fragment() {
             } else binding.popularityCard.visibility = View.VISIBLE
         })
     }
-
-    private fun setupToolbarMovie(binding: FragmentDetailBinding, movie: Movie) {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        val toolbar = binding.toolbar
-        toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.ic_heart_watchlist -> {
-                    if (!isSaveOnWatchlist) {
-                        viewModel.insertMovieToWatchlist(movie.toMovieORMEntity())
-                    } else {
-                        viewModel.deleteMovieFromWatchlist(movie.toMovieORMEntity())
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-        binding.collapsingToolbarLayout.setupWithNavController(
-            toolbar,
-            navController,
-            appBarConfiguration
-        )
-        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (verticalOffset < -500) {
-                binding.popularityCard.visibility = View.INVISIBLE
-            } else binding.popularityCard.visibility = View.VISIBLE
-        })
-    }
-
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {
         val watchlistItem = binding.toolbar.menu.findItem(R.id.ic_heart_watchlist)

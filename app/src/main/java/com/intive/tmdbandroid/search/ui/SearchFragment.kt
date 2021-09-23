@@ -17,7 +17,7 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
-import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,9 +27,9 @@ import kotlinx.coroutines.flow.collectLatest
 class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val clickListener = { tvShowOrMovie: ResultTVShowOrMovie ->
-        val isMovie = tvShowOrMovie.media_type == "movie"
-        val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShowOrMovie.id, isMovie)
+    private val clickListener = { screening: Screening ->
+        val isMovie = screening.media_type == "movie"
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
         findNavController().navigate(action)
     }
 
@@ -94,13 +94,13 @@ class SearchFragment: Fragment() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultTVShowOrMovie ->
+            viewModel.uiState.collectLatest { screening ->
 
-                when (resultTVShowOrMovie) {
-                    is State.Success<PagingData<ResultTVShowOrMovie>> -> {
+                when (screening) {
+                    is State.Success<PagingData<Screening>> -> {
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        searchAdapter.submitData(resultTVShowOrMovie.data)
+                        searchAdapter.submitData(screening.data)
                     }
                     is State.Error -> {
                         binding.layoutError.errorContainer.visibility = View.VISIBLE

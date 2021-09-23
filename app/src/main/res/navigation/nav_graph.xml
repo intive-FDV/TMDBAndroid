@@ -38,7 +38,7 @@
         android:name="com.intive.tmdbandroid.search.ui.SearchFragment"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_TVShowDetail"
+            android:id="@+id/action_searchFragment_to_DetailFragment"
             app:destination="@id/detailFragmentDest"
             app:popUpTo="@id/searchFragmentDest" />
     </fragment>

@@ -13,13 +13,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.HeaderResultsSearchBinding
 import com.intive.tmdbandroid.databinding.ItemFoundSearchBinding
-import com.intive.tmdbandroid.entity.ResultTVShowOrMovie
+import com.intive.tmdbandroid.model.Screening
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
 class TVShowSearchAdapter(
-    private val clickListener: ((ResultTVShowOrMovie) -> Unit)
+    private val clickListener: ((Screening) -> Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var query: String = ""
@@ -32,7 +32,7 @@ class TVShowSearchAdapter(
     }
 
     val differ = AsyncPagingDataDiffer(
-        TVShowAsyncPagingDataDiffCallback(),
+        ScreeningAsyncPagingDataDiffCallback(),
         object : ListUpdateCallback {
             override fun onInserted(position: Int, count: Int) {
                 adapterCallback.onInserted(position + 1, count)
@@ -53,8 +53,8 @@ class TVShowSearchAdapter(
         }
     )
 
-    suspend fun submitData(tvShowOrMoviePagingData: PagingData<ResultTVShowOrMovie>) {
-        differ.submitData(tvShowOrMoviePagingData)
+    suspend fun submitData(screening: PagingData<Screening>) {
+        differ.submitData(screening)
     }
 
     override fun getItemCount(): Int {
@@ -105,7 +105,7 @@ class TVShowSearchAdapter(
 
     inner class SearchResultHolder(
         private val binding: ItemFoundSearchBinding,
-        private val clickListener: ((ResultTVShowOrMovie) -> Unit)
+        private val clickListener: ((Screening) -> Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val itemTitle = binding.itemTitleSearch
@@ -113,19 +113,17 @@ class TVShowSearchAdapter(
         private val itemRating = binding.itemRatingSearch
         private val itemMediaType = binding.itemMediaTypeSearch
 
-        fun bind(item: ResultTVShowOrMovie) {
+        fun bind(item: Screening) {
 
             itemView.setOnClickListener {
                 clickListener.invoke(item)
             }
 
             try {
-                if (!item.first_air_date.isNullOrBlank() || !item.release_date.isNullOrBlank()) {
+                if (!item.release_date.isNullOrBlank()) {
                     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val dateStr = item.first_air_date ?: item.release_date
-                    val date: Date? = dateStr?.let {
-                        formatter.parse(it)
-                    }
+                    val dateStr = item.release_date
+                    val date: Date? = formatter.parse(dateStr)
                     val formatter2 = SimpleDateFormat("yyyy", Locale.getDefault())
                     val dateStr2 = date?.let {
                         formatter2.format(it)
@@ -136,7 +134,7 @@ class TVShowSearchAdapter(
                 Timber.e(e)
             }
 
-            itemTitle.text = item.original_name ?: item.original_title
+            itemTitle.text = item.name
             itemRating.rating = item.vote_average.toFloat() / 2
             itemMediaType.text = item.media_type.uppercase()
 
@@ -157,17 +155,17 @@ class TVShowSearchAdapter(
         }
     }
 
-    private class TVShowAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<ResultTVShowOrMovie>() {
+    private class ScreeningAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<Screening>() {
         override fun areItemsTheSame(
-            oldItem: ResultTVShowOrMovie,
-            newItem: ResultTVShowOrMovie
+            oldItem: Screening,
+            newItem: Screening
         ): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: ResultTVShowOrMovie,
-            newItem: ResultTVShowOrMovie
+            oldItem: Screening,
+            newItem: Screening
         ): Boolean {
             return oldItem == newItem
         }
