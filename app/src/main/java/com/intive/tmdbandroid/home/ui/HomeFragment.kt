@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             viewModel.popularTVShows()
         }
 
@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.fragmentHomeToolbar.setupWithNavController(navController, appBarConfiguration)
         binding.fragmentHomeToolbar.inflateMenu(R.menu.options_menu)
-        binding.fragmentHomeToolbar.setOnMenuItemClickListener{
+        binding.fragmentHomeToolbar.setOnMenuItemClickListener {
             binding.fragmentHomeToolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
             true
         }
@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
     private fun subscribeWatchlistData(binding: FragmentHomeBinding) {
         lifecycleScope.launchWhenStarted {
             viewModel.watchlistUIState.collectLatest {
-                when(it) {
+                when (it) {
                     is State.Success<List<TVShow>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE

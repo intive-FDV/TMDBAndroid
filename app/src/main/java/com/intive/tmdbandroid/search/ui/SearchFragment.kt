@@ -33,7 +33,6 @@ class SearchFragment: Fragment() {
     }
 
     private val searchAdapter = TVShowSearchAdapter(clickListener)
-
     private var searchViewQuery: String = ""
 
     override fun onCreateView(
@@ -62,8 +61,12 @@ class SearchFragment: Fragment() {
                 return false
             }
         })
+        if(savedInstanceState!=null){
+            binding.searchView.clearFocus()
+            subscribeViewModel(binding)
+        }
         initViews(binding)
-        if(searchViewQuery.isEmpty()){
+        if(searchViewQuery.isEmpty() && savedInstanceState==null){
             binding.searchView.requestFocus()
             val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             binding.searchView.postDelayed(  {
