@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.intive.tmdbandroid.databinding.ItemScreeningBinding
+import com.intive.tmdbandroid.databinding.ItemScreeningWatchlistBinding
 import com.intive.tmdbandroid.model.TVShow
 import timber.log.Timber
 
-class WatchlistAdapter(private val clickListener: ((TVShow) -> Unit)) : ListAdapter<TVShow, TVShowHolder>(COMPARATOR) {
+class WatchlistAdapter(private val clickListener: ((TVShow) -> Unit)) : ListAdapter<TVShow, WatchlistHolder>(COMPARATOR) {
     var widthSize: Int = 0
 
     companion object {
@@ -18,16 +18,16 @@ class WatchlistAdapter(private val clickListener: ((TVShow) -> Unit)) : ListAdap
         }
     }
 
-    override fun onBindViewHolder(holder: TVShowHolder, position: Int) {
+    override fun onBindViewHolder(holder: WatchlistHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder {
-        val binding = ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WatchlistHolder {
+        val binding = ItemScreeningWatchlistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         Timber.i("MAS - width: $widthSize")
-        binding.screeningContainer.layoutParams.width = widthSize
+        binding.containerWatchlistScreening.layoutParams.width = widthSize
 
-        return TVShowHolder(
+        return WatchlistHolder(
             binding,
             clickListener
         )

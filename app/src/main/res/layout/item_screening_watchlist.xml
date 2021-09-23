@@ -9,14 +9,14 @@
     android:layout_margin="8dp"
     android:paddingBottom="8dp"
     app:cardCornerRadius="5dp"
-    android:elevation="5dp">
+    app:cardElevation="4dp">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/backdrop_item_watchlist"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:foregroundGravity="fill_horizontal|fill_vertical"
             app:layout_constraintDimensionRatio="1:0.56"
