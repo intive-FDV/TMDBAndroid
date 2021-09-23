@@ -182,6 +182,9 @@ class DetailFragment : Fragment() {
 
         binding.statusDetailTextView.text = movie.status
 
+        binding.numberOfEpisodesDetailTextView.visibility = View.GONE
+        binding.numberOfSeasonsDetailTextView.visibility = View.GONE
+
         val genresListText = movie.genres.map {
             it.name
         }.toString()
