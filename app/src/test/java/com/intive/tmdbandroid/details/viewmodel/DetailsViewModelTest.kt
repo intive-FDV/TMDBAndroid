@@ -109,7 +109,7 @@ class DetailsViewModelTest {
         detailViewModel.tVShows(2)
 
         detailViewModel.uiState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(State.Success(tvShow))
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(tvShow.toScreening()))
         }
     }
 
