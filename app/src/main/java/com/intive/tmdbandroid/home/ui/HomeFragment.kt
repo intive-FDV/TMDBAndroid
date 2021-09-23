@@ -36,8 +36,10 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(savedInstanceState==null){
+            viewModel.popularTVShows()
+        }
 
-        viewModel.popularTVShows()
     }
 
     override fun onResume() {

@@ -58,7 +58,10 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tvShowId?.let {
-            viewModel.tVShows(it)
+            if(savedInstanceState==null){
+                viewModel.tVShows(it)
+            }
+
         }
     }
 
