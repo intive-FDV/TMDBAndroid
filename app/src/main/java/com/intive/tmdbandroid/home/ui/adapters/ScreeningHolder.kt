@@ -6,11 +6,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TVShowHolder(binding: ItemScreeningBinding, private val clickListener: ((TVShow) -> Unit)) : RecyclerView.ViewHolder(binding.root) {
+class ScreeningHolder(binding: ItemScreeningBinding, private val clickListener: ((Screening) -> Unit)) : RecyclerView.ViewHolder(binding.root) {
     private val poster = binding.screeningPoster
     private val popularity = binding.screeningPopularity
     private val average = binding.circularPercentage
@@ -20,7 +20,7 @@ class TVShowHolder(binding: ItemScreeningBinding, private val clickListener: ((T
     private val context = binding.root.context
     private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
-    fun bind (item: TVShow) {
+    fun bind (item: Screening) {
         itemView.setOnClickListener {
             clickListener.invoke(item)
         }
@@ -52,7 +52,7 @@ class TVShowHolder(binding: ItemScreeningBinding, private val clickListener: ((T
         title.text = item.name
 
         try {
-            val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
+            val dateFormat = item.release_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
             val stringDate = dateFormat?.let { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(it) }
             date.text = stringDate
         } catch (e: Exception) {

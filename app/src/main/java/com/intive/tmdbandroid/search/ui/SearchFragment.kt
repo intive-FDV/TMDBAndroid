@@ -17,8 +17,8 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
-import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
+import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.search.ui.adapters.ScreeningSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -27,12 +27,13 @@ import kotlinx.coroutines.flow.collectLatest
 class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val clickListener = { tvShow: TVShow ->
-        val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
+    private val clickListener = { screening: Screening ->
+        val isMovie = screening.media_type == "movie"
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
         findNavController().navigate(action)
     }
 
-    private val searchAdapter = TVShowSearchAdapter(clickListener)
+    private val searchAdapter = ScreeningSearchAdapter(clickListener)
 
     private var searchViewQuery: String = ""
 
@@ -93,13 +94,13 @@ class SearchFragment: Fragment() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultTVShow ->
+            viewModel.uiState.collectLatest { screening ->
 
-                when (resultTVShow) {
-                    is State.Success<PagingData<TVShow>> -> {
+                when (screening) {
+                    is State.Success<PagingData<Screening>> -> {
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        searchAdapter.submitData(resultTVShow.data)
+                        searchAdapter.submitData(screening.data)
                     }
                     is State.Error -> {
                         binding.layoutError.errorContainer.visibility = View.VISIBLE
