@@ -10,13 +10,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 
-class ScreeningPageAdapter(private val clickListener: ((TVShow) -> Unit)) : PagingDataAdapter<TVShow, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
+class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : PagingDataAdapter<Screening, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {
-        private val COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
-            override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
-            override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
+        private val COMPARATOR = object : DiffUtil.ItemCallback<Screening>() {
+            override fun areItemsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
+            override fun areContentsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
         }
     }
 
@@ -29,7 +30,7 @@ class ScreeningPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Pagi
         clickListener
     )
 
-    class ScreeningHolder(binding: ItemScreenengSmallBinding, private val clickListener: ((TVShow) -> Unit)) : RecyclerView.ViewHolder(binding.root)  {
+    class ScreeningHolder(binding: ItemScreenengSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
         private val title = binding.itemTitle
         private val backdrop = binding.itemBackdrop
         private val date = binding.itemDate
@@ -39,7 +40,7 @@ class ScreeningPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Pagi
         private val context = binding.root.context
         private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
-        fun bind (item: TVShow) {
+        fun bind (item: Screening) {
             itemView.setOnClickListener {
                 clickListener.invoke(item)
             }
@@ -60,7 +61,7 @@ class ScreeningPageAdapter(private val clickListener: ((TVShow) -> Unit)) : Pagi
 
             try {
                 //val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
-                date.text = item.first_air_date?.let { context.resources.getString(R.string.year, it.substring(0..3)) }
+                date.text = item.release_date?.let { context.resources.getString(R.string.year, it.substring(0..3)) }
             } catch (e: Exception) {
                 date.text = ""
             }
