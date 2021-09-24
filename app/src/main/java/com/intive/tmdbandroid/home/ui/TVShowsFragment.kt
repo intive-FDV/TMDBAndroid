@@ -23,7 +23,9 @@ import kotlin.math.floor
 
 @AndroidEntryPoint
 class TVShowsFragment : Fragment() {
-    private val viewModel: TVShowsViewModel by viewModels()
+    private val viewModel: TVShowsViewModel by navGraphViewModels(R.id.bottom_nav_graph) {
+        defaultViewModelProviderFactory
+    }
 
     private val clickListener = { screening: Screening ->
 //        val action = WatchlistFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
@@ -36,7 +38,7 @@ class TVShowsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            Timber.i("MAS - instance = null")
+            Timber.i("MAS - tvshows instance = null")
             viewModel.popularTVShows()
         }
     }
@@ -94,19 +96,12 @@ class TVShowsFragment : Fragment() {
         rvPopularTVShows.apply {
             val displayMetrics = context.resources.displayMetrics
             val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-            Timber.i("MAS - dpWidth: $dpWidth")
 
             val scaling = resources.getInteger(R.integer.screening_width)
             val columnCount = floor(dpWidth / scaling).toInt()
-            Timber.i("MAS - columnCount: $columnCount")
 
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = tvShowPageAdapter
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
     }
 }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
@@ -22,7 +23,9 @@ import kotlin.math.floor
 
 @AndroidEntryPoint
 class WatchlistFragment : Fragment() {
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.bottom_nav_graph) {
+        defaultViewModelProviderFactory
+    }
 
     private val clickListener = { screening: Screening ->
 //        val action = HomeFragmentDirections.actionHomeFragmentDestToDetailFragment(screening.id)
@@ -81,11 +84,9 @@ class WatchlistFragment : Fragment() {
         rvWatchlist.apply {
             val displayMetrics = context.resources.displayMetrics
             val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-            Timber.i("MAS - dpWidth: $dpWidth")
 
             val scaling = resources.getInteger(R.integer.screening_width)
             val columnCount = floor(dpWidth / scaling).toInt()
-            Timber.i("MAS - columnCount: $columnCount")
 
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = watchlistAdapter

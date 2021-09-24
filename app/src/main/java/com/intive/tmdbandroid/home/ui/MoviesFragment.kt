@@ -27,7 +27,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
-    private val viewModel: MoviesViewModel by viewModels()
+    private val viewModel: MoviesViewModel by navGraphViewModels(R.id.bottom_nav_graph) {
+        defaultViewModelProviderFactory
+    }
 
     private val clickListener = { screening: Screening ->
 //        val action = WatchlistFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
@@ -35,13 +37,12 @@ class MoviesFragment : Fragment() {
         Toast.makeText(context, screening.name, Toast.LENGTH_SHORT).show()
     }
     private val moviePageAdapter = ScreeningPageAdapter(clickListener)
-    private lateinit var rvPopularMovies: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            Timber.i("MAS - instance = null")
+            Timber.i("MAS - movies instance == null")
             viewModel.popularMovies()
         }
     }
@@ -66,15 +67,15 @@ class MoviesFragment : Fragment() {
     private fun subscribePopularData(binding: FragmentMoviesBinding) {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultTVShows ->
-                Timber.i("MAS - popular tvshows status: $resultTVShows")
+            viewModel.uiState.collectLatest { resultMovies ->
+                Timber.i("MAS - popular movies status: $resultMovies")
 
-                when (resultTVShows) {
+                when (resultMovies) {
                     is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
 
-                        moviePageAdapter.submitData(resultTVShows.data)
+                        moviePageAdapter.submitData(resultMovies.data)
 
                         if (moviePageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE
@@ -94,16 +95,14 @@ class MoviesFragment : Fragment() {
     }
 
     private fun initViews(binding: FragmentMoviesBinding) {
-        rvPopularMovies = binding.rvPopularMovies
+        val rvPopularMovies = binding.rvPopularMovies
 
         rvPopularMovies.apply {
             val displayMetrics = context.resources.displayMetrics
             val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-            Timber.i("MAS - dpWidth: $dpWidth")
 
             val scaling = resources.getInteger(R.integer.screening_width)
             val columnCount = floor(dpWidth / scaling).toInt()
-            Timber.i("MAS - columnCount: $columnCount")
 
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = moviePageAdapter
