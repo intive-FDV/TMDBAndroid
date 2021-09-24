@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
-import com.intive.tmdbandroid.home.ui.adapters.TVShowPageAdapter
+import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
@@ -25,11 +25,11 @@ import kotlin.math.floor
 class WatchlistFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
-    private val clickListener = { tvShow: TVShow ->
-        val action = WatchlistFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
-        findNavController().navigate(action)
+    private val clickListener = { screening: Screening ->
+//        val action = HomeFragmentDirections.actionHomeFragmentDestToDetailFragment(screening.id)
+//        findNavController().navigate(action)
     }
-    private val tvShowPageAdapter = TVShowPageAdapter(clickListener)
+    private val screeningPageAdapter = ScreeningPageAdapter(clickListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class WatchlistFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.watchlistTVShows()
+        viewModel.watchlistScreening()
     }
 
     override fun onCreateView(
@@ -67,13 +67,13 @@ class WatchlistFragment : Fragment() {
                 Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
-                    is State.Success<PagingData<TVShow>> -> {
+                    is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
 
-                        tvShowPageAdapter.submitData(resultTVShows.data)
+                        screeningPageAdapter.submitData(resultTVShows.data)
 
-                        if (tvShowPageAdapter.itemCount == 0) {
+                        if (screeningPageAdapter.itemCount == 0) {
                             binding.layoutEmpty.root.visibility = View.VISIBLE
                         } else binding.layoutEmpty.root.visibility = View.GONE
                     }
@@ -94,10 +94,10 @@ class WatchlistFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.watchlistUIState.collectLatest {
                 when(it) {
-                    is State.Success<List<TVShow>> -> {
+                    is State.Success<List<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        tvShowPageAdapter.refreshWatchlistAdapter(it.data)
+                        screeningPageAdapter.refreshWatchlistAdapter(it.data)
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
@@ -134,10 +134,10 @@ class WatchlistFragment : Fragment() {
                 }
             }
 
-            tvShowPageAdapter.widthSize = ((floor(dpWidth / columnCount) - resources.getInteger(R.integer.short_padding)) * displayMetrics.density).toInt()
+            screeningPageAdapter.widthSize = ((floor(dpWidth / columnCount) - resources.getInteger(R.integer.short_padding)) * displayMetrics.density).toInt()
 
             layoutManager = manager
-            adapter = tvShowPageAdapter
+            adapter = screeningPageAdapter
         }
     }
 }

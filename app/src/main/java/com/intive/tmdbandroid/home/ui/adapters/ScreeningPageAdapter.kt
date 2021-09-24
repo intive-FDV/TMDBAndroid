@@ -3,20 +3,14 @@ package com.intive.tmdbandroid.home.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.paging.AsyncPagingDataDiffer
-import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.AdapterListUpdateCallback
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
 import com.intive.tmdbandroid.model.TVShow
-import java.text.SimpleDateFormat
-import java.util.*
 
 class ScreeningPageAdapter(private val clickListener: ((TVShow) -> Unit)) : PagingDataAdapter<TVShow, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {
