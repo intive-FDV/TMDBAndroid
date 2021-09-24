@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
@@ -13,6 +14,7 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentTvshowsBinding
 import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.TVShowsViewModel
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -23,17 +25,20 @@ import kotlin.math.floor
 class TVShowsFragment : Fragment() {
     private val viewModel: TVShowsViewModel by viewModels()
 
-    private val clickListener = { tvShow: TVShow ->
+    private val clickListener = { screening: Screening ->
 //        val action = WatchlistFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
 //        findNavController().navigate(action)
-        Toast.makeText(context, tvShow.name, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, screening.name, Toast.LENGTH_SHORT).show()
     }
     private val tvShowPageAdapter = ScreeningPageAdapter(clickListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.popularTVShows()
+        if (savedInstanceState == null) {
+            Timber.i("MAS - instance = null")
+            viewModel.popularTVShows()
+        }
     }
 
     override fun onCreateView(
@@ -53,10 +58,6 @@ class TVShowsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     private fun subscribePopularData(binding: FragmentTvshowsBinding) {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
@@ -64,7 +65,7 @@ class TVShowsFragment : Fragment() {
                 Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
-                    is State.Success<PagingData<TVShow>> -> {
+                    is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
 
@@ -99,10 +100,13 @@ class TVShowsFragment : Fragment() {
             val columnCount = floor(dpWidth / scaling).toInt()
             Timber.i("MAS - columnCount: $columnCount")
 
-            val manager = GridLayoutManager(context, columnCount)
-
-            layoutManager = manager
+            layoutManager = GridLayoutManager(context, columnCount)
             adapter = tvShowPageAdapter
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
     }
 }
