@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -29,7 +28,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private val clickListener = { tvShow: TVShow ->
-        val action = HomeFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
+        val action = HomeFragmentDirections.actionHomeFragmentDestToDetailAndSearchActivity(tvShow.id)
         findNavController().navigate(action)
     }
     private val tvShowPageAdapter = TVShowPageAdapter(clickListener)
@@ -66,7 +65,7 @@ class HomeFragment : Fragment() {
         binding.fragmentHomeToolbar.setupWithNavController(navController, appBarConfiguration)
         binding.fragmentHomeToolbar.inflateMenu(R.menu.options_menu)
         binding.fragmentHomeToolbar.setOnMenuItemClickListener{
-            binding.fragmentHomeToolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
+            findNavController().navigate(R.id.action_homeFragmentDest_to_detailAndSearchActivity)
             true
         }
     }

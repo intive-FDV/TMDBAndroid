@@ -28,7 +28,7 @@ class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
     private val clickListener = { tvShow: TVShow ->
-        val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
+        val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(tvShow.id)
         findNavController().navigate(action)
     }
 

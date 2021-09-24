@@ -14,9 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TMDBAndroid"
         tools:ignore="AllowBackup">
-
         <activity
-            android:name=".home.ui.HomeActivity"
+            android:name=".activities.DetailAndSearchActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

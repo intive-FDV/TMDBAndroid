@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.home.ui
+package com.intive.tmdbandroid.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
