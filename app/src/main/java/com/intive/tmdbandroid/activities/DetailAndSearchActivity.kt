@@ -15,14 +15,21 @@ class DetailAndSearchActivity : AppCompatActivity() {
         val args = intent.extras
         args?.let {
             val screeningId = it.getInt("screeningID")
+            val isMovie = it.getBoolean("isMovieBoolean")
 
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val navController = navHostFragment.navController
 
-            if (screeningId != 0){
-                navController.navigate(R.id.action_emptyFragment_to_detailFragment,
-                    bundleOf("screeningID" to screeningId))
-            }else {
+            if (screeningId != 0) {
+                navController.navigate(
+                    R.id.action_emptyFragment_to_detailFragment,
+                    bundleOf(
+                        "screeningID" to screeningId,
+                        "isMovieBoolean" to isMovie
+                    )
+                )
+            } else {
                 navController.navigate(R.id.action_emptyFragment_to_searchFragment)
             }
         }

@@ -28,7 +28,8 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private val clickListener = { screening: Screening ->
-        val action = HomeFragmentDirections.actionHomeFragmentDestToDetailAndSearchActivity(screening.id)
+        val isMovie: Boolean = screening.media_type == "movie"
+        val action = HomeFragmentDirections.actionHomeFragmentDestToDetailAndSearchActivity(screening.id, isMovie)
         findNavController().navigate(action)
     }
     private val screeningPageAdapter = ScreeningPageAdapter(clickListener)

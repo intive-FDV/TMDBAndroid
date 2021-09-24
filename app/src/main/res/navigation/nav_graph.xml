@@ -24,6 +24,10 @@
         <argument
             android:name="screeningID"
             app:argType="integer"/>
+        <argument
+            android:name="isMovieBoolean"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </activity>
 
 </navigation>
