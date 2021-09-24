@@ -24,7 +24,7 @@ class WatchlistHolder(binding: ItemScreeningWatchlistBinding, private val clickL
             .placeholder(R.drawable.ic_image)
             .error(R.drawable.ic_image)
 
-        val backdropURL = imgUrl + item.backdrop_path
+        val backdropURL = imgUrl + (item.backdrop_path ?: item.poster_path)
 
         Glide.with(context)
             .load(backdropURL)
