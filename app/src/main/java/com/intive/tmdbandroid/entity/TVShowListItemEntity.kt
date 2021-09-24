@@ -16,6 +16,6 @@ data class TVShowListItemEntity(
     fun toTVShow() : TVShow {
         return TVShow(backdrop_path, emptyList(), first_air_date, emptyList(), id, null, name,
             null, null, original_name, overview, poster_path, null,
-            vote_average, vote_count)
+            vote_average, vote_count, emptyList())
     }
 }

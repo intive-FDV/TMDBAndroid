@@ -17,11 +17,12 @@ data class TVShow(
     val poster_path: String?,
     val status: String?,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    val networks: List<Network>
 ) {
     fun toTVShowORMEntity() : TVShowORMEntity {
         return TVShowORMEntity(backdrop_path, created_by, first_air_date, genres, id, last_air_date, name,
             number_of_episodes, number_of_seasons, original_name, overview, poster_path, status,
-            vote_average, vote_count)
+            vote_average, vote_count, networks)
     }
 }
