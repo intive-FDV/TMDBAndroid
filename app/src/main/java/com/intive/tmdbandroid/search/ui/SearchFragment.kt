@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class SearchFragment: Fragment() {
     private val viewModel: SearchViewModel by viewModels()
+    private var isLoad:Boolean = false;
 
     private val clickListener = { tvShow: TVShow ->
         val action = SearchFragmentDirections.actionSearchFragmentToTVShowDetail(tvShow.id)
@@ -40,6 +41,9 @@ class SearchFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if (savedInstanceState != null) {
+            isLoad = savedInstanceState.getBoolean("isLoad", false)
+        }
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
         binding.layoutProgressbar.progressBar.visibility = View.GONE
         setupToolbar(binding)
@@ -56,17 +60,18 @@ class SearchFragment: Fragment() {
                     viewModel.search(query)
                     searchViewQuery = query
                     subscribeViewModel(binding)
+                    isLoad=true
                     return true
                 }
                 return false
             }
         })
-        if(savedInstanceState!=null){
+        if(savedInstanceState!=null && isLoad){
             binding.searchView.clearFocus()
             subscribeViewModel(binding)
         }
         initViews(binding)
-        if(searchViewQuery.isEmpty() && savedInstanceState==null){
+        if(searchViewQuery.isEmpty() && !isLoad){
             binding.searchView.requestFocus()
             val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             binding.searchView.postDelayed(  {
@@ -125,5 +130,10 @@ class SearchFragment: Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = searchAdapter
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("isLoad", isLoad)
     }
 }
