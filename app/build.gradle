@@ -23,8 +23,8 @@ android {
     def _patch
 
     def versionPropsFile = file('version.properties')
-    def _versionCodeHash   = 'git rev-parse --verify --short HEAD'.execute().text.trim()
-    def _versionCode   = 'git rev-list --all --count'.execute().text.trim().toInteger()
+    def _versionCodeHash = 'git rev-parse --verify --short HEAD'.execute().text.trim()
+    def _versionCode = 'git rev-list --all --count'.execute().text.trim().toInteger()
     if (versionPropsFile.canRead()) {
         Properties versionProps = new Properties()
 
@@ -33,8 +33,7 @@ android {
         _patch = versionProps['PATCH'].toInteger()
         _major = versionProps['MAJOR'].toInteger()
         _minor = versionProps['MINOR'].toInteger()
-    }
-    else {
+    } else {
         throw new GradleException("Could not read version.properties!")
     }
 
@@ -51,17 +50,24 @@ android {
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/3/\"")
         buildConfigField("String", "API_KEY", "\"dc41c63c639111ed0845809d99175035\"")
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
             def fileNaming = "TMDBAndroid"
             if (variant.buildType.name.equals("release"))
-                fileNaming = fileNaming+"-Release"
+                fileNaming = fileNaming + "-Release"
             else
-                fileNaming = fileNaming+"-Debug"
+                fileNaming = fileNaming + "-Debug"
 
-            outputFileName = fileNaming+"-" + _versionName+".apk"
+            outputFileName = fileNaming + "-" + _versionName + ".apk"
 
         }
     }

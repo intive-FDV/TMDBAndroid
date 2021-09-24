@@ -5,7 +5,7 @@ import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.model.Genre
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -28,24 +28,26 @@ class SearchTVShowUseCaseTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val testTVShowPagingData = PagingData.from(
+    private val screening = PagingData.from(
         listOf(
-            TVShow(
+            Screening(
                 backdrop_path = "BACKDROP_PATH",
-                first_air_date = "1983-10-20",
-                genres = listOf(Genre(1, "genre1"), Genre(2,"genre2")),
+                release_date = "1983-10-20",
+                genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
                 id = 1,
                 name = "Simona la Cacarisa",
-                original_name = "El cochiloco",
-                overview = "Simona la cacarisa, el cochiloco",
-                poster_path = "POSTER_PATH",
-                vote_average = 10.5,
-                vote_count = 100,
-                created_by = emptyList(),
-                last_air_date = "1990-09-25",
                 number_of_episodes = 5,
                 number_of_seasons = 2,
-                status = "Online"
+                overview = "Simona la cacarisa, el cochiloco",
+                poster_path = "POSTER_PATH",
+                status = "Online",
+                vote_average = 10.5,
+                vote_count = 100,
+                popularity = 34.0,
+                media_type = "tv",
+                adult = false,
+                genre_ids = null,
+                video = false
             )
         )
     )
@@ -67,14 +69,14 @@ class SearchTVShowUseCaseTest {
                 .thenReturn(
                     flow {
                         emit(
-                            testTVShowPagingData
+                            screening
                         )
                     }
                 )
 
             val actual = searchUseCase("cristina kirchner")
             actual.test {
-                Assert.assertEquals(awaitItem(), testTVShowPagingData)
+                Assert.assertEquals(awaitItem(), screening)
                 awaitComplete()
             }
             Mockito.verify(catalogRepository, Mockito.only()).search("cristina kirchner")
