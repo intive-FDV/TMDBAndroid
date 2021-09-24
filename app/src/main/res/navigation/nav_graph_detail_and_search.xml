@@ -7,26 +7,28 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        tools:layout="@layout/fragment_search"
         android:name="com.intive.tmdbandroid.search.ui.SearchFragment"
-        android:label="SearchFragment" >
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_detailFragment"
             app:destination="@id/detailFragment"
             app:popUpTo="@id/searchFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.intive.tmdbandroid.details.ui.DetailFragment"
-        tools:layout="@layout/fragment_detail" >
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="screeningID"
             app:argType="integer" />
     </fragment>
+
     <fragment
         android:id="@+id/emptyFragment"
         android:name="com.intive.tmdbandroid.emptyfragment.EmptyFragment"
-        android:label="EmptyFragment" >
+        android:label="EmptyFragment">
         <action
             android:id="@+id/action_emptyFragment_to_searchFragment"
             app:destination="@id/searchFragment"
@@ -38,4 +40,5 @@
             app:popUpTo="@id/emptyFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
 </navigation>

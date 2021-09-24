@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
 import com.intive.tmdbandroid.model.TVShow
@@ -78,7 +79,7 @@ class SearchFragment: Fragment() {
 
     private fun setupToolbar(binding: FragmentSearchBinding) {
         val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.searchFragment))
         val toolbar = binding.fragmentSearchToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }

@@ -213,7 +213,7 @@ class DetailFragment : Fragment() {
 
     private fun setupToolbar(binding: FragmentDetailBinding, tvShow: TVShow) {
         val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.detailFragment))
         val toolbar = binding.toolbar
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.setOnMenuItemClickListener {
