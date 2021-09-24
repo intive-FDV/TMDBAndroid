@@ -41,7 +41,7 @@ class HomeViewModel @Inject internal constructor(
         }
     }
 
-    fun watchlistTVShows() {
+    fun watchlistScreening() {
         viewModelScope.launch {
             getAllItemsInWatchlistUseCase()
                 .catch {

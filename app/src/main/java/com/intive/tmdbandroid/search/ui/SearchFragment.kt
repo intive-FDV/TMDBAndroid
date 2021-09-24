@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
 import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.search.ui.adapters.TVShowSearchAdapter
+import com.intive.tmdbandroid.search.ui.adapters.ScreeningSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -33,7 +33,7 @@ class SearchFragment: Fragment() {
         findNavController().navigate(action)
     }
 
-    private val searchAdapter = TVShowSearchAdapter(clickListener)
+    private val searchAdapter = ScreeningSearchAdapter(clickListener)
 
     private var searchViewQuery: String = ""
 

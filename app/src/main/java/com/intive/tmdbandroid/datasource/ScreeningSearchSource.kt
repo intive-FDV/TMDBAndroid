@@ -7,7 +7,7 @@ import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.model.Screening
 import kotlinx.coroutines.flow.collect
 
-class TVShowSearchSource(private val service: Service, private val query: String) : PagingSource<Int, Screening>() {
+class ScreeningSearchSource(private val service: Service, private val query: String) : PagingSource<Int, Screening>() {
     companion object {
         const val DEFAULT_PAGE_INDEX = 1
     }

@@ -3,8 +3,8 @@ package com.intive.tmdbandroid.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.intive.tmdbandroid.datasource.TVShowPagingSource
-import com.intive.tmdbandroid.datasource.TVShowSearchSource
+import com.intive.tmdbandroid.datasource.ScreeningPagingSource
+import com.intive.tmdbandroid.datasource.ScreeningSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
@@ -28,7 +28,7 @@ class CatalogRepository @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                TVShowPagingSource(service = service)
+                ScreeningPagingSource(service = service)
             }
         ).flow
     }
@@ -48,7 +48,7 @@ class CatalogRepository @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                TVShowSearchSource(service = service, name)
+                ScreeningSearchSource(service = service, name)
             }
         ).flow
     }

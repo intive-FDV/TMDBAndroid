@@ -49,7 +49,7 @@ class DetailFragment : Fragment() {
     ): View {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        collectTVShowDetailFromViewModel(binding)
+        collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
 
         return binding.root
@@ -69,7 +69,7 @@ class DetailFragment : Fragment() {
         Glide.get(requireContext()).clearMemory()
     }
 
-    private fun collectTVShowDetailFromViewModel(binding: FragmentDetailBinding) {
+    private fun collectScreeningDetailFromViewModel(binding: FragmentDetailBinding) {
         binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { state ->

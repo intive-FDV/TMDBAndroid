@@ -10,7 +10,7 @@ import com.intive.tmdbandroid.model.Screening
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TVShowHolder(binding: ItemScreeningBinding, private val clickListener: ((Screening) -> Unit)) : RecyclerView.ViewHolder(binding.root) {
+class ScreeningHolder(binding: ItemScreeningBinding, private val clickListener: ((Screening) -> Unit)) : RecyclerView.ViewHolder(binding.root) {
     private val poster = binding.screeningPoster
     private val popularity = binding.screeningPopularity
     private val average = binding.circularPercentage

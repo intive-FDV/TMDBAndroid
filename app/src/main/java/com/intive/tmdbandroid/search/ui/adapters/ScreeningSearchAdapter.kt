@@ -18,7 +18,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TVShowSearchAdapter(
+class ScreeningSearchAdapter(
     private val clickListener: ((Screening) -> Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

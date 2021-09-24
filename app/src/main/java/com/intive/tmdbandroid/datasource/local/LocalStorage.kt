@@ -14,5 +14,5 @@ import com.intive.tmdbandroid.model.converter.IntConverter
 )
 @TypeConverters(GenreConverter::class, IntConverter::class)
 abstract class LocalStorage : RoomDatabase() {
-    abstract fun tvShowDao(): Dao
+    abstract fun screeningDao(): Dao
 }

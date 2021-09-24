@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.common.TVShowAsyncPagingDataDiffCallback
+import com.intive.tmdbandroid.common.ScreeningAsyncPagingDataDiffCallback
 import com.intive.tmdbandroid.databinding.ItemHorizontalListBinding
 import com.intive.tmdbandroid.databinding.ItemScreeningBinding
 import com.intive.tmdbandroid.databinding.ItemTitleBinding
 import com.intive.tmdbandroid.model.Screening
 
-class TVShowPageAdapter(private val clickListener: ((Screening) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScreeningPageAdapter(private val clickListener: ((Screening) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val HEADER = 0
         private const val WATCHLIST = 1
@@ -27,7 +27,7 @@ class TVShowPageAdapter(private val clickListener: ((Screening) -> Unit)) : Recy
     val adapterCallback = AdapterListUpdateCallback(this)
 
     private val differ = AsyncPagingDataDiffer(
-        TVShowAsyncPagingDataDiffCallback(),
+        ScreeningAsyncPagingDataDiffCallback(),
         object : ListUpdateCallback {
             override fun onInserted(position: Int, count: Int) {
                 adapterCallback.onInserted(position + 1, count)
@@ -74,7 +74,7 @@ class TVShowPageAdapter(private val clickListener: ((Screening) -> Unit)) : Recy
         when (holder) {
             is HeaderHolder -> holder.bind(position)
             is WatchlistHolder -> holder.bind()
-            is TVShowHolder -> differ.getItem(position - 3)?.let { holder.bind(it) }
+            is ScreeningHolder -> differ.getItem(position - 3)?.let { holder.bind(it) }
         }
     }
 
@@ -82,7 +82,7 @@ class TVShowPageAdapter(private val clickListener: ((Screening) -> Unit)) : Recy
         return when (viewType) {
             HEADER -> HeaderHolder(ItemTitleBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             WATCHLIST -> WatchlistHolder(ItemHorizontalListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            POPULAR -> TVShowHolder(ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickListener)
+            POPULAR -> ScreeningHolder(ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickListener)
             else -> throw Exception("Illegal ViewType")
         }
     }
