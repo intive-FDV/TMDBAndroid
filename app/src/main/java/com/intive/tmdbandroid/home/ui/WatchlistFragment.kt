@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
@@ -53,23 +50,15 @@ class WatchlistFragment : Fragment() {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
+        activity?.title = getString(R.string.watchlist)
+
         initViews(binding)
+
         subscribePopularData(binding)
-        //setupToolbar(binding)
         subscribeWatchlistData(binding)
+
         return binding.root
     }
-
-//    private fun setupToolbar(binding: FragmentHomeBinding) {
-//        val navController = findNavController()
-//        val appBarConfiguration = AppBarConfiguration(navController.graph)
-//        binding.fragmentHomeToolbar.setupWithNavController(navController, appBarConfiguration)
-//        binding.fragmentHomeToolbar.inflateMenu(R.menu.options_menu)
-//        binding.fragmentHomeToolbar.setOnMenuItemClickListener{
-//            binding.fragmentHomeToolbar.findNavController().navigate(R.id.action_homeFragmentDest_to_searchFragment)
-//            true
-//        }
-//    }
 
     private fun subscribePopularData(binding: FragmentHomeBinding) {
         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
@@ -124,9 +113,9 @@ class WatchlistFragment : Fragment() {
     }
 
     private fun initViews(binding: FragmentHomeBinding) {
-        val rvTopTVShows = binding.rvPopularTVShows
+        val rvWatchlist = binding.rvWatchlist
 
-        rvTopTVShows.apply {
+        rvWatchlist.apply {
             val displayMetrics = context.resources.displayMetrics
             val dpWidth = displayMetrics.widthPixels / displayMetrics.density
             Timber.i("MAS - dpWidth: $dpWidth")
