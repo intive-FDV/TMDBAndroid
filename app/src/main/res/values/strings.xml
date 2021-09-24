@@ -19,6 +19,7 @@
     <string name="collapsing_toolbar_description">Backdrop Poster Header</string>
     <string name="details_poster_description">TV Show Poster</string>
     <string name="search_result_header">Results for: %1$s</string>
+    <string name="year">(%1$s)</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
