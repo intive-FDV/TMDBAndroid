@@ -40,6 +40,7 @@ class HomeActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.tvShowsDest, R.id.watchlistDest,  R.id.moviesDest)
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
