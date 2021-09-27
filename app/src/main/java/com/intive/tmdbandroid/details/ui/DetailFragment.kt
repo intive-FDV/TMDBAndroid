@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,6 +60,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
+            Timber.i("MAS - screeningID: $it")
             if (args.isMovieBoolean) viewModel.movie(it)
             else viewModel.tVShows(it)
         }
