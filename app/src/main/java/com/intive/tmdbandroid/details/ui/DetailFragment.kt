@@ -121,7 +121,7 @@ class DetailFragment : Fragment() {
 
         tvShow.first_air_date?.let { setDate(binding, it) }
 
-        setPercentageToCircularPercentage(binding, tvShow.vote_average)
+        //setPercentageToCircularPercentage(binding, tvShow.vote_average)
 
         setupToolbar(binding, tvShow)
 
@@ -158,28 +158,28 @@ class DetailFragment : Fragment() {
         tvShowId?.let { viewModel.existAsFavorite(it) }
     }
 
-    private fun setPercentageToCircularPercentage(
-        binding: FragmentDetailBinding,
-        voteAverage: Double
-    ) {
-        val percentage = (voteAverage * 10).toInt()
-
-        binding.circularPercentage.progress = percentage
-
-        val context = binding.root.context
-
-        when {
-            percentage < 25 -> binding.circularPercentage.progressTintList =
-                ContextCompat.getColorStateList(context, R.color.red)
-            percentage < 45 -> binding.circularPercentage.progressTintList =
-                ContextCompat.getColorStateList(context, R.color.orange)
-            percentage < 75 -> binding.circularPercentage.progressTintList =
-                ContextCompat.getColorStateList(context, R.color.yellow)
-            else -> binding.circularPercentage.progressTintList =
-                ContextCompat.getColorStateList(context, R.color.green)
-        }
-        binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
-    }
+//    private fun setPercentageToCircularPercentage(
+//        binding: FragmentDetailBinding,
+//        voteAverage: Double
+//    ) {
+//        val percentage = (voteAverage * 10).toInt()
+//
+//        binding.circularPercentage.progress = percentage
+//
+//        val context = binding.root.context
+//
+//        when {
+//            percentage < 25 -> binding.circularPercentage.progressTintList =
+//                ContextCompat.getColorStateList(context, R.color.red)
+//            percentage < 45 -> binding.circularPercentage.progressTintList =
+//                ContextCompat.getColorStateList(context, R.color.orange)
+//            percentage < 75 -> binding.circularPercentage.progressTintList =
+//                ContextCompat.getColorStateList(context, R.color.yellow)
+//            else -> binding.circularPercentage.progressTintList =
+//                ContextCompat.getColorStateList(context, R.color.green)
+//        }
+//        binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
+//    }
 
     private fun setDate(binding: FragmentDetailBinding, firstAirDate: String) {
         try {
@@ -234,11 +234,11 @@ class DetailFragment : Fragment() {
             navController,
             appBarConfiguration
         )
-        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (verticalOffset < -500) {
-                binding.popularityCard.visibility = View.INVISIBLE
-            } else binding.popularityCard.visibility = View.VISIBLE
-        })
+//        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+//            if (verticalOffset < -500) {
+//                binding.popularityCard.visibility = View.INVISIBLE
+//            } else binding.popularityCard.visibility = View.VISIBLE
+//        })
     }
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {
