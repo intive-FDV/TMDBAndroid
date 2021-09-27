@@ -221,7 +221,9 @@ class DetailFragment : Fragment() {
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+
         val toolbar = binding.toolbar
+
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -236,11 +238,16 @@ class DetailFragment : Fragment() {
                 else -> false
             }
         }
+
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
             appBarConfiguration
         )
+
+        toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
+        toolbar.setNavigationOnClickListener { activity?.finish() }
+
         binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset < -500) {
                 binding.popularityCard.visibility = View.INVISIBLE
