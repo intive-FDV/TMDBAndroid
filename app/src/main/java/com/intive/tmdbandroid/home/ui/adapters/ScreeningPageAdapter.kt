@@ -1,117 +1,82 @@
 package com.intive.tmdbandroid.home.ui.adapters
 
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.AsyncPagingDataDiffer
-import androidx.paging.PagingData
-import androidx.recyclerview.widget.AdapterListUpdateCallback
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListUpdateCallback
+import androidx.core.content.ContextCompat
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.common.ScreeningAsyncPagingDataDiffCallback
-import com.intive.tmdbandroid.databinding.ItemHorizontalListBinding
-import com.intive.tmdbandroid.databinding.ItemScreeningBinding
-import com.intive.tmdbandroid.databinding.ItemTitleBinding
+import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
 import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.model.TVShow
 
-class ScreeningPageAdapter(private val clickListener: ((Screening) -> Unit)) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : PagingDataAdapter<Screening, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {
-        private const val HEADER = 0
-        private const val WATCHLIST = 1
-        private const val POPULAR = 2
+        private val COMPARATOR = object : DiffUtil.ItemCallback<Screening>() {
+            override fun areItemsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
+            override fun areContentsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
+        }
     }
 
-    var widthSize: Int = 0
-    val adapterCallback = AdapterListUpdateCallback(this)
+    override fun onBindViewHolder(holder: ScreeningHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
 
-    private val differ = AsyncPagingDataDiffer(
-        ScreeningAsyncPagingDataDiffCallback(),
-        object : ListUpdateCallback {
-            override fun onInserted(position: Int, count: Int) {
-                adapterCallback.onInserted(position + 1, count)
-            }
-
-            override fun onRemoved(position: Int, count: Int) {
-                adapterCallback.onRemoved(position + 1, count)
-            }
-
-            override fun onMoved(fromPosition: Int, toPosition: Int) {
-                adapterCallback.onMoved(fromPosition + 1, toPosition + 1)
-            }
-
-            override fun onChanged(position: Int, count: Int, payload: Any?) {
-                adapterCallback.onChanged(position + 1, count, payload)
-            }
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreeningHolder = ScreeningHolder(
+        ItemScreenengSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        clickListener
     )
 
-    suspend fun submitData(screeningPagingData: PagingData<Screening>) {
-        differ.submitData(screeningPagingData)
-    }
+    class ScreeningHolder(binding: ItemScreenengSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
+        private val title = binding.itemTitle
+        private val backdrop = binding.itemBackdrop
+        private val date = binding.itemDate
+        private val popularity = binding.itemPopularity
+        private val progress = binding.circularPercentage
 
-    private val watchlistAdapter = WatchlistAdapter(clickListener)
+        private val context = binding.root.context
+        private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
-    override fun getItemCount(): Int {
-        return differ.itemCount + 3
-    }
-
-    fun refreshWatchlistAdapter(list: List<Screening>) {
-        watchlistAdapter.submitList(list)
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            0, 2 -> HEADER
-            1 -> WATCHLIST
-            else -> POPULAR
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        when (holder) {
-            is HeaderHolder -> holder.bind(position)
-            is WatchlistHolder -> holder.bind()
-            is ScreeningHolder -> differ.getItem(position - 3)?.let { holder.bind(it) }
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            HEADER -> HeaderHolder(ItemTitleBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            WATCHLIST -> WatchlistHolder(ItemHorizontalListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            POPULAR -> ScreeningHolder(ItemScreeningBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickListener)
-            else -> throw Exception("Illegal ViewType")
-        }
-    }
-
-    inner class HeaderHolder(binding: ItemTitleBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val header = binding.tvTitle
-
-        private val res: Resources = binding.root.resources
-        private val watchlist = res.getString(R.string.watchlist)
-        private val popularTVShow = res.getString(R.string.popular_tvShows)
-
-        fun bind(position: Int) {
-            when (position) {
-                0 -> header.text = watchlist
-                2 -> header.text = popularTVShow
-                else -> throw IndexOutOfBoundsException("Illegal position")
+        fun bind (item: Screening) {
+            itemView.setOnClickListener {
+                clickListener.invoke(item)
             }
-        }
-    }
 
-    inner class WatchlistHolder(binding: ItemHorizontalListBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val rvWatchlist = binding.rvWatchlistTVShows
+            val options = RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_image)
+                .error(R.drawable.ic_image)
 
-        fun bind() {
-            rvWatchlist.apply {
-                layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-                watchlistAdapter.widthSize = widthSize
-                adapter = watchlistAdapter
+            val backdropURL = imgUrl + item.backdrop_path
+
+            Glide.with(context)
+                .load(backdropURL)
+                .apply(options)
+                .into(backdrop)
+
+            title.text = item.name
+
+            try {
+                //val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
+                date.text = item.release_date?.let { context.resources.getString(R.string.year, it.substring(0..3)) }
+            } catch (e: Exception) {
+                date.text = ""
             }
+
+            val percentage = (item.vote_average * 10).toInt()
+            progress.progress = percentage
+
+            when {
+                percentage < 25 -> progress.progressTintList = ContextCompat.getColorStateList(context, R.color.red)
+                percentage < 45 -> progress.progressTintList = ContextCompat.getColorStateList(context, R.color.orange)
+                percentage < 75 -> progress.progressTintList = ContextCompat.getColorStateList(context, R.color.yellow)
+                else -> progress.progressTintList = ContextCompat.getColorStateList(context, R.color.green)
+            }
+
+            popularity.text = context.resources.getString(R.string.popularity, percentage)
         }
     }
 }
