@@ -1,17 +1,20 @@
 package com.intive.tmdbandroid.home.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.navGraphViewModels
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentMoviesBinding
+import com.intive.tmdbandroid.detailandsearch.ui.DetailAndSearchActivity
 import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.MoviesViewModel
 import com.intive.tmdbandroid.model.Screening
@@ -19,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import kotlin.math.floor
-import androidx.navigation.navGraphViewModels
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
@@ -28,9 +30,15 @@ class MoviesFragment : Fragment() {
     }
 
     private val clickListener = { screening: Screening ->
-//        val action = WatchlistFragmentDirections.actionHomeFragmentDestToTVShowDetail(tvShow.id)
-//        findNavController().navigate(action)
-        Toast.makeText(context, screening.name, Toast.LENGTH_SHORT).show()
+        val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
+        intent.putExtras(
+            bundleOf(
+                "action" to "detail",
+                "screeningID" to screening.id,
+                "isMovieBoolean" to true
+            )
+        )
+        requireActivity().startActivity(intent)
     }
     private val moviePageAdapter = ScreeningPageAdapter(clickListener)
 

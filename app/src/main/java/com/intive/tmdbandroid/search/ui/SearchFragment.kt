@@ -79,9 +79,8 @@ class SearchFragment: Fragment() {
 
     private fun setupToolbar(binding: FragmentSearchBinding) {
         val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(setOf())
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentSearchToolbar
-
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 
