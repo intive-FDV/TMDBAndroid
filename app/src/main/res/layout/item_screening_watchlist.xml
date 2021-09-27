@@ -18,13 +18,12 @@
             android:id="@+id/backdrop_item_watchlist"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:foregroundGravity="fill_horizontal|fill_vertical"
-            app:layout_constraintDimensionRatio="1:0.56"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1.7:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/backdrop_placeholder"
             tools:src="@drawable/backdrop_placeholder" />
 
         <androidx.appcompat.widget.AppCompatTextView
