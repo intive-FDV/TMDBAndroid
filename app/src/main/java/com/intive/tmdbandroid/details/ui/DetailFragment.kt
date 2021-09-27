@@ -20,7 +20,7 @@ import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +32,7 @@ import java.util.*
 class DetailFragment : Fragment() {
 
     private var isSaveOnWatchlist: Boolean = false
-    private var tvShowId: Int? = null
+    private var screeningItemId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
 
@@ -40,7 +40,7 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val args: DetailFragmentArgs by navArgs()
-        tvShowId = args.screeningID
+        screeningItemId = args.screeningID
     }
 
     override fun onCreateView(
@@ -49,7 +49,7 @@ class DetailFragment : Fragment() {
     ): View {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        collectTVShowDetailFromViewModel(binding)
+        collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
 
         return binding.root
@@ -57,8 +57,10 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tvShowId?.let {
-            viewModel.tVShows(it)
+        val args: DetailFragmentArgs by navArgs()
+        screeningItemId?.let {
+            if (args.isMovieBoolean) viewModel.movie(it)
+            else viewModel.tVShows(it)
         }
     }
 
@@ -67,7 +69,7 @@ class DetailFragment : Fragment() {
         Glide.get(requireContext()).clearMemory()
     }
 
-    private fun collectTVShowDetailFromViewModel(binding: FragmentDetailBinding) {
+    private fun collectScreeningDetailFromViewModel(binding: FragmentDetailBinding) {
         binding.coordinatorContainerDetail.visibility = View.INVISIBLE
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { state ->
@@ -115,28 +117,33 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
 
-        setImages(binding, tvShow)
+        setImages(binding, screening)
 
-        tvShow.first_air_date?.let { setDate(binding, it) }
+        screening.release_date?.let { setDate(binding, it) }
 
+        //setPercentageToCircularPercentage(binding, screening.vote_average)
         //setPercentageToCircularPercentage(binding, tvShow.vote_average)
 
-        setupToolbar(binding, tvShow)
+        setupToolbar(binding, screening)
 
-        binding.toolbar.title = tvShow.name
+        binding.toolbar.title = screening.name
 
-        binding.statusDetailTextView.text = tvShow.status
+        binding.statusDetailTextView.text = screening.status
 
-        val genresListText = tvShow.genres.map {
+        val genresListText = screening.genres?.map {
             it.name
         }.toString()
         val genresTextWithoutCharacters = genresListText.subSequence(1, genresListText.lastIndex)
         binding.genresDetailTextView.text = genresTextWithoutCharacters
 
+        binding.numberOfEpisodesDetailTextView.visibility = View.GONE
+        binding.numberOfSeasonsDetailTextView.visibility = View.GONE
+
         binding.numberOfSeasonsDetailTextView.text =
-            tvShow.number_of_seasons?.let {
+            screening.number_of_seasons?.let {
+                binding.numberOfSeasonsDetailTextView.visibility = View.VISIBLE
                 resources.getQuantityString(
                     R.plurals.numberOfSeasons,
                     it,
@@ -144,7 +151,8 @@ class DetailFragment : Fragment() {
                 )
             }
         binding.numberOfEpisodesDetailTextView.text =
-            tvShow.number_of_episodes?.let {
+            screening.number_of_episodes?.let {
+                binding.numberOfEpisodesDetailTextView.visibility = View.VISIBLE
                 resources.getQuantityString(
                     R.plurals.numberOfEpisodes,
                     it,
@@ -152,10 +160,10 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        binding.overviewDetailTextView.text = tvShow.overview
+        binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
-        tvShowId?.let { viewModel.existAsFavorite(it) }
+        screeningItemId?.let { viewModel.existAsFavorite(it) }
     }
 
 //    private fun setPercentageToCircularPercentage(
@@ -192,13 +200,13 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setImages(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setImages(binding: FragmentDetailBinding, screening: Screening) {
         val options = RequestOptions()
             .placeholder(R.drawable.ic_image)
             .error(R.drawable.ic_image)
 
-        val posterURL = resources.getString(R.string.base_imageURL) + tvShow.poster_path
-        val backdropPosterURL = resources.getString(R.string.base_imageURL) + tvShow.backdrop_path
+        val posterURL = resources.getString(R.string.base_imageURL) + screening.poster_path
+        val backdropPosterURL = resources.getString(R.string.base_imageURL) + screening.backdrop_path
 
         val glide = Glide.with(this)
 
@@ -211,7 +219,7 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
     }
 
-    private fun setupToolbar(binding: FragmentDetailBinding, tvShow: TVShow) {
+    private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
@@ -220,9 +228,9 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
-                        viewModel.addToWatchlist(tvShow.toTVShowORMEntity())
+                        viewModel.addToWatchlist(screening)
                     } else {
-                        viewModel.deleteFromWatchlist(tvShow.toTVShowORMEntity())
+                        viewModel.deleteFromWatchlist(screening)
                     }
                     true
                 }

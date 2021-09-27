@@ -8,22 +8,22 @@ import java.lang.reflect.Type
 
 class NetworkConverter {
     @TypeConverter // note this annotation
-    fun toOptionValuesList(netWorkUrl: String?): List<Network>? {
-        if (netWorkUrl == null) {
+    fun toOptionValuesList(genreString: String?): List<Network>? {
+        if (genreString == null) {
             return null
         }
         val gson = Gson()
         val type = object : TypeToken<List<Network?>?>() {}.type
-        return gson.fromJson<List<Network>>(netWorkUrl, type)
+        return gson.fromJson<List<Network>>(genreString, type)
     }
 
     @TypeConverter
-    fun fromOptionValuesList(network: List<Network?>?): String? {
-        if (network == null) {
+    fun fromOptionValuesList(genre: List<Network?>?): String? {
+        if (genre == null) {
             return null
         }
         val gson = Gson()
         val type: Type = object : TypeToken<List<Network?>?>() {}.type
-        return gson.toJson(network, type)
+        return gson.toJson(genre, type)
     }
 }

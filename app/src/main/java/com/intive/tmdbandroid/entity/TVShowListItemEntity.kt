@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.entity
 
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 
 data class TVShowListItemEntity(
     val backdrop_path: String?,
@@ -13,9 +13,27 @@ data class TVShowListItemEntity(
     val vote_average: Double,
     val vote_count: Int
 ) {
-    fun toTVShow() : TVShow {
-        return TVShow(backdrop_path, emptyList(), first_air_date, emptyList(), id, null, name,
-            null, null, original_name, overview, poster_path, null,
-            vote_average, vote_count, emptyList())
+    fun toScreening(): Screening {
+        return Screening(
+            backdrop_path,
+            null,
+            id,
+            name,
+            null,
+            null,
+            overview,
+            poster_path,
+            null,
+            vote_average,
+            vote_count,
+            0.0,
+            first_air_date,
+            "tv",
+            false,
+            null,
+            false,
+            emptyList()
+
+        )
     }
 }
