@@ -15,7 +15,7 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentHomeBinding
 import com.intive.tmdbandroid.detailandsearch.ui.DetailAndSearchActivity
 import com.intive.tmdbandroid.home.ui.adapters.WatchlistAdapter
-import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
+import com.intive.tmdbandroid.home.viewmodel.WatchlistViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +23,7 @@ import kotlin.math.floor
 
 @AndroidEntryPoint
 class WatchlistFragment : Fragment() {
-    private val viewModel: HomeViewModel by navGraphViewModels(R.id.bottom_nav_graph) {
+    private val viewModel: WatchlistViewModel by navGraphViewModels(R.id.bottom_nav_graph) {
         defaultViewModelProviderFactory
     }
 
@@ -63,7 +63,7 @@ class WatchlistFragment : Fragment() {
 
     private fun subscribeWatchlistData(binding: FragmentHomeBinding) {
         lifecycleScope.launchWhenStarted {
-            viewModel.watchlistUIState.collectLatest {
+            viewModel.uiState.collectLatest {
                 when(it) {
                     is State.Success<List<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
