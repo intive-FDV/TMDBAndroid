@@ -28,15 +28,13 @@ class WatchlistAdapter(private val clickListener: ((Screening) -> Unit)) : ListA
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WatchlistHolder = WatchlistHolder(
-        ItemScreenengSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        ItemScreeningWatchlistBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         clickListener
     )
 
-    class WatchlistHolder(binding: ItemScreenengSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
-        private val title = binding.itemTitle
-        private val backdrop = binding.itemBackdrop
-        private val date = binding.itemDate
-        private val popularity = binding.popularityCard
+    class WatchlistHolder(binding: ItemScreeningWatchlistBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
+        private val title = binding.titleItemWatchlist
+        private val backdrop = binding.backdropItemWatchlist
 
         private val context = binding.root.context
         private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
@@ -59,15 +57,6 @@ class WatchlistAdapter(private val clickListener: ((Screening) -> Unit)) : ListA
                 .into(backdrop)
 
             title.text = item.name
-
-            try {
-                //val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
-                date.text = item.release_date?.let { context.resources.getString(R.string.year, it.substring(0..3)) }
-            } catch (e: Exception) {
-                date.text = ""
-            }
-
-            popularity.visibility = View.GONE
         }
     }
 }
