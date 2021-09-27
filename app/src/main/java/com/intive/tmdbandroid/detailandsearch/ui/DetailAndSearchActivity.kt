@@ -17,9 +17,17 @@ class DetailAndSearchActivity : AppCompatActivity() {
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_detail_and_search) as NavHostFragment
         val navController = navHost.navController
 
-        val graph = navHost.navController
+        val graph = navController
             .navInflater.inflate(R.navigation.nav_graph)
-        graph.startDestination = R.id.searchFragmentDest
+
+        val action = intent.extras?.getString("action", "search")
+        action.let {
+            if (it.equals("search")){
+                graph.startDestination = R.id.searchFragmentDest
+            } else {
+                graph.startDestination = R.id.detailFragmentDest
+            }
+        }
 
         navHost.navController.graph = graph
     }

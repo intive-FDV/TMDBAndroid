@@ -16,6 +16,7 @@
         tools:ignore="AllowBackup">
         <activity
             android:name=".detailandsearch.ui.DetailAndSearchActivity"
+            android:parentActivityName=".home.ui.HomeActivity"
             android:exported="true" />
         <activity
             android:name=".home.ui.HomeActivity"
