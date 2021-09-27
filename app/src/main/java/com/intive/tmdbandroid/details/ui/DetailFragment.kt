@@ -246,7 +246,13 @@ class DetailFragment : Fragment() {
         )
 
         toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
-        toolbar.setNavigationOnClickListener { activity?.finish() }
+        toolbar.setNavigationOnClickListener {
+            if (navController.navigateUp()) {
+                navController.popBackStack()
+            }else {
+                activity?.finish()
+            }
+        }
 
         binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset < -500) {
