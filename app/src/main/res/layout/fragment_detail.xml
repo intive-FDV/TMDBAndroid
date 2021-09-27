@@ -58,6 +58,7 @@
                     android:layout_height="?actionBarSize"
                     android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
                     app:contentInsetStart="0dp"
+                    app:titleMarginStart="16dp"
                     app:contentInsetStartWithNavigation="0dp"
                     app:layout_collapseMode="pin" />
 
