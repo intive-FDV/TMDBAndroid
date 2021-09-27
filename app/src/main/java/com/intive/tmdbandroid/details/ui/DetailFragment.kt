@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -15,7 +16,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.appbar.AppBarLayout
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
@@ -27,6 +27,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import android.util.TypedValue
+
+import android.widget.LinearLayout
+import android.widget.TextView
+
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -216,6 +221,32 @@ class DetailFragment : Fragment() {
         glide.load(backdropPosterURL)
             .apply(options)
             .into(binding.backgroundImageToolbarLayout)
+
+        if (screening.networks.isNotEmpty()){
+            screening.networks.forEach {
+
+                val networkImg = ImageView(binding.networkContainer.context)
+                glide.load(resources.getString(R.string.base_imageURL) + it.logo_path)
+                    .apply(options)
+                    .into(networkImg)
+
+                val lp = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+
+                lp.setMargins(0, 0, calculateDP(40f), 0)
+
+                networkImg.layoutParams = lp
+                networkImg.layoutParams.width = calculateDP(100f)
+
+                binding.networkContainer.addView(networkImg)
+            }
+        } else {
+            val noNetworks = TextView(binding.networkContainer.context)
+            noNetworks.text = "Unknown"
+            binding.networkContainer.addView(noNetworks)
+        }
     }
 
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
@@ -241,11 +272,6 @@ class DetailFragment : Fragment() {
             navController,
             appBarConfiguration
         )
-//        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-//            if (verticalOffset < -500) {
-//                binding.popularityCard.visibility = View.INVISIBLE
-//            } else binding.popularityCard.visibility = View.VISIBLE
-//        })
     }
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {
@@ -256,6 +282,14 @@ class DetailFragment : Fragment() {
         } else watchlistItem.icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
 
+    }
+
+    private fun calculateDP(value: Float): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            value,
+            resources.displayMetrics
+        ).toInt()
     }
 
 }
