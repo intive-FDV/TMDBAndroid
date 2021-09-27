@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragmentDest_to_TVShowDetail"
+            android:id="@+id/action_homeFragmentDest_to_DetailFragment"
             app:destination="@id/detailFragmentDest"
             app:popUpTo="@id/homeFragmentDest" />
         <action
@@ -27,6 +27,10 @@
         <argument
             android:name="screeningID"
             app:argType="integer" />
+        <argument
+            android:name="isMovieBoolean"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -34,7 +38,7 @@
         android:name="com.intive.tmdbandroid.search.ui.SearchFragment"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_TVShowDetail"
+            android:id="@+id/action_searchFragment_to_DetailFragment"
             app:destination="@id/detailFragmentDest"
             app:popUpTo="@id/searchFragmentDest" />
     </fragment>

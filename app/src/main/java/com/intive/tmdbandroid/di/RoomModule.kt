@@ -27,6 +27,6 @@ class RoomModule {
     @Singleton
     fun provideDao(
         database: LocalStorage
-    ): Dao = database.tvShowDao()
+    ): Dao = database.screeningDao()
 
 }

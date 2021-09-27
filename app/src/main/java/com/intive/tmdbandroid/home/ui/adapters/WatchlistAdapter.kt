@@ -5,16 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.intive.tmdbandroid.databinding.ItemScreeningWatchlistBinding
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 import timber.log.Timber
 
-class WatchlistAdapter(private val clickListener: ((TVShow) -> Unit)) : ListAdapter<TVShow, WatchlistHolder>(COMPARATOR) {
+class WatchlistAdapter(private val clickListener: ((Screening) -> Unit)) : ListAdapter<Screening, WatchlistHolder>(COMPARATOR) {
     var widthSize: Int = 0
 
     companion object {
-        private val COMPARATOR = object : DiffUtil.ItemCallback<TVShow>() {
-            override fun areItemsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
-            override fun areContentsTheSame(oldItem: TVShow, newItem: TVShow): Boolean = (oldItem == newItem)
+        private val COMPARATOR = object : DiffUtil.ItemCallback<Screening>() {
+            override fun areItemsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
+            override fun areContentsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
         }
     }
 
