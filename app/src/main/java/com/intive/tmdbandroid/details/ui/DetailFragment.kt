@@ -152,7 +152,8 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        binding.overviewDetailTextView.text = tvShow.overview
+        if(tvShow.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
+        else binding.overviewDetailTextView.text = tvShow.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         tvShowId?.let { viewModel.existAsFavorite(it) }
