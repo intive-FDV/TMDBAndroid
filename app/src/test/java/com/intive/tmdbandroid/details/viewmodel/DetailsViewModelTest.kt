@@ -6,13 +6,9 @@ import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Genre
-import com.intive.tmdbandroid.model.CreatedBy
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
-import com.intive.tmdbandroid.entity.TVShowORMEntity
-import com.intive.tmdbandroid.usecase.DetailTVShowUseCase
-import com.intive.tmdbandroid.usecase.GetIfExistsUseCase
-import com.intive.tmdbandroid.usecase.RemoveTVShowFromWatchlistUseCase
-import com.intive.tmdbandroid.usecase.SaveTVShowInWatchlistUseCase
+import com.intive.tmdbandroid.usecase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
@@ -22,7 +18,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
@@ -54,41 +51,46 @@ class DetailsViewModelTest {
         status = "Online"
     )
 
-    private val tvShowEntity = TVShowORMEntity(
+    private val screening = Screening(
         backdrop_path = "BACKDROP_PATH",
-        created_by = listOf(CreatedBy("credit1", 1, 1, "name1","PROFILE_PATH_1"), CreatedBy("credit2", 1, 2, "name2","PROFILE_PATH_2")),
-        first_air_date = "1983-10-20",
+        release_date = "1983-10-20",
         genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
         id = 1,
-        last_air_date = "1990-09-25",
         name = "Simona la Cacarisa",
         number_of_episodes = 5,
         number_of_seasons = 2,
-        original_name = "El cochiloco",
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         status = "Online",
         vote_average = 10.5,
-        vote_count = 100
+        vote_count = 100,
+        popularity = 34.0,
+        media_type = "tv",
+        adult = false,
+        genre_ids = null,
+        video = false
     )
 
     private lateinit var detailViewModel: DetailsViewModel
     @Mock
     private lateinit var tVShowUseCase: DetailTVShowUseCase
     @Mock
-    private lateinit var saveTVShowInWatchlistUseCase: SaveTVShowInWatchlistUseCase
+    private lateinit var saveTVShowInWatchlistUseCase: InsertInWatchlistUseCase
     @Mock
-    private lateinit var removeTVShowFromWatchlistUseCase: RemoveTVShowFromWatchlistUseCase
+    private lateinit var deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase
     @Mock
-    private lateinit var getIfExistsUseCase: GetIfExistsUseCase
+    private lateinit var getIfExistsUseCase: ExistUseCase
+    @Mock
+    private lateinit var movieUseCase: DetailMovieUseCase
 
 
     @Before
     fun setup() {
         detailViewModel = DetailsViewModel(
             tVShowUseCase,
+            movieUseCase,
             saveTVShowInWatchlistUseCase,
-            removeTVShowFromWatchlistUseCase,
+            deleteFromWatchlistUseCase,
             getIfExistsUseCase
         )
     }
@@ -107,19 +109,19 @@ class DetailsViewModelTest {
         detailViewModel.tVShows(2)
 
         detailViewModel.uiState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(State.Success(tvShow))
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(tvShow.toScreening()))
         }
     }
 
     @Test
     @ExperimentalTime
     fun addToWatchlistTestSuccess() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(saveTVShowInWatchlistUseCase(tvShowEntity)).willReturn(
+        BDDMockito.given(saveTVShowInWatchlistUseCase(screening)).willReturn(
             flow {
                 emit(true)
             })
 
-        detailViewModel.addToWatchlist(tvShowEntity)
+        detailViewModel.addToWatchlist(screening)
 
         detailViewModel.watchlistUIState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(true))
@@ -130,12 +132,12 @@ class DetailsViewModelTest {
     @ExperimentalTime
     fun addToWatchlistTestFailure() = mainCoroutineRule.runBlockingTest {
         val runtimeException = RuntimeException()
-        BDDMockito.given(saveTVShowInWatchlistUseCase(tvShowEntity)).willReturn(
+        BDDMockito.given(saveTVShowInWatchlistUseCase(screening)).willReturn(
             flow {
                 throw runtimeException
             })
 
-        detailViewModel.addToWatchlist(tvShowEntity)
+        detailViewModel.addToWatchlist(screening)
 
         detailViewModel.watchlistUIState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Error)
@@ -145,12 +147,12 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun deleteFromWatchlistTestSuccess() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(removeTVShowFromWatchlistUseCase(tvShowEntity)).willReturn(
+        BDDMockito.given(deleteFromWatchlistUseCase(screening)).willReturn(
             flow {
                 emit(false)
             })
 
-        detailViewModel.deleteFromWatchlist(tvShowEntity)
+        detailViewModel.deleteFromWatchlist(screening)
 
         detailViewModel.watchlistUIState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(false))
@@ -161,12 +163,12 @@ class DetailsViewModelTest {
     @ExperimentalTime
     fun deleteFromWatchlistTestFailure() = mainCoroutineRule.runBlockingTest {
         val runtimeException = RuntimeException()
-        BDDMockito.given(removeTVShowFromWatchlistUseCase(tvShowEntity)).willReturn(
+        BDDMockito.given(deleteFromWatchlistUseCase(screening)).willReturn(
             flow {
                 throw runtimeException
             })
 
-        detailViewModel.deleteFromWatchlist(tvShowEntity)
+        detailViewModel.deleteFromWatchlist(screening)
 
         detailViewModel.watchlistUIState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Error)

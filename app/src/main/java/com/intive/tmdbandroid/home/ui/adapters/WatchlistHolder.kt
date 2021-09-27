@@ -5,16 +5,16 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreeningWatchlistBinding
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.Screening
 
-class WatchlistHolder(binding: ItemScreeningWatchlistBinding, private val clickListener: ((TVShow) -> Unit)) : RecyclerView.ViewHolder(binding.root)  {
+class WatchlistHolder(binding: ItemScreeningWatchlistBinding, private val clickListener: ((Screening) -> Unit)) : RecyclerView.ViewHolder(binding.root)  {
     private val title = binding.titleItemWatchlist
     private val backdrop = binding.backdropItemWatchlist
 
     private val context = binding.root.context
     private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
-    fun bind (item: TVShow) {
+    fun bind (item: Screening) {
         itemView.setOnClickListener {
             clickListener.invoke(item)
         }
