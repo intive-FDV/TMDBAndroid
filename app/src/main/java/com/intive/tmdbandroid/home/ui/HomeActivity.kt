@@ -1,10 +1,11 @@
 package com.intive.tmdbandroid.home.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ActivityHomeBinding
+import com.intive.tmdbandroid.detailandsearch.ui.DetailAndSearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,8 +55,13 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                //TODO : Call second Activity
-                Toast.makeText(applicationContext, "SEARCH", Toast.LENGTH_LONG).show()
+                val intent = Intent(this, DetailAndSearchActivity::class.java)
+                intent.putExtras(
+                    bundleOf(
+                        "action" to "search"
+                    )
+                )
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -3,22 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragmentDest">
-
-    <fragment
-        android:id="@+id/homeFragmentDest"
-        android:name="com.intive.tmdbandroid.home.ui.WatchlistFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragmentDest_to_DetailFragment"
-            app:destination="@id/detailFragmentDest"
-            app:popUpTo="@id/homeFragmentDest" />
-        <action
-            android:id="@+id/action_homeFragmentDest_to_searchFragment"
-            app:destination="@id/searchFragmentDest"
-            app:popUpTo="@id/homeFragmentDest" />
-    </fragment>
+    tools:ignore="InvalidNavigation">
 
     <fragment
         android:id="@+id/detailFragmentDest"
