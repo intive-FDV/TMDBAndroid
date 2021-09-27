@@ -1,6 +1,5 @@
 package com.intive.tmdbandroid.home.viewmodel
 
-import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
