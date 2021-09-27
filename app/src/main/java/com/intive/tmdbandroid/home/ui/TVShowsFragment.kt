@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
 import androidx.paging.PagingData
@@ -15,7 +14,6 @@ import com.intive.tmdbandroid.databinding.FragmentTvshowsBinding
 import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.TVShowsViewModel
 import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.model.TVShow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
@@ -50,8 +48,6 @@ class TVShowsFragment : Fragment() {
     ): View {
         val binding = FragmentTvshowsBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        activity?.title = getString(R.string.popular_tvShows)
 
         initViews(binding)
 

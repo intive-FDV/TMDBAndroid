@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,7 +17,6 @@ import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -46,8 +44,6 @@ class WatchlistFragment : Fragment() {
     ): View {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        activity?.title = getString(R.string.watchlist)
 
         initViews(binding)
 

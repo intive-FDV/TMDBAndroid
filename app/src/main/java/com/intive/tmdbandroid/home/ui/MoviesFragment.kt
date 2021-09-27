@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,10 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import kotlin.math.floor
-import android.os.Parcelable
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import androidx.recyclerview.widget.RecyclerView
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
@@ -54,8 +50,6 @@ class MoviesFragment : Fragment() {
     ): View {
         val binding = FragmentMoviesBinding.inflate(inflater, container, false)
         context ?: return binding.root
-
-        activity?.title = getString(R.string.popular_movies)
 
         initViews(binding)
 
