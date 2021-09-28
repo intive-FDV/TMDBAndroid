@@ -2,6 +2,8 @@
     <string name="app_name">To Watch</string>
 
     <string name="watchlist">Watchlist</string>
+    <string name="movies">Movies</string>
+    <string name="tvShows">TV shows</string>
     <string name="popular_movies">Popular movies</string>
     <string name="popular_tvShows">Popular TV shows</string>
     <string name="base_imageURL">https://image.tmdb.org/t/p/w780</string>
@@ -17,6 +19,7 @@
     <string name="collapsing_toolbar_description">Backdrop Poster Header</string>
     <string name="details_poster_description">TV Show Poster</string>
     <string name="search_result_header">Results for: %1$s</string>
+    <string name="year">(%1$s)</string>
     <string name="no_overview">No overview available</string>
     <string name="thumb_description">Rating Icon</string>
     <string name="rate_button_text">Rate it</string>

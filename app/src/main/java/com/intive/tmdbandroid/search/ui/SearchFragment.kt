@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
 import com.intive.tmdbandroid.model.Screening
@@ -82,6 +84,8 @@ class SearchFragment: Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentSearchToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
+        toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
+        toolbar.setNavigationOnClickListener { activity?.finish() }
     }
 
     fun subscribeViewModel(binding: FragmentSearchBinding){
