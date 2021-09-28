@@ -46,18 +46,16 @@ class Service {
 
     fun getTVShowVideos(movieID: Int): Flow<String> {
         return flow {
-            val videoEntity = retrofit.create(ApiClient::class.java).getTVShowVideos(movieID, BuildConfig.API_KEY)
+            val videoEntity = retrofit.create(ApiClient::class.java).getTVShowVideos(movieID, BuildConfig.API_KEY).results.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
             Timber.i("MAS - videoEntity: $videoEntity")
-            val videoList = videoEntity.results.filter { it.site == "YouTube" && it.type == "Trailer" }
-            Timber.i("MAS - videoList: $videoList")
 
-            emit(videoList[0].key)
+            emit(videoEntity[0].key)
         }
     }
 
     fun getMovieVideos(movieID: Int): Flow<String> {
         return flow {
-            val videoEntity = retrofit.create(ApiClient::class.java).getTVShowVideos(movieID, BuildConfig.API_KEY).results.filter { it.site == "YouTube" && it.type == "Trailer" }
+            val videoEntity = retrofit.create(ApiClient::class.java).getMovieVideos(movieID, BuildConfig.API_KEY).results.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
             emit(videoEntity[0].key)
         }
     }

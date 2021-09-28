@@ -32,23 +32,21 @@ import android.net.Uri
 import android.widget.Toast
 import android.content.Intent
 
-
-
-
-
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
-    private val args: DetailFragmentArgs by navArgs()
 
     private var isSaveOnWatchlist: Boolean = false
     private var screeningItemId: Int? = null
+    private var isMovie: Boolean = false
 
     private val viewModel: DetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val args: DetailFragmentArgs by navArgs()
         screeningItemId = args.screeningID
+        isMovie = args.isMovieBoolean
     }
 
     override fun onCreateView(
@@ -59,16 +57,16 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
-        collectTrailer()
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
-            if (args.isMovieBoolean) viewModel.movie(it)
+            if (isMovie) viewModel.movie(it)
             else viewModel.tVShows(it)
         }
     }
@@ -132,13 +130,16 @@ class DetailFragment : Fragment() {
                 Timber.i("MAS - trailerState: $it")
                 when (it) {
                     is State.Success -> {
-                        showVideo(it.data)
+                        if (it.data.isEmpty())
+                            Toast.makeText(context, "No trailer found. Sorry!", Toast.LENGTH_LONG).show()
+                        else
+                            showVideo(it.data)
                     }
                     State.Error -> {
-                        Toast.makeText(context, "Sorry! There was an error!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
                     }
                     State.Loading -> {
-                        Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
+                        //
                     }
                 }
             }
@@ -193,7 +194,14 @@ class DetailFragment : Fragment() {
         screeningItemId?.let { viewModel.existAsFavorite(it) }
 
         binding.trailerTextView.setOnClickListener {
-            screeningItemId?.let { viewModel.getTVShowTrailer(it) }
+            collectTrailer()
+
+            screeningItemId?.let {
+                if (isMovie)
+                    viewModel.getMovieTrailer(it)
+                else
+                    viewModel.getTVShowTrailer(it)
+            }
         }
     }
 
@@ -312,37 +320,6 @@ class DetailFragment : Fragment() {
                 Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey))
             )
         )
-
-//        val dialog = activity?.let { Dialog(it) }
-//
-//        dialog?.apply {
-//            requestWindowFeature(Window.FEATURE_NO_TITLE)
-//            setCancelable(true)
-//            setContentView(R.layout.dialog_video)
-//
-//            val videoView = findViewById<VideoView>(R.id.video_view)
-//            videoView.setVideoURI(Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey)))
-//            videoView.requestFocus()
-//
-//            videoView.setOnCompletionListener { dialog.dismiss() }
-//
-//            videoView.setOnPreparedListener { mediaPlayer ->
-//                videoView.start()
-//                mediaPlayer.setOnVideoSizeChangedListener { _, _, _ ->
-//                    val mediaController = MediaController(context)
-//                    videoView.setMediaController(mediaController)
-//                    mediaController.setAnchorView(videoView)
-//                }
-//            }
-//
-//            videoView.setOnErrorListener { _, _, _ ->
-//                Toast.makeText(context, "Sorry! There was an error!", Toast.LENGTH_SHORT).show()
-//                dialog.dismiss()
-//                false
-//            }
-//
-//            show()
-//        }
     }
 
 }

@@ -22,7 +22,9 @@ class DetailsViewModel @Inject internal constructor(
     private val movieUseCase: DetailMovieUseCase,
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
     private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
-    private val existUseCase: ExistUseCase
+    private val existUseCase: ExistUseCase,
+    private val tvShowTrailerUseCase: GetTVShowTrailer,
+    private val movieTrailerUseCase: GetMovieTrailer
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<Screening>>(State.Loading)
@@ -48,8 +50,7 @@ class DetailsViewModel @Inject internal constructor(
 
     fun getTVShowTrailer(id: Int) {
         viewModelScope.launch {
-            val service = Service()
-            service.getTVShowVideos(id)
+            tvShowTrailerUseCase(id)
                 .catch {
                     Timber.i("MAS - viewModel.getTVShowTrailer.error: ${it.message}")
                     _trailerState.value = State.Error
@@ -74,8 +75,7 @@ class DetailsViewModel @Inject internal constructor(
 
     fun getMovieTrailer(id: Int) {
         viewModelScope.launch {
-            val service = Service()
-            service.getMovieVideos(id)
+            movieTrailerUseCase(id)
                 .catch {
                     _trailerState.value = State.Error
                 }
