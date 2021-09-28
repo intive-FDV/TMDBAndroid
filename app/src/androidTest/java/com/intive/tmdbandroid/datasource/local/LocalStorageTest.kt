@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.intive.tmdbandroid.entity.ScreeningORMEntity
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert.assertThat
@@ -37,7 +38,8 @@ class LocalStorageTest : TestCase() {
         media_type = "tv",
         adult = false,
         genre_ids = null,
-        video = false
+        video = false,
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
     private val screeningUpdate = ScreeningORMEntity(
@@ -57,7 +59,8 @@ class LocalStorageTest : TestCase() {
         media_type = "tv",
         adult = false,
         genre_ids = null,
-        video = false
+        video = false,
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
     // Override function setUp() and annotate it with @Before

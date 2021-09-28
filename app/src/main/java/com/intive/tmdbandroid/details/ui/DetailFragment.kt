@@ -177,18 +177,18 @@ class DetailFragment : Fragment() {
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.ratingNumber.text = "$percentage%"
+        binding.popularityRatingNumber.text = "$percentage%"
 
         val context = binding.root.context
 
         when {
-            percentage < 25 -> binding.thumbIcon.imageTintList =
+            percentage < 25 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.red)
-            percentage < 45 -> binding.thumbIcon.imageTintList =
+            percentage < 45 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.orange)
-            percentage < 75 -> binding.thumbIcon.imageTintList =
+            percentage < 75 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.yellow)
-            else -> binding.thumbIcon.imageTintList =
+            else -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.green)
         }
     }
@@ -243,9 +243,7 @@ class DetailFragment : Fragment() {
                 binding.networkContainer.addView(networkImg)
             }
         } else {
-            val noNetworks = TextView(binding.networkContainer.context)
-            noNetworks.text = "Unknown"
-            binding.networkContainer.addView(noNetworks)
+            binding.networksHeader.visibility = View.GONE
         }
     }
 
