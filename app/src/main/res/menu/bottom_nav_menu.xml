@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tvShowsDest"
+        android:icon="@drawable/ic_tvshow"
+        android:title="@string/tvShows" />
+    <item
+        android:id="@+id/watchlistDest"
+        android:icon="@drawable/ic_heart_selected"
+        android:title="@string/watchlist" />
+    <item
+        android:id="@+id/moviesDest"
+        android:icon="@drawable/ic_movie"
+        android:title="@string/movies" />
+</menu>

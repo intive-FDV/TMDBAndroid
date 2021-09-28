@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.ui.WatchlistFragment">
+    tools:context=".home.ui.TVShowsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_watchlist"
+        android:id="@+id/rv_popularTVShows"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:nestedScrollingEnabled="false"
