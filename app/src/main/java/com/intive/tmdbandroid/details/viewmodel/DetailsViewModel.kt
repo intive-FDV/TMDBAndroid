@@ -3,7 +3,9 @@ package com.intive.tmdbandroid.details.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
+import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.repository.CatalogRepository
 import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +31,9 @@ class DetailsViewModel @Inject internal constructor(
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
 
+    private val _trailerState = MutableStateFlow<State<String>>(State.Loading)
+    val trailerState: StateFlow<State<String>> = _trailerState
+
     fun tVShows(id: Int) {
         viewModelScope.launch {
             tVShowUseCase(id)
@@ -40,6 +46,20 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
+    fun getTVShowTrailer(id: Int) {
+        viewModelScope.launch {
+            val service = Service()
+            service.getTVShowVideos(id)
+                .catch {
+                    Timber.i("MAS - viewModel.getTVShowTrailer.error: ${it.message}")
+                    _trailerState.value = State.Error
+                }
+                .collect { trailerKey ->
+                    _trailerState.value = State.Success(trailerKey)
+                }
+        }
+    }
+
     fun movie(id: Int) {
         viewModelScope.launch {
             movieUseCase(id)
@@ -48,6 +68,19 @@ class DetailsViewModel @Inject internal constructor(
                 }
                 .collect { movie ->
                     _state.value = State.Success(movie.toScreening())
+                }
+        }
+    }
+
+    fun getMovieTrailer(id: Int) {
+        viewModelScope.launch {
+            val service = Service()
+            service.getMovieVideos(id)
+                .catch {
+                    _trailerState.value = State.Error
+                }
+                .collect { trailerKey ->
+                    _trailerState.value = State.Success(trailerKey)
                 }
         }
     }

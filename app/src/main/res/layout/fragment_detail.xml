@@ -117,15 +117,34 @@
                     android:textColor="@color/black"
                     tools:text="5 Episodes" />
 
-                <TextView
-                    android:id="@+id/overview_textView"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:text="@string/overview"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/overview_textView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/overview"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/trailer_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="3dp"
+                        android:drawablePadding="3dp"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/watch_trailer"
+                        app:drawableEndCompat="@drawable/ic_play" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/overview_detail_textView"

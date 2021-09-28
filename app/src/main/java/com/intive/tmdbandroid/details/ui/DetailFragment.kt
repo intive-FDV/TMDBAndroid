@@ -28,9 +28,17 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import android.net.Uri
+import android.widget.Toast
+import android.content.Intent
+
+
+
+
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
+    private val args: DetailFragmentArgs by navArgs()
 
     private var isSaveOnWatchlist: Boolean = false
     private var screeningItemId: Int? = null
@@ -40,7 +48,6 @@ class DetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val args: DetailFragmentArgs by navArgs()
         screeningItemId = args.screeningID
     }
 
@@ -52,13 +59,13 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
+        collectTrailer()
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
             if (args.isMovieBoolean) viewModel.movie(it)
@@ -119,6 +126,25 @@ class DetailFragment : Fragment() {
         }
     }
 
+    private fun collectTrailer() {
+        lifecycleScope.launch {
+            viewModel.trailerState.collectLatest {
+                Timber.i("MAS - trailerState: $it")
+                when (it) {
+                    is State.Success -> {
+                        showVideo(it.data)
+                    }
+                    State.Error -> {
+                        Toast.makeText(context, "Sorry! There was an error!", Toast.LENGTH_SHORT).show()
+                    }
+                    State.Loading -> {
+                        Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
     private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
 
         setImages(binding, screening)
@@ -165,6 +191,10 @@ class DetailFragment : Fragment() {
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
+
+        binding.trailerTextView.setOnClickListener {
+            screeningItemId?.let { viewModel.getTVShowTrailer(it) }
+        }
     }
 
     private fun setPercentageToCircularPercentage(
@@ -271,6 +301,48 @@ class DetailFragment : Fragment() {
         } else watchlistItem.icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
 
+    }
+
+    private fun showVideo(videoKey: String) {
+        Timber.i("MAS - videoKey: $videoKey")
+
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey))
+            )
+        )
+
+//        val dialog = activity?.let { Dialog(it) }
+//
+//        dialog?.apply {
+//            requestWindowFeature(Window.FEATURE_NO_TITLE)
+//            setCancelable(true)
+//            setContentView(R.layout.dialog_video)
+//
+//            val videoView = findViewById<VideoView>(R.id.video_view)
+//            videoView.setVideoURI(Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey)))
+//            videoView.requestFocus()
+//
+//            videoView.setOnCompletionListener { dialog.dismiss() }
+//
+//            videoView.setOnPreparedListener { mediaPlayer ->
+//                videoView.start()
+//                mediaPlayer.setOnVideoSizeChangedListener { _, _, _ ->
+//                    val mediaController = MediaController(context)
+//                    videoView.setMediaController(mediaController)
+//                    mediaController.setAnchorView(videoView)
+//                }
+//            }
+//
+//            videoView.setOnErrorListener { _, _, _ ->
+//                Toast.makeText(context, "Sorry! There was an error!", Toast.LENGTH_SHORT).show()
+//                dialog.dismiss()
+//                false
+//            }
+//
+//            show()
+//        }
     }
 
 }

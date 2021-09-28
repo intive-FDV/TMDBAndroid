@@ -7,6 +7,7 @@
     <string name="popular_movies">Popular movies</string>
     <string name="popular_tvShows">Popular TV shows</string>
     <string name="base_imageURL">https://image.tmdb.org/t/p/w780</string>
+    <string name="base_youtubeURL">https://www.youtube.com/watch?v=%1$s</string>
     <string name="popularity">"%1$d%%"</string>
     <string name="error_message">Oops! Something went wrong.\nSorry about that :(</string>
     <string name="empty_message">Nothing to see here</string>
@@ -20,6 +21,7 @@
     <string name="details_poster_description">TV Show Poster</string>
     <string name="search_result_header">Results for: %1$s</string>
     <string name="year">(%1$s)</string>
+    <string name="watch_trailer">Watch trailer</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
