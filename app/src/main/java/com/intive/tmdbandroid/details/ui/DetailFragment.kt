@@ -59,7 +59,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
-            if (args.isMovieBoolean) viewModel.movie(it)
+            if (args.isMovieBoolean && savedInstanceState==null) viewModel.movie(it)
             else viewModel.tVShows(it)
         }
     }
