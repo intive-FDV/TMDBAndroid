@@ -4,9 +4,10 @@ import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Response
+import retrofit2.http.*
 
 interface ApiClient {
     @GET("tv/popular")
@@ -25,4 +26,7 @@ interface ApiClient {
     suspend fun getTVShowAndMoviesByName(@Query("api_key") apiKey: String,
                                 @Query("query") query: String,
                                 @Query("page") page: Int) : ResultListTVShowOrMovies
+
+    @POST("movie/{movie_id}/rating")
+    suspend fun postRanking(@Query("api_key") apiKey: String, @Path("movie_id") query: String, @Body requestBody : RequestBody): Response<ResponseBody>
 }
