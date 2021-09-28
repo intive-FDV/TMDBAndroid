@@ -85,14 +85,14 @@ class LocalStorageTest : TestCase() {
     @Test
     fun writeAndReadAllAndDeleteTest() = runBlocking {
         dao.insertFavorite(screening)
-        val tvShows = dao.allFavorites()
+        val screenings = dao.allFavorites()
 
-        assertThat("Expecting to find item in list", tvShows.contains(screening))
+        assertThat("Expecting to find item in list", screenings.contains(screening))
 
         dao.deleteFavorite(screening)
-        val tvShowsDeleted = dao.allFavorites()
+        val screeningDeleted = dao.allFavorites()
 
-        assertThat("Expecting NOT to find item in list", !tvShowsDeleted.contains(screening))
+        assertThat("Expecting NOT to find item in list", !screeningDeleted.contains(screening))
     }
 
     // here we are first adding an item to the db and then checking if that item

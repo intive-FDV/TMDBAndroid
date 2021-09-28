@@ -17,38 +17,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject internal constructor(
-    private val paginatedPopularTVShowsUseCase: PaginatedPopularTVShowsUseCase,
+class WatchlistViewModel @Inject internal constructor(
     private val getAllItemsInWatchlistUseCase: GetAllItemsInWatchlistUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<PagingData<Screening>>>(State.Loading)
-    val uiState: StateFlow<State<PagingData<Screening>>> = _state
-
-    private val _watchlistState = MutableStateFlow<State<List<Screening>>>(State.Loading)
-    val watchlistUIState: StateFlow<State<List<Screening>>> = _watchlistState
-
-    fun popularTVShows() {
-        viewModelScope.launch {
-            paginatedPopularTVShowsUseCase()
-                .cachedIn(viewModelScope)
-                .catch {
-                    _state.value = State.Error
-                }
-                .collect { resultTVShows ->
-                    _state.value = State.Success(resultTVShows)
-                }
-        }
-    }
+    private val _state = MutableStateFlow<State<List<Screening>>>(State.Loading)
+    val uiState: StateFlow<State<List<Screening>>> = _state
 
     fun watchlistScreening() {
         viewModelScope.launch {
             getAllItemsInWatchlistUseCase()
                 .catch {
-                    _watchlistState.value = State.Error
+                    _state.value = State.Error
                 }
                 .collect {
-                    _watchlistState.value = State.Success(it)
+                    _state.value = State.Success(it)
                 }
         }
     }
