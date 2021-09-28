@@ -250,7 +250,7 @@ class DetailFragment : Fragment() {
         toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
             if (navController.navigateUp()) {
-                navController.popBackStack()
+                navController.navigateUp()
             }else {
                 activity?.finish()
             }
