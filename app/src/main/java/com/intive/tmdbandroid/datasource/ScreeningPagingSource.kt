@@ -3,11 +3,8 @@ package com.intive.tmdbandroid.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.intive.tmdbandroid.datasource.network.Service
-import com.intive.tmdbandroid.entity.ResultMoviesEntity
-import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Screening
 import kotlinx.coroutines.flow.collect
-import java.lang.RuntimeException
 
 class ScreeningPagingSource(private val service: Service, private val type: Int) : PagingSource<Int, Screening>() {
     companion object {
