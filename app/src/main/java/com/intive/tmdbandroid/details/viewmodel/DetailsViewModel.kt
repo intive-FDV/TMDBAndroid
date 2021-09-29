@@ -3,15 +3,11 @@ package com.intive.tmdbandroid.details.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.repository.CatalogRepository
 import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,8 +29,8 @@ class DetailsViewModel @Inject internal constructor(
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
 
-    private val _trailerState = MutableStateFlow<State<String>>(State.Loading)
-    val trailerState: StateFlow<State<String>> = _trailerState
+    private val _trailerState = Channel<State<String>>(Channel.CONFLATED)
+    val trailerState = _trailerState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -52,11 +48,10 @@ class DetailsViewModel @Inject internal constructor(
         viewModelScope.launch {
             tvShowTrailerUseCase(id)
                 .catch {
-                    Timber.i("MAS - viewModel.getTVShowTrailer.error: ${it.message}")
-                    _trailerState.value = State.Error
+                    _trailerState.send(State.Error)
                 }
                 .collect { trailerKey ->
-                    _trailerState.value = State.Success(trailerKey)
+                    _trailerState.send(State.Success(trailerKey))
                 }
         }
     }
@@ -77,10 +72,10 @@ class DetailsViewModel @Inject internal constructor(
         viewModelScope.launch {
             movieTrailerUseCase(id)
                 .catch {
-                    _trailerState.value = State.Error
+                    _trailerState.send(State.Error)
                 }
                 .collect { trailerKey ->
-                    _trailerState.value = State.Success(trailerKey)
+                    _trailerState.send(State.Success(trailerKey))
                 }
         }
     }
