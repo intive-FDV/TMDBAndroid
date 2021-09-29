@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
+    private var isLoad:Boolean = false
 
     private lateinit var searchAdapter: ScreeningSearchAdapter
 
@@ -55,6 +56,9 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if (savedInstanceState != null) {
+            isLoad = savedInstanceState.getBoolean("isLoad", false)
+        }
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
         setupToolbar(binding)
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -69,14 +73,19 @@ class SearchFragment : Fragment() {
                     binding.searchView.clearFocus()
                     viewModel.search(query)
                     searchViewQuery = query
+                    isLoad=true
                     return true
                 }
                 return false
             }
         })
+        if(savedInstanceState!=null && isLoad){
+            binding.searchView.clearFocus()
+            subscribeViewModel(binding)
+        }
         initViews(binding)
         subscribeViewModel(binding)
-        if (searchViewQuery.isEmpty()) {
+        if (searchViewQuery.isEmpty() && !isLoad) {
             binding.searchView.requestFocus()
             val imm =
                 binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -85,7 +94,6 @@ class SearchFragment : Fragment() {
             }, 50)
         } else {
             binding.layoutSearchHint.hintContainer.visibility = View.GONE
-
         }
         return binding.root
     }
