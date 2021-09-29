@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.intive.tmdbandroid.R
@@ -29,19 +31,24 @@ import kotlinx.coroutines.flow.collectLatest
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
-    private val clickListener = { screening: Screening ->
-        val isMovie = screening.media_type == "movie"
-        val action =
-            SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
-        val currentDestination = findNavController().currentDestination?.id
-        if (currentDestination == R.id.searchFragmentDest) {
-            findNavController().navigate(action)
-        }
-    }
-
-    private val searchAdapter = ScreeningSearchAdapter(clickListener)
+    private lateinit var searchAdapter: ScreeningSearchAdapter
 
     private var searchViewQuery: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val clickListener = { screening: Screening ->
+            val isMovie = screening.media_type == "movie"
+            val action =
+                SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
+            val currentDestination = findNavController().currentDestination?.id
+            if (currentDestination == R.id.searchFragmentDest) {
+                findNavController().navigate(action)
+            }
+        }
+        searchAdapter = ScreeningSearchAdapter(clickListener)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +56,6 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
-        binding.layoutProgressbar.progressBar.visibility = View.GONE
         setupToolbar(binding)
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
@@ -91,7 +97,7 @@ class SearchFragment : Fragment() {
         toolbar.setupWithNavController(navController, appBarConfiguration)
         toolbar.navigationIcon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
-        toolbar.setNavigationOnClickListener { activity?.finish() }
+        toolbar.setNavigationOnClickListener { requireActivity().finish() }
     }
 
     private fun subscribeViewModel(binding: FragmentSearchBinding) {
@@ -136,12 +142,16 @@ class SearchFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = searchAdapter
         }
-        searchAdapter.differ.addLoadStateListener { loadState ->
-            if (loadState.append.endOfPaginationReached) {
-                if (searchAdapter.itemCount < 1 + 1) {
-                    binding.layoutEmpty.root.visibility = View.VISIBLE
-                } else binding.layoutEmpty.root.visibility = View.GONE
+        lifecycleScope.launchWhenStarted {
+            searchAdapter.differ.loadStateFlow.collectLatest { loadState ->
+                if (loadState.refresh is LoadState.NotLoading &&
+                    loadState.append is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached
+                ) {
+                    binding.layoutEmpty.root.isVisible = searchAdapter.itemCount < 2
+                }
             }
         }
+
     }
 }
