@@ -146,6 +146,14 @@
 
                 </LinearLayout>
 
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:id="@+id/screening_trailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:showFullScreenButton="false"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/overview_detail_textView"
                     android:layout_width="wrap_content"

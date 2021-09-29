@@ -31,6 +31,12 @@ import java.util.*
 import android.net.Uri
 import android.widget.Toast
 import android.content.Intent
+import androidx.annotation.NonNull
+import androidx.core.view.isVisible
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
+import kotlinx.coroutines.flow.consumeAsFlow
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -57,6 +63,7 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
+        collectTrailer(binding)
 
         return binding.root
     }
@@ -124,16 +131,16 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun collectTrailer() {
+    private fun collectTrailer(binding: FragmentDetailBinding) {
         lifecycleScope.launch {
-            viewModel.trailerState.collectLatest {
+            viewModel.trailerState.consumeAsFlow().collect {
                 Timber.i("MAS - trailerState: $it")
                 when (it) {
                     is State.Success -> {
                         if (it.data.isEmpty())
                             Toast.makeText(context, "No trailer found. Sorry!", Toast.LENGTH_LONG).show()
                         else
-                            showVideo(it.data)
+                            showInAppVideo(it.data, binding)//showVideo(it.data)
                     }
                     State.Error -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
@@ -193,9 +200,8 @@ class DetailFragment : Fragment() {
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
 
+        lifecycle.addObserver(binding.screeningTrailer)
         binding.trailerTextView.setOnClickListener {
-            collectTrailer()
-
             screeningItemId?.let {
                 if (isMovie)
                     viewModel.getMovieTrailer(it)
@@ -308,7 +314,6 @@ class DetailFragment : Fragment() {
                 AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_selected)
         } else watchlistItem.icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
-
     }
 
     private fun showVideo(videoKey: String) {
@@ -320,6 +325,20 @@ class DetailFragment : Fragment() {
                 Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey))
             )
         )
+    }
+
+    private fun showInAppVideo(videoKey: String, binding: FragmentDetailBinding) {
+        Timber.i("MAS - videoKey: $videoKey")
+        val videoView = binding.screeningTrailer
+
+        videoView.isVisible = true
+
+        videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                Timber.i("MAS - player ready")
+                youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
+            }
+        })
     }
 
 }

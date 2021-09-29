@@ -44,19 +44,33 @@ class Service {
         }
     }
 
-    fun getTVShowVideos(movieID: Int): Flow<String> {
+    fun getTVShowVideos(tvShowID: Int): Flow<String> {
         return flow {
-            val videoEntity = retrofit.create(ApiClient::class.java).getTVShowVideos(movieID, BuildConfig.API_KEY).results.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
-            Timber.i("MAS - videoEntity: $videoEntity")
+            val videoList = retrofit.create(ApiClient::class.java).getTVShowVideos(tvShowID, BuildConfig.API_KEY).results
 
-            emit(videoEntity[0].key)
+            val official = videoList.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
+            val unOfficial = videoList.filter { it.site == "YouTube" && it.type == "Trailer" }
+
+            when {
+                official.isNotEmpty() -> emit(official[0].key)
+                unOfficial.isNotEmpty() -> emit(unOfficial[0].key)
+                else -> emit("")
+            }
         }
     }
 
     fun getMovieVideos(movieID: Int): Flow<String> {
         return flow {
-            val videoEntity = retrofit.create(ApiClient::class.java).getMovieVideos(movieID, BuildConfig.API_KEY).results.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
-            emit(videoEntity[0].key)
+            val videoList = retrofit.create(ApiClient::class.java).getMovieVideos(movieID, BuildConfig.API_KEY).results
+
+            val official = videoList.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
+            val unOfficial = videoList.filter { it.site == "YouTube" && it.type == "Trailer" }
+
+            when {
+                official.isNotEmpty() -> emit(official[0].key)
+                unOfficial.isNotEmpty() -> emit(unOfficial[0].key)
+                else -> emit("")
+            }
         }
     }
 }
