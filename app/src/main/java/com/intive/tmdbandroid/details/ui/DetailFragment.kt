@@ -58,17 +58,7 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
-
-        binding.networkList.apply {
-            val displayMetrics = context.resources.displayMetrics
-            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-
-            val scaling = resources.getInteger(R.integer.screening_width)
-            val columnCount = floor(dpWidth / scaling).toInt() + 1
-
-            layoutManager = GridLayoutManager(context, columnCount)
-            adapter = networkAdapter
-        }
+        setupNetworkList(binding)
 
         return binding.root
     }
@@ -287,5 +277,18 @@ class DetailFragment : Fragment() {
         } else watchlistItem.icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
 
+    }
+
+    private fun setupNetworkList(binding: FragmentDetailBinding) {
+        binding.networkList.apply {
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = resources.getInteger(R.integer.screening_width)
+            val columnCount = floor(dpWidth / scaling).toInt() + 1
+
+            layoutManager = GridLayoutManager(context, columnCount)
+            adapter = networkAdapter
+        }
     }
 }
