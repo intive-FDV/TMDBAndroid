@@ -61,8 +61,10 @@ class DetailFragment : Fragment() {
         val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
-            if (args.isMovieBoolean) viewModel.movie(it)
-            else viewModel.tVShows(it)
+            if(savedInstanceState==null){
+                if (args.isMovieBoolean) viewModel.movie(it)
+                else viewModel.tVShows(it)
+            }
         }
     }
 
