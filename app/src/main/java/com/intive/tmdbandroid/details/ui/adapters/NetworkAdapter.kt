@@ -36,7 +36,6 @@ class NetworkAdapter : ListAdapter<Network, NetworkAdapter.NetworkHolder>(COMPAR
         fun bind (network: Network) {
 
             val options = RequestOptions()
-                .centerCrop()
                 .placeholder(R.drawable.ic_image)
                 .error(R.drawable.ic_image)
 
