@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
-    private var isLoad:Boolean = false
+    private var isLoad: Boolean = false
 
     private lateinit var searchAdapter: ScreeningSearchAdapter
 
@@ -73,13 +73,13 @@ class SearchFragment : Fragment() {
                     binding.searchView.clearFocus()
                     viewModel.search(query)
                     searchViewQuery = query
-                    isLoad=true
+                    isLoad = true
                     return true
                 }
                 return false
             }
         })
-        if(savedInstanceState!=null && isLoad){
+        if (savedInstanceState != null && isLoad) {
             binding.searchView.clearFocus()
             subscribeViewModel(binding)
         }
