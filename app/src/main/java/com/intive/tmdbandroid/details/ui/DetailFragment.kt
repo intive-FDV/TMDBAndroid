@@ -1,10 +1,15 @@
 package com.intive.tmdbandroid.details.ui
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
+import android.widget.RatingBar
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -65,15 +70,33 @@ class DetailFragment : Fragment() {
         }
         val button_rating=view.findViewById<Button>(R.id.button_rating)
         button_rating.setOnClickListener{
-            screeningItemId?.let {
-                if (args.isMovieBoolean) viewModel.ratingMovie(it,5.0)
-                else{
-                    viewModel.ratingTvShow(it,5.0)
-                }
-            }
+            screeningItemId?.let { it1 -> showDialog(it1,args) }
         }
 
 
+
+    }
+
+    private fun showDialog(screeningItemId:Int, args:DetailFragmentArgs) {
+        val dialog = this.context?.let { Dialog(it) }
+        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog?.setCancelable(false)
+        dialog?.setContentView(R.layout.rank_dialog)
+        val yesBtn = dialog?.findViewById(R.id.rank_dialog_button_rate) as Button
+        val noBtn = dialog.findViewById(R.id.rank_dialog_button_cancel) as TextView
+        yesBtn.setOnClickListener {
+            val ratingBar: RatingBar = dialog?.findViewById(R.id.dialog_ratingbar) as RatingBar
+            screeningItemId?.let {
+                if (args.isMovieBoolean) viewModel.ratingMovie(it,ratingBar.rating.toDouble())
+                else{
+                    viewModel.ratingTvShow(it,ratingBar.rating.toDouble())
+                }
+            }
+
+            dialog.dismiss()
+        }
+        noBtn.setOnClickListener { dialog.dismiss() }
+        dialog?.show()
 
     }
 
