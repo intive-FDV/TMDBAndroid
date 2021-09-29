@@ -24,6 +24,7 @@
     <string name="thumb_description">Rating Icon</string>
     <string name="rate_button_text">Rate it</string>
     <string name="networks_header_text">Available in:</string>
+    <string name="network_img_description">Network Logo</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>

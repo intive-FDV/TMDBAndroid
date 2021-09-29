@@ -16,7 +16,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.appbar.AppBarLayout
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
@@ -30,9 +29,10 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import android.util.TypedValue
-
 import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
+import kotlin.math.floor
 
 
 @AndroidEntryPoint
@@ -42,6 +42,8 @@ class DetailFragment : Fragment() {
     private var screeningItemId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
+
+    private val networkAdapter = NetworkAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,17 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
+
+        binding.networkList.apply {
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = resources.getInteger(R.integer.screening_width)
+            val columnCount = floor(dpWidth / scaling).toInt() + 1
+
+            layoutManager = GridLayoutManager(context, columnCount)
+            adapter = networkAdapter
+        }
 
         return binding.root
     }
@@ -133,7 +146,7 @@ class DetailFragment : Fragment() {
 
         screening.release_date?.let { setDate(binding, it) }
 
-        setPercentageToCircularPercentage(binding, screening.vote_average)
+        setPercentage(binding, screening.vote_average)
 
         setupToolbar(binding, screening)
 
@@ -176,7 +189,7 @@ class DetailFragment : Fragment() {
         screeningItemId?.let { viewModel.existAsFavorite(it) }
     }
 
-    private fun setPercentageToCircularPercentage(
+    private fun setPercentage(
         binding: FragmentDetailBinding,
         voteAverage: Double
     ) {
@@ -228,25 +241,27 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
 
         if (screening.networks.isNotEmpty()){
-            screening.networks.forEach {
-
-                val networkImg = ImageView(binding.networkContainer.context)
-                glide.load(resources.getString(R.string.base_imageURL) + it.logo_path)
-                    .apply(options)
-                    .into(networkImg)
-
-                val lp = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-
-                lp.setMargins(0, 0, calculateDP(40f), 0)
-
-                networkImg.layoutParams = lp
-                networkImg.layoutParams.width = calculateDP(100f)
-
-                binding.networkContainer.addView(networkImg)
-            }
+//            screening.networks.forEach {
+//
+//                val networkImg = ImageView(binding.networkContainer.context)
+//                glide.load(resources.getString(R.string.base_imageURL) + it.logo_path)
+//                    .apply(options)
+//                    .into(networkImg)
+//
+//                val lp = LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//                )
+//
+//                lp.setMargins(0, 0, calculateDP(40f), 0)
+//
+//                networkImg.layoutParams = lp
+//                networkImg.layoutParams.width = calculateDP(100f)
+//
+//                binding.networkContainer.addView(networkImg)
+//
+//            }
+                networkAdapter.submitList(screening.networks)
         } else {
             binding.networksHeader.visibility = View.GONE
         }
