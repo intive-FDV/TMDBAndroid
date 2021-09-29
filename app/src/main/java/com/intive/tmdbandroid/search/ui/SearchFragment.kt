@@ -26,13 +26,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class SearchFragment: Fragment() {
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
     private val clickListener = { screening: Screening ->
         val isMovie = screening.media_type == "movie"
-        val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
-        findNavController().navigate(action)
+        val action =
+            SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
+        val currentDestination = findNavController().currentDestination?.id
+        if (currentDestination == R.id.searchFragmentDest) {
+            findNavController().navigate(action)
+        }
     }
 
     private val searchAdapter = ScreeningSearchAdapter(clickListener)
@@ -54,27 +58,28 @@ class SearchFragment: Fragment() {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                if (query.isNotEmpty()){
+                if (query.isNotEmpty()) {
                     searchAdapter.query = query
                     binding.searchView.clearFocus()
                     viewModel.search(query)
                     searchViewQuery = query
-                    subscribeViewModel(binding)
                     return true
                 }
                 return false
             }
         })
         initViews(binding)
-        if(searchViewQuery.isEmpty()){
+        subscribeViewModel(binding)
+        if (searchViewQuery.isEmpty()) {
             binding.searchView.requestFocus()
-            val imm = binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            binding.searchView.postDelayed(  {
+            val imm =
+                binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            binding.searchView.postDelayed({
                 imm.showSoftInput(binding.searchView, InputMethodManager.SHOW_IMPLICIT)
             }, 50)
-        }
-        else{
+        } else {
             binding.layoutSearchHint.hintContainer.visibility = View.GONE
+
         }
         return binding.root
     }
@@ -84,36 +89,40 @@ class SearchFragment: Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.fragmentSearchToolbar
         toolbar.setupWithNavController(navController, appBarConfiguration)
-        toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
+        toolbar.navigationIcon =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
         toolbar.setNavigationOnClickListener { activity?.finish() }
     }
 
-    fun subscribeViewModel(binding: FragmentSearchBinding){
-        searchAdapter.notifyItemChanged(0)
-        searchAdapter.differ.addLoadStateListener { loadState ->
-            if(loadState.append.endOfPaginationReached){
-                if (searchAdapter.itemCount < 1 + 1) {
-                    binding.layoutEmpty.root.visibility = View.VISIBLE
-                } else binding.layoutEmpty.root.visibility = View.GONE
-            }
-        }
+    private fun subscribeViewModel(binding: FragmentSearchBinding) {
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { screening ->
-
                 when (screening) {
                     is State.Success<PagingData<Screening>> -> {
-                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutEmpty.root.visibility = View.GONE
+                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
+                        searchAdapter.notifyItemChanged(0)
                         searchAdapter.submitData(screening.data)
                     }
                     is State.Error -> {
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
-                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutEmpty.root.visibility = View.GONE
+                        binding.layoutSearchHint.hintContainer.visibility = View.GONE
+                        binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                    }
+                    is State.Waiting -> {
+                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutEmpty.root.visibility = View.GONE
+                        binding.layoutSearchHint.hintContainer.visibility = View.VISIBLE
                     }
                 }
             }
@@ -126,6 +135,13 @@ class SearchFragment: Fragment() {
         resultsList.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = searchAdapter
+        }
+        searchAdapter.differ.addLoadStateListener { loadState ->
+            if (loadState.append.endOfPaginationReached) {
+                if (searchAdapter.itemCount < 1 + 1) {
+                    binding.layoutEmpty.root.visibility = View.VISIBLE
+                } else binding.layoutEmpty.root.visibility = View.GONE
+            }
         }
     }
 }
