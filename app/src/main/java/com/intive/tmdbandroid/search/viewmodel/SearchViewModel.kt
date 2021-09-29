@@ -37,4 +37,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    val searchQuery = MutableStateFlow("")
+
 }

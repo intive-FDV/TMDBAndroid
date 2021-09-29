@@ -34,8 +34,6 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchAdapter: ScreeningSearchAdapter
 
-    private var searchViewQuery: String = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,10 +67,9 @@ class SearchFragment : Fragment() {
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotEmpty()) {
-                    searchAdapter.query = query
                     binding.searchView.clearFocus()
+                    viewModel.searchQuery.value = query
                     viewModel.search(query)
-                    searchViewQuery = query
                     isLoad = true
                     return true
                 }
@@ -81,11 +78,12 @@ class SearchFragment : Fragment() {
         })
         if (savedInstanceState != null && isLoad) {
             binding.searchView.clearFocus()
+        } else {
+            initViews(binding)
             subscribeViewModel(binding)
         }
-        initViews(binding)
-        subscribeViewModel(binding)
-        if (searchViewQuery.isEmpty() && !isLoad) {
+
+        if (viewModel.searchQuery.value.isEmpty() && !isLoad) {
             binding.searchView.requestFocus()
             val imm =
                 binding.searchView.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -117,7 +115,11 @@ class SearchFragment : Fragment() {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
-                        searchAdapter.notifyItemChanged(0)
+                        binding.resultSearchHeader.text =
+                            requireContext().getString(
+                                R.string.search_result_header,
+                                viewModel.searchQuery.value
+                            )
                         searchAdapter.submitData(screening.data)
                     }
                     is State.Error -> {
@@ -156,7 +158,7 @@ class SearchFragment : Fragment() {
                     loadState.append is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached
                 ) {
-                    binding.layoutEmpty.root.isVisible = searchAdapter.itemCount < 2
+                    binding.layoutEmpty.root.isVisible = searchAdapter.itemCount < 1
                 }
             }
         }
