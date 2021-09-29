@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.databinding.HeaderResultsSearchBinding
 import com.intive.tmdbandroid.databinding.ItemFoundSearchBinding
 import com.intive.tmdbandroid.model.Screening
 import timber.log.Timber
@@ -20,34 +19,27 @@ import java.util.*
 
 class ScreeningSearchAdapter(
     private val clickListener: ((Screening) -> Unit)
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    var query: String = ""
+) : RecyclerView.Adapter<ScreeningSearchAdapter.SearchResultHolder>() {
 
     val adapterCallback = AdapterListUpdateCallback(this)
-
-    companion object {
-        private const val HEADER = 0
-        private const val ITEM = 1
-    }
 
     val differ = AsyncPagingDataDiffer(
         ScreeningAsyncPagingDataDiffCallback(),
         object : ListUpdateCallback {
             override fun onInserted(position: Int, count: Int) {
-                adapterCallback.onInserted(position + 1, count)
+                adapterCallback.onInserted(position, count)
             }
 
             override fun onRemoved(position: Int, count: Int) {
-                adapterCallback.onRemoved(position + 1, count)
+                adapterCallback.onRemoved(position, count)
             }
 
             override fun onMoved(fromPosition: Int, toPosition: Int) {
-                adapterCallback.onMoved(fromPosition + 1, toPosition + 1)
+                adapterCallback.onMoved(fromPosition, toPosition)
             }
 
             override fun onChanged(position: Int, count: Int, payload: Any?) {
-                adapterCallback.onChanged(position + 1, count, payload)
+                adapterCallback.onChanged(position, count, payload)
             }
 
         }
@@ -58,49 +50,21 @@ class ScreeningSearchAdapter(
     }
 
     override fun getItemCount(): Int {
-        return differ.itemCount + 1
+        return differ.itemCount
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            0 -> HEADER
-            else -> ITEM
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultHolder {
+        return SearchResultHolder(
+            ItemFoundSearchBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), clickListener
+        )
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            HEADER -> HeaderHolder(
-                HeaderResultsSearchBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
-            ITEM -> SearchResultHolder(
-                ItemFoundSearchBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                ), clickListener
-            )
-            else -> throw Exception("Illegal ViewType")
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is HeaderHolder -> holder.bind(query)
-            is SearchResultHolder -> differ.getItem(position - 1)?.let { holder.bind(it) }
-        }
-    }
-
-    inner class HeaderHolder(private val binding: HeaderResultsSearchBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(query: String) {
-            binding.searchHeader.text =
-                binding.root.context.getString(R.string.search_result_header, query)
-        }
+    override fun onBindViewHolder(holder: SearchResultHolder, position: Int) {
+        differ.getItem(position)?.let { holder.bind(it) }
     }
 
     inner class SearchResultHolder(
