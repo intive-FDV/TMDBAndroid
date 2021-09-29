@@ -3,6 +3,7 @@ package com.intive.tmdbandroid.datasource.network
 import com.intive.tmdbandroid.BuildConfig
 import com.intive.tmdbandroid.common.RetrofitHelper
 import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
+import com.intive.tmdbandroid.entity.ResultMoviesEntity
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
@@ -15,6 +16,12 @@ class Service {
     fun getPaginatedPopularTVShows(page: Int): Flow<ResultTVShowsEntity> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getPaginatedPopularTVShows(BuildConfig.API_KEY, page))
+        }
+    }
+
+    fun getPaginatedPopularMovies(page: Int): Flow<ResultMoviesEntity> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getPaginatedPopularMovies(BuildConfig.API_KEY, page))
         }
     }
 

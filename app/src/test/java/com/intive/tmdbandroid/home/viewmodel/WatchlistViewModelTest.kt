@@ -1,21 +1,17 @@
-package com.intive.tmdbandroid.viewmodel
+package com.intive.tmdbandroid.home.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.home.viewmodel.HomeViewModel
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.GetAllItemsInWatchlistUseCase
-import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,13 +21,12 @@ import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
 /**
- * Unit tests for the implementation of [HomeViewModel].
+ * Unit tests for the implementation of [WatchlistViewModel].
  */
 @RunWith(MockitoJUnitRunner::class)
-class HomeViewModelTest {
+class WatchlistViewModelTest {
 
-    private val screening = PagingData.from(
-        listOf(
+    private val screening = listOf(
             Screening(
                 backdrop_path = "BACKDROP_PATH",
                 release_date = "1983-10-20",
@@ -52,12 +47,8 @@ class HomeViewModelTest {
                 video = false
             )
         )
-    )
 
-    private lateinit var viewModel: HomeViewModel
-
-    @Mock
-    private lateinit var popularTVShowsUseCase: PaginatedPopularTVShowsUseCase
+    private lateinit var viewModel: WatchlistViewModel
 
     @Mock
     private lateinit var getAllItemsInWatchlistUseCase: GetAllItemsInWatchlistUseCase
@@ -73,46 +64,42 @@ class HomeViewModelTest {
 
     @Before
     fun setupViewModel() {
-        viewModel = HomeViewModel(popularTVShowsUseCase, getAllItemsInWatchlistUseCase)
+        viewModel = WatchlistViewModel(getAllItemsInWatchlistUseCase)
     }
 
     @ExperimentalTime
     @ExperimentalCoroutinesApi
     @Test
-    @Ignore("There's a problem in how the cachedIn ext func from paging data works (it's using a flow to handle the cache which makes the content of the succes not to be a paging data but actually a new flow). Ignoring this test for now, until we get a better way to test the paging library.")
-    fun fetchTvShowsSuccess() {
+    fun getWatchlistSuccess() {
         mainCoroutineRule.runBlockingTest {
-            BDDMockito.given(popularTVShowsUseCase()).willReturn(flow {
+            BDDMockito.given(getAllItemsInWatchlistUseCase()).willReturn(flow {
                 emit(screening)
             })
 
-            viewModel.popularTVShows()
+            viewModel.watchlistScreening()
 
             viewModel.uiState.test {
                 val item = awaitItem()
                 Truth.assertThat(item).isEqualTo(State.Success(screening))
             }
         }
-
     }
 
     @ExperimentalTime
     @ExperimentalCoroutinesApi
     @Test
-    fun fetchTvShowError() {
+    fun getWatchlistError() {
         mainCoroutineRule.runBlockingTest {
             val runtimeException = RuntimeException()
-            BDDMockito.given(popularTVShowsUseCase()).willReturn(flow {
+            BDDMockito.given(getAllItemsInWatchlistUseCase()).willReturn(flow {
                 throw runtimeException
             })
 
-            viewModel.popularTVShows()
+            viewModel.watchlistScreening()
 
             viewModel.uiState.test {
                 Truth.assertThat(awaitItem()).isEqualTo(State.Error)
             }
         }
-
     }
-
 }

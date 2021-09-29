@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,6 +60,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
+            Timber.i("MAS - screeningID: $it")
             if(savedInstanceState==null){
                 if (args.isMovieBoolean) viewModel.movie(it)
                 else viewModel.tVShows(it)
@@ -223,7 +225,9 @@ class DetailFragment : Fragment() {
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+
         val toolbar = binding.toolbar
+
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -238,11 +242,22 @@ class DetailFragment : Fragment() {
                 else -> false
             }
         }
+
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
             appBarConfiguration
         )
+
+        toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
+        toolbar.setNavigationOnClickListener {
+            if (navController.navigateUp()) {
+                navController.popBackStack()
+            }else {
+                activity?.finish()
+            }
+        }
+
         binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset < -500) {
                 binding.popularityCard.visibility = View.INVISIBLE
