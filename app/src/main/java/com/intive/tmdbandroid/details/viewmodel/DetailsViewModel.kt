@@ -21,7 +21,8 @@ class DetailsViewModel @Inject internal constructor(
     private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
     private val existUseCase: ExistUseCase,
     private val ratingMovieUseCase: RatingMovieUseCase,
-    private val ratingTVShowUseCase: RatingTVShowUseCase
+    private val ratingTVShowUseCase: RatingTVShowUseCase,
+    private val guestSessionUseCase: GuestSessionUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<Screening>>(State.Loading)
@@ -92,12 +93,14 @@ class DetailsViewModel @Inject internal constructor(
 
     fun ratingMovie(idMovie: Int, rating: Double){
         viewModelScope.launch {
+            guestSessionUseCase()
             ratingMovieUseCase(idMovie,rating)
         }
     }
 
     fun ratingTvShow(idMovie: Int, rating: Double){
         viewModelScope.launch {
+            guestSessionUseCase()
             ratingTVShowUseCase(idMovie,rating)
         }
     }

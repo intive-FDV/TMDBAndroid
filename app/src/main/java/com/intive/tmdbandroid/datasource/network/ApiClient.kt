@@ -3,6 +3,7 @@ package com.intive.tmdbandroid.datasource.network
 import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Movie
+import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.model.TVShow
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -28,8 +29,11 @@ interface ApiClient {
                                 @Query("page") page: Int) : ResultListTVShowOrMovies
 
     @POST("movie/{movie_id}/rating")
-    suspend fun postMovieRanking(@Path("movie_id") query: Int,@Query("api_key") apiKey: String, @Query("session_id") sessionId:String, @Body requestBody : RequestBody): Response<ResponseBody>
+    suspend fun postMovieRanking(@Path("movie_id") query: Int,@Query("api_key") apiKey: String, @Query("guest_session_id") sessionId:String, @Body requestBody : RequestBody): Response<ResponseBody>
 
     @POST("tv/{tv_id}/rating")
-    suspend fun postTVRanking(@Path("tv_id") query: Int,@Query("api_key") apiKey: String,  @Query("session_id") sessionId:String,  @Body requestBody : RequestBody): Response<ResponseBody>
+    suspend fun postTVRanking(@Path("tv_id") query: Int,@Query("api_key") apiKey: String,  @Query("guest_session_id") sessionId:String,  @Body requestBody : RequestBody): Response<ResponseBody>
+
+    @GET("authentication/guest_session/new")
+    suspend fun getNewGuestSession(@Query("api_key") apiKey: String) : Session
 }

@@ -8,6 +8,7 @@ import com.intive.tmdbandroid.datasource.ScreeningSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -59,5 +60,9 @@ class CatalogRepository @Inject constructor(
 
     suspend fun setTVShowRating(idMovie: Int,rating: Double):Boolean{
         return service.setTVShowRating(idMovie,rating)
+    }
+
+    suspend fun getGuestSession():Session{
+        return service.getGuestSession()
     }
 }
