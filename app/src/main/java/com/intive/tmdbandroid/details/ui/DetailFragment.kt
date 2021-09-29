@@ -28,8 +28,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import android.util.TypedValue
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import kotlin.math.floor
@@ -241,26 +239,6 @@ class DetailFragment : Fragment() {
             .into(binding.backgroundImageToolbarLayout)
 
         if (screening.networks.isNotEmpty()){
-//            screening.networks.forEach {
-//
-//                val networkImg = ImageView(binding.networkContainer.context)
-//                glide.load(resources.getString(R.string.base_imageURL) + it.logo_path)
-//                    .apply(options)
-//                    .into(networkImg)
-//
-//                val lp = LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT
-//                )
-//
-//                lp.setMargins(0, 0, calculateDP(40f), 0)
-//
-//                networkImg.layoutParams = lp
-//                networkImg.layoutParams.width = calculateDP(100f)
-//
-//                binding.networkContainer.addView(networkImg)
-//
-//            }
                 networkAdapter.submitList(screening.networks)
         } else {
             binding.networksHeader.visibility = View.GONE
@@ -310,13 +288,4 @@ class DetailFragment : Fragment() {
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
 
     }
-
-    private fun calculateDP(value: Float): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            value,
-            resources.displayMetrics
-        ).toInt()
-    }
-
 }
