@@ -1,11 +1,15 @@
 package com.intive.tmdbandroid.details.ui
 
+import android.app.Dialog
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,22 +25,23 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
 import com.intive.tmdbandroid.model.Screening
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import android.net.Uri
-import android.widget.Toast
-import android.content.Intent
-import androidx.annotation.NonNull
-import androidx.core.view.isVisible
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
-import kotlinx.coroutines.flow.consumeAsFlow
+import android.util.DisplayMetrics
+import android.view.*
+import com.intive.tmdbandroid.common.TrailerDialogFragment
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -63,7 +68,7 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
-        collectTrailer(binding)
+        collectTrailer()
 
         return binding.root
     }
@@ -131,7 +136,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun collectTrailer(binding: FragmentDetailBinding) {
+    private fun collectTrailer() {
         lifecycleScope.launch {
             viewModel.trailerState.consumeAsFlow().collect {
                 Timber.i("MAS - trailerState: $it")
@@ -140,7 +145,9 @@ class DetailFragment : Fragment() {
                         if (it.data.isEmpty())
                             Toast.makeText(context, "No trailer found. Sorry!", Toast.LENGTH_LONG).show()
                         else
-                            showInAppVideo(it.data, binding)//showVideo(it.data)
+                            showDialog(it.data)
+//                            showInAppVideo(it.data, binding)
+//                            showVideo(it.data)
                     }
                     State.Error -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
@@ -200,7 +207,7 @@ class DetailFragment : Fragment() {
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
 
-        lifecycle.addObserver(binding.screeningTrailer)
+        //lifecycle.addObserver(binding.screeningTrailer)
         binding.trailerTextView.setOnClickListener {
             screeningItemId?.let {
                 if (isMovie)
@@ -327,18 +334,46 @@ class DetailFragment : Fragment() {
         )
     }
 
-    private fun showInAppVideo(videoKey: String, binding: FragmentDetailBinding) {
-        Timber.i("MAS - videoKey: $videoKey")
-        val videoView = binding.screeningTrailer
+//    private fun showInAppVideo(videoKey: String, binding: FragmentDetailBinding) {
+//        Timber.i("MAS - videoKey: $videoKey")
+//        val videoView = binding.screeningTrailer
+//
+//        videoView.isVisible = true
+//
+//        videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+//            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+//                Timber.i("MAS - player ready")
+//                youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
+//            }
+//        })
+//    }
 
-        videoView.isVisible = true
+    private fun showDialog(videoKey: String) {
+        val dialog = activity?.let { Dialog(it) }
 
-        videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-                Timber.i("MAS - player ready")
-                youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
-            }
-        })
+        dialog?.apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setCancelable(true)
+            setContentView(R.layout.dialog_trailer)
+
+            val videoView = findViewById<YouTubePlayerView>(R.id.screening_trailer)
+
+            videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                    Timber.i("MAS - player ready")
+                    youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
+                }
+            })
+
+            val metrics = resources.displayMetrics
+            val width = metrics.widthPixels
+            val density = metrics.density
+
+            window?.setLayout((width - (8 * density).toInt()), WindowManager.LayoutParams.WRAP_CONTENT)
+
+            setOnDismissListener { videoView.release() }
+
+            show()
+        }
     }
-
 }
