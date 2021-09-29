@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -62,6 +63,18 @@ class DetailFragment : Fragment() {
             if (args.isMovieBoolean) viewModel.movie(it)
             else viewModel.tVShows(it)
         }
+        val button_rating=view.findViewById<Button>(R.id.button_rating)
+        button_rating.setOnClickListener{
+            screeningItemId?.let {
+                if (args.isMovieBoolean) viewModel.ratingMovie(it,5.0)
+                else{
+                    viewModel.ratingTvShow(it,5.0)
+                }
+            }
+        }
+
+
+
     }
 
     override fun onDestroyView() {

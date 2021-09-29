@@ -28,8 +28,8 @@ interface ApiClient {
                                 @Query("page") page: Int) : ResultListTVShowOrMovies
 
     @POST("movie/{movie_id}/rating")
-    suspend fun postMovieRanking(@Query("api_key") apiKey: String, @Path("movie_id") query: Int, @Query("session_id") sessionId:String,@Body requestBody : RequestBody): Response<ResponseBody>
+    suspend fun postMovieRanking(@Path("movie_id") query: Int,@Query("api_key") apiKey: String, @Query("session_id") sessionId:String, @Body requestBody : RequestBody): Response<ResponseBody>
 
     @POST("tv/{tv_id}/rating")
-    suspend fun postTVRanking(@Query("api_key") apiKey: String, @Path("tv_id") query: Int, @Query("session_id") sessionId:String, @Body requestBody : RequestBody): Response<ResponseBody>
+    suspend fun postTVRanking(@Path("tv_id") query: Int,@Query("api_key") apiKey: String,  @Query("session_id") sessionId:String,  @Body requestBody : RequestBody): Response<ResponseBody>
 }

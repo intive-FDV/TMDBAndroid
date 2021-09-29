@@ -63,7 +63,29 @@ class Service {
             // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-            retrofit.create(ApiClient::class.java).postMovieRanking(BuildConfig.API_KEY,movieID, session(),requestBody)
+            retrofit.create(ApiClient::class.java).postMovieRanking(movieID,BuildConfig.API_KEY,session(),requestBody)
+        }
+
+        return  retorno
+    }
+
+    suspend fun setTVShowRating(tvShowID: Int, rating: Double): Boolean {
+        var retorno:Boolean = true
+        if(rating < 0.5 || rating > 10){
+            retorno=false
+        }
+        else{
+            // Create JSON using JSONObject
+            val jsonObject = JSONObject()
+            jsonObject.put("value", rating)
+
+            // Convert JSONObject to String
+            val jsonObjectString = jsonObject.toString()
+
+            // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
+            retrofit.create(ApiClient::class.java).postTVRanking(tvShowID,BuildConfig.API_KEY,session(),requestBody)
         }
 
         return  retorno

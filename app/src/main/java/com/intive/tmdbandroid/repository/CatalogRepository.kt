@@ -52,4 +52,12 @@ class CatalogRepository @Inject constructor(
             }
         ).flow
     }
+
+    suspend fun setMovieRating(idMovie: Int,rating: Double):Boolean{
+        return service.setMovieRating(idMovie,rating)
+    }
+
+    suspend fun setTVShowRating(idMovie: Int,rating: Double):Boolean{
+        return service.setTVShowRating(idMovie,rating)
+    }
 }

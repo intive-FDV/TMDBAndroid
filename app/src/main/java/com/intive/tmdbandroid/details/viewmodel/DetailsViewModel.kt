@@ -19,7 +19,9 @@ class DetailsViewModel @Inject internal constructor(
     private val movieUseCase: DetailMovieUseCase,
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
     private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
-    private val existUseCase: ExistUseCase
+    private val existUseCase: ExistUseCase,
+    private val ratingMovieUseCase: RatingMovieUseCase,
+    private val ratingTVShowUseCase: RatingTVShowUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<Screening>>(State.Loading)
@@ -85,6 +87,18 @@ class DetailsViewModel @Inject internal constructor(
                 .collect {
                     _watchlistState.value = State.Success(it)
                 }
+        }
+    }
+
+    fun ratingMovie(idMovie: Int, rating: Double){
+        viewModelScope.launch {
+            ratingMovieUseCase(idMovie,rating)
+        }
+    }
+
+    fun ratingTvShow(idMovie: Int, rating: Double){
+        viewModelScope.launch {
+            ratingTVShowUseCase(idMovie,rating)
         }
     }
 }
