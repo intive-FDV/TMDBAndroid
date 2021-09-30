@@ -6,6 +6,7 @@ import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.usecase.*
@@ -48,7 +49,8 @@ class DetailsViewModelTest {
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,
-        status = "Online"
+        status = "Online",
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
     private val screening = Screening(
@@ -68,7 +70,8 @@ class DetailsViewModelTest {
         media_type = "tv",
         adult = false,
         genre_ids = null,
-        video = false
+        video = false,
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
     private lateinit var detailViewModel: DetailsViewModel

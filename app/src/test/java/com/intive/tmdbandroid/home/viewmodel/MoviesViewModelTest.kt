@@ -59,7 +59,8 @@ class MoviesViewModelTest {
                 media_type = "movie",
                 adult = false,
                 genre_ids = null,
-                video = false
+                video = false,
+                networks = emptyList()
             ),
             Screening(
                 backdrop_path = "BACKDROP_PATH_2",
@@ -78,7 +79,8 @@ class MoviesViewModelTest {
                 media_type = "movie",
                 adult = false,
                 genre_ids = null,
-                video = false
+                video = false,
+                networks = emptyList()
             )
         )
     )

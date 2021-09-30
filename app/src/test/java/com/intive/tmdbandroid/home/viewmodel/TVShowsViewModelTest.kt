@@ -7,6 +7,7 @@ import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,7 +60,8 @@ class TVShowsViewModelTest {
                 media_type = "tv",
                 adult = false,
                 genre_ids = null,
-                video = false
+                video = false,
+                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
             ),
             Screening(
                 backdrop_path = "BACKDROP_PATH_2",
@@ -78,7 +80,8 @@ class TVShowsViewModelTest {
                 media_type = "tv",
                 adult = false,
                 genre_ids = null,
-                video = false
+                video = false,
+                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
             )
         )
     )

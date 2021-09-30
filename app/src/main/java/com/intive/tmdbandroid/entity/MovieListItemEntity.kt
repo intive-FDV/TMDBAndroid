@@ -31,7 +31,8 @@ data class MovieListItemEntity(
             "tv",
             false,
             null,
-            false
+            false,
+            emptyList()
         )
     }
 }

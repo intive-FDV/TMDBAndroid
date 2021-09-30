@@ -20,6 +20,7 @@ data class Screening(
     val adult: Boolean,
     val genre_ids: List<Int>?,
     val video: Boolean,
+    val networks: List<Network>
 ) {
     fun toScreeningORMEntity(): ScreeningORMEntity {
         return ScreeningORMEntity(
@@ -39,7 +40,8 @@ data class Screening(
             media_type,
             adult,
             genre_ids,
-            video
+            video,
+            networks
         )
     }
 }

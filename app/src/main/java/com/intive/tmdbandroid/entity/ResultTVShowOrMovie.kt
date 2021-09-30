@@ -45,7 +45,8 @@ data class ResultTVShowOrMovie(
             media_type,
             adult,
             genre_ids,
-            video
+            video,
+            emptyList()
         )
     }
 }
