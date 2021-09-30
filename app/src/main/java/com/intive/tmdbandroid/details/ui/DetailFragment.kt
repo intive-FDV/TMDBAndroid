@@ -1,8 +1,6 @@
 package com.intive.tmdbandroid.details.ui
 
 import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -29,10 +27,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -132,33 +128,19 @@ class DetailFragment : Fragment() {
     }
 
     private fun collectTrailer() {
-        Timber.i("MAS - collectTrailer")
         lifecycleScope.launchWhenStarted {
-            Timber.i("MAS - fragment launch")
-            Timber.i("MAS - viewModel: $viewModel, trailerState: ${viewModel.trailerState}")
-            viewModel.trailerState
-                .catch {
-                    Timber.i("MAS - fragment catch")
-                    Timber.e("MAS - ERROR: $this")
-                }
-                .collect {
-                Timber.i("MAS - trailerState: $it")
+            for (it in viewModel.trailerState) {
+                Timber.i("MAS - collectTrailer.state: $it")
                 when (it) {
-                    is State.Success -> {
+                    is State.Success<String> -> {
                         if (it.data.isEmpty())
                             Toast.makeText(context, "No trailer found. Sorry!", Toast.LENGTH_LONG).show()
                         else {
-                            Timber.i("MAS - showing dialog")
                             showDialog(it.data)
-//                            showInAppVideo(it.data, binding)
-//                            showVideo(it.data)
                         }
                     }
-                    State.Error -> {
+                    else -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
-                    }
-                    State.Loading -> {
-                        //
                     }
                 }
             }
@@ -214,7 +196,6 @@ class DetailFragment : Fragment() {
 
         //lifecycle.addObserver(binding.screeningTrailer)
         binding.trailerTextView.setOnClickListener {
-            Timber.i("MAS - trailer button Clicked / screeningID: $screeningItemId, isMovie: $isMovie")
             screeningItemId?.let {
                 if (isMovie)
                     viewModel.getMovieTrailer(it)
@@ -329,31 +310,6 @@ class DetailFragment : Fragment() {
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
     }
 
-//    private fun showVideo(videoKey: String) {
-//        Timber.i("MAS - videoKey: $videoKey")
-//
-//        startActivity(
-//            Intent(
-//                Intent.ACTION_VIEW,
-//                Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey))
-//            )
-//        )
-//    }
-
-//    private fun showInAppVideo(videoKey: String, binding: FragmentDetailBinding) {
-//        Timber.i("MAS - videoKey: $videoKey")
-//        val videoView = binding.screeningTrailer
-//
-//        videoView.isVisible = true
-//
-//        videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-//            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-//                Timber.i("MAS - player ready")
-//                youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
-//            }
-//        })
-//    }
-
     private fun showDialog(videoKey: String) {
         val dialog = activity?.let { Dialog(it) }
 
@@ -367,7 +323,6 @@ class DetailFragment : Fragment() {
 
             videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                 override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-                    Timber.i("MAS - player ready")
                     youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
                 }
             })

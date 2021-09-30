@@ -30,7 +30,7 @@ class DetailsViewModel @Inject internal constructor(
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
 
     private val _trailerState = Channel<State<String>>()
-    val trailerState = _trailerState.consumeAsFlow()
+    val trailerState = _trailerState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
