@@ -21,7 +21,9 @@ class ScreeningSearchSource(private val service: Service, private val query: Str
             val prevKey = if (pageNumber > DEFAULT_PAGE_INDEX) pageNumber - 1 else null
             val nextKey = if (response.results.isNotEmpty()) pageNumber + 1 else null
 
-            val screenings: List<Screening> = response.results.map { it.toScreening() }
+            val screenings: List<Screening> = response.results.filter {
+                it.media_type == "movie" || it.media_type == "tv"
+            }.map { it.toScreening() }
 
             LoadResult.Page(
                 data = screenings,
