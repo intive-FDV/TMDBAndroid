@@ -132,6 +132,8 @@ class DetailFragment : Fragment() {
 
         setImages(binding, screening)
 
+        setNetworkImages(binding, screening)
+
         screening.release_date?.let { setDate(binding, it) }
 
         setPercentage(binding, screening.vote_average)
@@ -227,12 +229,6 @@ class DetailFragment : Fragment() {
         glide.load(backdropPosterURL)
             .apply(options)
             .into(binding.backgroundImageToolbarLayout)
-
-        if (screening.networks.isNotEmpty()){
-                networkAdapter.submitList(screening.networks)
-        } else {
-            binding.networksHeader.visibility = View.GONE
-        }
     }
 
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
@@ -289,6 +285,14 @@ class DetailFragment : Fragment() {
 
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = networkAdapter
+        }
+    }
+
+    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening){
+        if (screening.networks.isNotEmpty()){
+            networkAdapter.submitList(screening.networks)
+        } else {
+            binding.networksHeader.visibility = View.GONE
         }
     }
 }
