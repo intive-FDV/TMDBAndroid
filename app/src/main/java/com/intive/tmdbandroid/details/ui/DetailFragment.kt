@@ -31,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -65,8 +66,11 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
-            if (args.isMovieBoolean) viewModel.movie(it)
-            else viewModel.tVShows(it)
+            Timber.i("MAS - screeningID: $it")
+            if(savedInstanceState==null){
+                if (args.isMovieBoolean) viewModel.movie(it)
+                else viewModel.tVShows(it)
+            }
         }
         val button_rating=view.findViewById<Button>(R.id.button_rating)
         button_rating.setOnClickListener{
@@ -159,8 +163,7 @@ class DetailFragment : Fragment() {
 
         screening.release_date?.let { setDate(binding, it) }
 
-        //setPercentageToCircularPercentage(binding, screening.vote_average)
-        //setPercentageToCircularPercentage(binding, tvShow.vote_average)
+        setPercentageToCircularPercentage(binding, screening.vote_average)
 
         setupToolbar(binding, screening)
 
@@ -202,28 +205,28 @@ class DetailFragment : Fragment() {
         screeningItemId?.let { viewModel.existAsFavorite(it) }
     }
 
-//    private fun setPercentageToCircularPercentage(
-//        binding: FragmentDetailBinding,
-//        voteAverage: Double
-//    ) {
-//        val percentage = (voteAverage * 10).toInt()
-//
-//        binding.circularPercentage.progress = percentage
-//
-//        val context = binding.root.context
-//
-//        when {
-//            percentage < 25 -> binding.circularPercentage.progressTintList =
-//                ContextCompat.getColorStateList(context, R.color.red)
-//            percentage < 45 -> binding.circularPercentage.progressTintList =
-//                ContextCompat.getColorStateList(context, R.color.orange)
-//            percentage < 75 -> binding.circularPercentage.progressTintList =
-//                ContextCompat.getColorStateList(context, R.color.yellow)
-//            else -> binding.circularPercentage.progressTintList =
-//                ContextCompat.getColorStateList(context, R.color.green)
-//        }
-//        binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
-//    }
+    private fun setPercentageToCircularPercentage(
+        binding: FragmentDetailBinding,
+        voteAverage: Double
+    ) {
+        val percentage = (voteAverage * 10).toInt()
+
+        binding.circularPercentage.progress = percentage
+
+        val context = binding.root.context
+
+        when {
+            percentage < 25 -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.red)
+            percentage < 45 -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.orange)
+            percentage < 75 -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.yellow)
+            else -> binding.circularPercentage.progressTintList =
+                ContextCompat.getColorStateList(context, R.color.green)
+        }
+        binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
+    }
 
     private fun setDate(binding: FragmentDetailBinding, firstAirDate: String) {
         try {
@@ -258,7 +261,9 @@ class DetailFragment : Fragment() {
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+
         val toolbar = binding.toolbar
+
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -273,16 +278,27 @@ class DetailFragment : Fragment() {
                 else -> false
             }
         }
+
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
             appBarConfiguration
         )
-//        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-//            if (verticalOffset < -500) {
-//                binding.popularityCard.visibility = View.INVISIBLE
-//            } else binding.popularityCard.visibility = View.VISIBLE
-//        })
+
+        toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
+        toolbar.setNavigationOnClickListener {
+            if (navController.navigateUp()) {
+                navController.navigateUp()
+            }else {
+                activity?.finish()
+            }
+        }
+
+        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            if (verticalOffset < -500) {
+                binding.popularityCard.visibility = View.INVISIBLE
+            } else binding.popularityCard.visibility = View.VISIBLE
+        })
     }
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {

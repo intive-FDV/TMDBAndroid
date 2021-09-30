@@ -1,6 +1,7 @@
 package com.intive.tmdbandroid.datasource.network
 
 import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
+import com.intive.tmdbandroid.entity.ResultMoviesEntity
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Session
@@ -14,6 +15,10 @@ interface ApiClient {
     @GET("tv/popular")
     suspend fun getPaginatedPopularTVShows(@Query("api_key") apiKey: String,
                                            @Query("page") page: Int) : ResultTVShowsEntity
+
+    @GET("movie/popular")
+    suspend fun getPaginatedPopularMovies(@Query("api_key") apiKey: String,
+                                           @Query("page") page: Int) : ResultMoviesEntity
 
     @GET("tv/{tv_id}")
     suspend fun getTVShowByID(@Path("tv_id") tvShowID: Int,

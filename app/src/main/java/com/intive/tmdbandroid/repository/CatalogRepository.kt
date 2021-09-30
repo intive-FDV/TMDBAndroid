@@ -29,7 +29,19 @@ class CatalogRepository @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                ScreeningPagingSource(service = service)
+                ScreeningPagingSource(service = service, 1)
+            }
+        ).flow
+    }
+
+    fun paginatedPopularMovies(): Flow<PagingData<Screening>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = DEFAULT_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                ScreeningPagingSource(service = service, 2)
             }
         ).flow
     }

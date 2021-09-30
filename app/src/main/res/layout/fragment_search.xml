@@ -12,13 +12,11 @@
         android:layout_height="?actionBarSize"
         android:background="@color/primaryColor"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:contentInsetStartWithNavigation="0dp"
         app:titleTextColor="@color/white">
 
         <SearchView
@@ -33,6 +31,16 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView
+        android:id="@+id/result_search_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar"
+        tools:text="@string/search_result_header" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_results"
         android:layout_width="match_parent"
@@ -42,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar"
+        app:layout_constraintTop_toBottomOf="@id/result_search_header"
         tools:listitem="@layout/item_found_search" />
 
 
@@ -54,12 +62,14 @@
     <include
         android:id="@+id/layout_empty"
         layout="@layout/layout_empty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:padding="5dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/result_search_header" />
 
     <include
         android:id="@+id/layout_progressbar"
@@ -68,11 +78,10 @@
     <include
         android:id="@+id/layout_search_hint"
         layout="@layout/layout_search_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_height="0dp"
         android:layout_width="0dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar"
-        />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>
