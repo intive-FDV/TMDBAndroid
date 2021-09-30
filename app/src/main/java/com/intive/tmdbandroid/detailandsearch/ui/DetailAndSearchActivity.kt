@@ -29,6 +29,6 @@ class DetailAndSearchActivity : AppCompatActivity() {
             }
         }
 
-        navHost.navController.setGraph(graph, intent.extras)
+        navController.setGraph(graph, intent.extras)
     }
 }

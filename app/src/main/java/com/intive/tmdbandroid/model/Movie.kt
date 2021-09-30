@@ -32,7 +32,8 @@ data class Movie(
             media_type = "movie",
             adult = false,
             genre_ids = null,
-            false
+            false,
+            emptyList()
         )
     }
 }

@@ -14,7 +14,7 @@ data class ResultTVShowOrMovie(
     val adult: Boolean,
     val genre_ids: List<Int>,
     val id: Int,
-    val overview: String,
+    val overview: String?,
     val popularity: Double,
     val release_date: String?,
     val title: String,
@@ -35,7 +35,7 @@ data class ResultTVShowOrMovie(
             name = name ?: title,
             null,
             null,
-            overview,
+            overview ?: "",
             poster_path,
             null,
             vote_average,
@@ -45,7 +45,8 @@ data class ResultTVShowOrMovie(
             media_type,
             adult,
             genre_ids,
-            video
+            video,
+            emptyList()
         )
     }
 }

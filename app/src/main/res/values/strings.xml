@@ -22,6 +22,11 @@
     <string name="search_result_header">Results for: %1$s</string>
     <string name="year">(%1$s)</string>
     <string name="watch_trailer">Watch trailer</string>
+    <string name="no_overview">No overview available</string>
+    <string name="thumb_description">Rating Icon</string>
+    <string name="rate_button_text">Rate it</string>
+    <string name="networks_header_text">Available in:</string>
+    <string name="network_img_description">Network Logo</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>

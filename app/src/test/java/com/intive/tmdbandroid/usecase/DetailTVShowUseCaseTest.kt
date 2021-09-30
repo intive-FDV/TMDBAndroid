@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.TVShow
 import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,7 +41,8 @@ class DetailTVShowUseCaseTest{
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,
-        status = "Online"
+        status = "Online",
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
     private lateinit var detailUseCase: DetailTVShowUseCase

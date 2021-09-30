@@ -31,7 +31,9 @@ data class TVShowListItemEntity(
             "tv",
             false,
             null,
-            false
+            false,
+            emptyList()
+
         )
     }
 }

@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,7 +48,8 @@ class SearchTVShowUseCaseTest {
                 media_type = "tv",
                 adult = false,
                 genre_ids = null,
-                video = false
+                video = false,
+                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
             )
         )
     )

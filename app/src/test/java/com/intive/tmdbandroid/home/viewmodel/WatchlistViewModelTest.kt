@@ -1,21 +1,18 @@
-package com.intive.tmdbandroid.viewmodel
+package com.intive.tmdbandroid.home.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.home.viewmodel.WatchlistViewModel
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.GetAllItemsInWatchlistUseCase
-import com.intive.tmdbandroid.usecase.PaginatedPopularTVShowsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,7 +45,8 @@ class WatchlistViewModelTest {
                 media_type = "tv",
                 adult = false,
                 genre_ids = null,
-                video = false
+                video = false,
+                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
             )
         )
 

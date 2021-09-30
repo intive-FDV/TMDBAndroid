@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.WatchlistRepository
 import com.intive.tmdbandroid.usecase.InsertInWatchlistUseCase
@@ -45,7 +46,8 @@ class SaveTVShowInWatchlistUseCaseTest {
         media_type = "tv",
         adult = false,
         genre_ids = null,
-        video = false
+        video = false,
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
     private lateinit var saveTVShowInWatchlistUseCase: InsertInWatchlistUseCase

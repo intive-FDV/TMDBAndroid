@@ -1,19 +1,15 @@
 package com.intive.tmdbandroid.home.ui.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
 import com.intive.tmdbandroid.databinding.ItemScreeningWatchlistBinding
 import com.intive.tmdbandroid.model.Screening
-import timber.log.Timber
 
 class WatchlistAdapter(private val clickListener: ((Screening) -> Unit)) : ListAdapter<Screening, WatchlistAdapter.WatchlistHolder>(COMPARATOR) {
     companion object {

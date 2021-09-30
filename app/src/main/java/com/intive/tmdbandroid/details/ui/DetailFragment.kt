@@ -16,7 +16,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.appbar.AppBarLayout
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
@@ -33,6 +32,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.recyclerview.widget.GridLayoutManager
+import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
+import kotlin.math.floor
+
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -42,6 +45,8 @@ class DetailFragment : Fragment() {
     private var isMovie: Boolean = false
 
     private val viewModel: DetailsViewModel by viewModels()
+
+    private val networkAdapter = NetworkAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +65,7 @@ class DetailFragment : Fragment() {
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
         collectTrailer()
+        setupNetworkList(binding)
 
         return binding.root
     }
@@ -69,8 +75,10 @@ class DetailFragment : Fragment() {
 
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
-            if (isMovie) viewModel.movie(it)
-            else viewModel.tVShows(it)
+            if(savedInstanceState==null){
+                if (isMovie) viewModel.movie(it)
+                else viewModel.tVShows(it)
+            }
         }
     }
 
@@ -151,9 +159,11 @@ class DetailFragment : Fragment() {
 
         setImages(binding, screening)
 
+        setNetworkImages(binding, screening)
+
         screening.release_date?.let { setDate(binding, it) }
 
-        setPercentageToCircularPercentage(binding, screening.vote_average)
+        setPercentage(binding, screening.vote_average)
 
         setupToolbar(binding, screening)
 
@@ -189,12 +199,12 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        binding.overviewDetailTextView.text = screening.overview
+        if(screening.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
+        else binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
 
-        //lifecycle.addObserver(binding.screeningTrailer)
         binding.trailerTextView.setOnClickListener {
             screeningItemId?.let {
                 if (isMovie)
@@ -205,27 +215,26 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setPercentageToCircularPercentage(
+    private fun setPercentage(
         binding: FragmentDetailBinding,
         voteAverage: Double
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.circularPercentage.progress = percentage
+        binding.popularityRatingNumber.text = "$percentage%"
 
         val context = binding.root.context
 
         when {
-            percentage < 25 -> binding.circularPercentage.progressTintList =
+            percentage < 25 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.red)
-            percentage < 45 -> binding.circularPercentage.progressTintList =
+            percentage < 45 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.orange)
-            percentage < 75 -> binding.circularPercentage.progressTintList =
+            percentage < 75 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.yellow)
-            else -> binding.circularPercentage.progressTintList =
+            else -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.green)
         }
-        binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
     }
 
     private fun setDate(binding: FragmentDetailBinding, firstAirDate: String) {
@@ -288,17 +297,11 @@ class DetailFragment : Fragment() {
         toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
             if (navController.navigateUp()) {
-                navController.popBackStack()
+                navController.navigateUp()
             }else {
                 activity?.finish()
             }
         }
-
-        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (verticalOffset < -500) {
-                binding.popularityCard.visibility = View.INVISIBLE
-            } else binding.popularityCard.visibility = View.VISIBLE
-        })
     }
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {
@@ -334,6 +337,27 @@ class DetailFragment : Fragment() {
             window?.setLayout((width - (8 * density).toInt()), WindowManager.LayoutParams.WRAP_CONTENT)
 
             show()
+        }
+    }
+
+    private fun setupNetworkList(binding: FragmentDetailBinding) {
+        binding.networkList.apply {
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = resources.getInteger(R.integer.screening_width)
+            val columnCount = floor(dpWidth / scaling).toInt() + 1
+
+            layoutManager = GridLayoutManager(context, columnCount)
+            adapter = networkAdapter
+        }
+    }
+
+    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening){
+        if (screening.networks.isNotEmpty()){
+            networkAdapter.submitList(screening.networks)
+        } else {
+            binding.networksHeader.visibility = View.GONE
         }
     }
 }

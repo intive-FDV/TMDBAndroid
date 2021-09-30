@@ -4,9 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.intive.tmdbandroid.model.Genre
+import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.converter.GenreConverter
 import com.intive.tmdbandroid.model.converter.IntConverter
+import com.intive.tmdbandroid.model.converter.NetworkConverter
 
 @Entity
 data class ScreeningORMEntity(
@@ -30,6 +32,8 @@ data class ScreeningORMEntity(
     @TypeConverters(IntConverter::class)
     val genre_ids: List<Int>?,
     val video: Boolean,
+    @TypeConverters(NetworkConverter::class)
+    val networks: List<Network>
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -49,7 +53,8 @@ data class ScreeningORMEntity(
             media_type,
             adult,
             genre_ids,
-            video
+            video,
+            networks
         )
     }
 }
