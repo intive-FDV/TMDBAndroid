@@ -2,14 +2,13 @@ package com.intive.tmdbandroid.details.ui
 
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +29,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -37,11 +37,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import android.util.DisplayMetrics
-import android.view.*
-import com.intive.tmdbandroid.common.TrailerDialogFragment
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
-
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -137,17 +132,27 @@ class DetailFragment : Fragment() {
     }
 
     private fun collectTrailer() {
-        lifecycleScope.launch {
-            viewModel.trailerState.consumeAsFlow().collect {
+        Timber.i("MAS - collectTrailer")
+        lifecycleScope.launchWhenStarted {
+            Timber.i("MAS - fragment launch")
+            Timber.i("MAS - viewModel: $viewModel, trailerState: ${viewModel.trailerState}")
+            viewModel.trailerState
+                .catch {
+                    Timber.i("MAS - fragment catch")
+                    Timber.e("MAS - ERROR: $this")
+                }
+                .collect {
                 Timber.i("MAS - trailerState: $it")
                 when (it) {
                     is State.Success -> {
                         if (it.data.isEmpty())
                             Toast.makeText(context, "No trailer found. Sorry!", Toast.LENGTH_LONG).show()
-                        else
+                        else {
+                            Timber.i("MAS - showing dialog")
                             showDialog(it.data)
 //                            showInAppVideo(it.data, binding)
 //                            showVideo(it.data)
+                        }
                     }
                     State.Error -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
@@ -209,6 +214,7 @@ class DetailFragment : Fragment() {
 
         //lifecycle.addObserver(binding.screeningTrailer)
         binding.trailerTextView.setOnClickListener {
+            Timber.i("MAS - trailer button Clicked / screeningID: $screeningItemId, isMovie: $isMovie")
             screeningItemId?.let {
                 if (isMovie)
                     viewModel.getMovieTrailer(it)
@@ -323,16 +329,16 @@ class DetailFragment : Fragment() {
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
     }
 
-    private fun showVideo(videoKey: String) {
-        Timber.i("MAS - videoKey: $videoKey")
-
-        startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey))
-            )
-        )
-    }
+//    private fun showVideo(videoKey: String) {
+//        Timber.i("MAS - videoKey: $videoKey")
+//
+//        startActivity(
+//            Intent(
+//                Intent.ACTION_VIEW,
+//                Uri.parse(resources.getString(R.string.base_youtubeURL, videoKey))
+//            )
+//        )
+//    }
 
 //    private fun showInAppVideo(videoKey: String, binding: FragmentDetailBinding) {
 //        Timber.i("MAS - videoKey: $videoKey")
@@ -357,6 +363,7 @@ class DetailFragment : Fragment() {
             setContentView(R.layout.dialog_trailer)
 
             val videoView = findViewById<YouTubePlayerView>(R.id.screening_trailer)
+            lifecycle.addObserver(videoView)
 
             videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                 override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
@@ -370,8 +377,6 @@ class DetailFragment : Fragment() {
             val density = metrics.density
 
             window?.setLayout((width - (8 * density).toInt()), WindowManager.LayoutParams.WRAP_CONTENT)
-
-            setOnDismissListener { videoView.release() }
 
             show()
         }

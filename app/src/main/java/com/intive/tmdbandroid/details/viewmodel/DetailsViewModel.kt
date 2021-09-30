@@ -29,8 +29,8 @@ class DetailsViewModel @Inject internal constructor(
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
 
-    private val _trailerState = Channel<State<String>>(Channel.CONFLATED)
-    val trailerState = _trailerState
+    private val _trailerState = Channel<State<String>>()
+    val trailerState = _trailerState.consumeAsFlow()
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -69,12 +69,16 @@ class DetailsViewModel @Inject internal constructor(
     }
 
     fun getMovieTrailer(id: Int) {
+        Timber.i("MAS - getMovieTrailer()")
         viewModelScope.launch {
+            Timber.i("MAS - viewmodel launch")
             movieTrailerUseCase(id)
                 .catch {
+                    Timber.i("MAS - viewmodel catch")
                     _trailerState.send(State.Error)
                 }
                 .collect { trailerKey ->
+                    Timber.i("MAS - viewmodel collect trailerKey: $trailerKey")
                     _trailerState.send(State.Success(trailerKey))
                 }
         }
