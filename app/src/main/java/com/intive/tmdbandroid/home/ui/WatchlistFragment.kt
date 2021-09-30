@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.databinding.FragmentHomeBinding
+import com.intive.tmdbandroid.databinding.FragmentWatchlistBinding
 import com.intive.tmdbandroid.detailandsearch.ui.DetailAndSearchActivity
 import com.intive.tmdbandroid.home.ui.adapters.WatchlistAdapter
 import com.intive.tmdbandroid.home.viewmodel.WatchlistViewModel
@@ -27,23 +28,23 @@ class WatchlistFragment : Fragment() {
         defaultViewModelProviderFactory
     }
 
-    private val clickListener = { screening: Screening ->
-        val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
-        val isMovie = screening.media_type == "movie"
-        intent.putExtras(
-            bundleOf(
-                "action" to "detail",
-                "screeningID" to screening.id,
-                "isMovieBoolean" to isMovie
-            )
-        )
-        requireActivity().startActivity(intent)
-    }
-    private val watchlistAdapter = WatchlistAdapter(clickListener)
+    private lateinit var watchlistAdapter: WatchlistAdapter
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.watchlistScreening()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val clickListener = { screening: Screening ->
+            val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
+            val isMovie = screening.media_type == "movie"
+            intent.putExtras(
+                bundleOf(
+                    "action" to "detail",
+                    "screeningID" to screening.id,
+                    "isMovieBoolean" to isMovie
+                )
+            )
+            requireActivity().startActivity(intent)
+        }
+        watchlistAdapter = WatchlistAdapter(clickListener)
     }
 
     override fun onCreateView(
@@ -51,7 +52,7 @@ class WatchlistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val binding = FragmentWatchlistBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
         initViews(binding)
@@ -61,21 +62,27 @@ class WatchlistFragment : Fragment() {
         return binding.root
     }
 
-    private fun subscribeWatchlistData(binding: FragmentHomeBinding) {
-        lifecycleScope.launchWhenStarted {
+    override fun onResume() {
+        super.onResume()
+        viewModel.watchlistScreening()
+    }
+
+    private fun subscribeWatchlistData(binding: FragmentWatchlistBinding) {
+        lifecycleScope.launchWhenResumed {
             viewModel.uiState.collectLatest {
                 when(it) {
                     is State.Success<List<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         watchlistAdapter.submitList(it.data)
+                        binding.layoutEmpty.root.isVisible = it.data.isEmpty()
                     }
                     is State.Error -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
                 }
@@ -83,7 +90,7 @@ class WatchlistFragment : Fragment() {
         }
     }
 
-    private fun initViews(binding: FragmentHomeBinding) {
+    private fun initViews(binding: FragmentWatchlistBinding) {
         val rvWatchlist = binding.rvWatchlist
 
         rvWatchlist.apply {

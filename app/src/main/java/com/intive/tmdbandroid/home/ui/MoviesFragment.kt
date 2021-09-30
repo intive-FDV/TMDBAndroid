@@ -67,7 +67,6 @@ class MoviesFragment : Fragment() {
     }
 
     private fun subscribePopularData(binding: FragmentMoviesBinding) {
-        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collectLatest { resultMovies ->
                 Timber.i("MAS - popular movies status: $resultMovies")
@@ -75,7 +74,7 @@ class MoviesFragment : Fragment() {
                 when (resultMovies) {
                     is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
 
                         moviePageAdapter.submitData(resultMovies.data)
 
@@ -84,11 +83,11 @@ class MoviesFragment : Fragment() {
                         } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
                 }

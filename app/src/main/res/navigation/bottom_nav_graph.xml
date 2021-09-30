@@ -9,7 +9,7 @@
         android:id="@+id/watchlistDest"
         android:name="com.intive.tmdbandroid.home.ui.WatchlistFragment"
         android:label="@string/watchlist"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_watchlist" />
 
     <fragment
         android:id="@+id/moviesDest"

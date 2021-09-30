@@ -18,7 +18,11 @@
     <include
         android:id="@+id/layout_error"
         layout="@layout/layout_error"
-        android:padding="5dp" />
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <include
         android:id="@+id/layout_empty"
@@ -31,6 +35,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include layout="@layout/layout_progressbar"
-        android:id="@+id/layout_progressbar" />
+        android:id="@+id/layout_progressbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
