@@ -82,6 +82,12 @@ class DetailsViewModelTest {
     private lateinit var getIfExistsUseCase: ExistUseCase
     @Mock
     private lateinit var movieUseCase: DetailMovieUseCase
+    @Mock
+    private lateinit var ratingMovieUseCase: RatingMovieUseCase
+    @Mock
+    private lateinit var ratingTVShowUseCase: RatingTVShowUseCase
+    @Mock
+    private lateinit var guestSessionUseCase: GuestSessionUseCase
 
 
     @Before
@@ -91,7 +97,10 @@ class DetailsViewModelTest {
             movieUseCase,
             saveTVShowInWatchlistUseCase,
             deleteFromWatchlistUseCase,
-            getIfExistsUseCase
+            getIfExistsUseCase,
+            ratingMovieUseCase,
+            ratingTVShowUseCase,
+            guestSessionUseCase
         )
     }
 
