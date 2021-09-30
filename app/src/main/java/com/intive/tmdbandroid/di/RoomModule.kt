@@ -21,7 +21,7 @@ class RoomModule {
         app,
         LocalStorage::class.java, Constants.DATABASE
     )
-        .build()
+        .fallbackToDestructiveMigration().build()
 
     @Provides
     @Singleton

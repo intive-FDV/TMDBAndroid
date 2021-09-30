@@ -9,7 +9,6 @@ import android.view.Window
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -21,7 +20,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.appbar.AppBarLayout
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
@@ -34,6 +32,10 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.recyclerview.widget.GridLayoutManager
+import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
+import kotlin.math.floor
+
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -42,6 +44,8 @@ class DetailFragment : Fragment() {
     private var screeningItemId: Int? = null
 
     private val viewModel: DetailsViewModel by viewModels()
+
+    private val networkAdapter = NetworkAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +62,7 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
+        setupNetworkList(binding)
 
         return binding.root
     }
@@ -72,7 +77,7 @@ class DetailFragment : Fragment() {
                 else viewModel.tVShows(it)
             }
         }
-        val button_rating=view.findViewById<Button>(R.id.button_rating)
+        val button_rating=view.findViewById<Button>(R.id.rate_button)
         button_rating.setOnClickListener{
             screeningItemId?.let { it1 -> showDialog(it1,args) }
         }
@@ -161,9 +166,11 @@ class DetailFragment : Fragment() {
 
         setImages(binding, screening)
 
+        setNetworkImages(binding, screening)
+
         screening.release_date?.let { setDate(binding, it) }
 
-        setPercentageToCircularPercentage(binding, screening.vote_average)
+        setPercentage(binding, screening.vote_average)
 
         setupToolbar(binding, screening)
 
@@ -199,33 +206,33 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        binding.overviewDetailTextView.text = screening.overview
+        if(screening.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
+        else binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
     }
 
-    private fun setPercentageToCircularPercentage(
+    private fun setPercentage(
         binding: FragmentDetailBinding,
         voteAverage: Double
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.circularPercentage.progress = percentage
+        binding.popularityRatingNumber.text = "$percentage%"
 
         val context = binding.root.context
 
         when {
-            percentage < 25 -> binding.circularPercentage.progressTintList =
+            percentage < 25 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.red)
-            percentage < 45 -> binding.circularPercentage.progressTintList =
+            percentage < 45 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.orange)
-            percentage < 75 -> binding.circularPercentage.progressTintList =
+            percentage < 75 -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.yellow)
-            else -> binding.circularPercentage.progressTintList =
+            else -> binding.popularityThumbIcon.imageTintList =
                 ContextCompat.getColorStateList(context, R.color.green)
         }
-        binding.screeningPopularity.text = resources.getString(R.string.popularity, percentage)
     }
 
     private fun setDate(binding: FragmentDetailBinding, firstAirDate: String) {
@@ -261,9 +268,7 @@ class DetailFragment : Fragment() {
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-
         val toolbar = binding.toolbar
-
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -278,7 +283,6 @@ class DetailFragment : Fragment() {
                 else -> false
             }
         }
-
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
@@ -293,12 +297,6 @@ class DetailFragment : Fragment() {
                 activity?.finish()
             }
         }
-
-        binding.appBarLayoutDetail.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            if (verticalOffset < -500) {
-                binding.popularityCard.visibility = View.INVISIBLE
-            } else binding.popularityCard.visibility = View.VISIBLE
-        })
     }
 
     private fun selectOrUnselectWatchlistFav(binding: FragmentDetailBinding, isFav: Boolean) {
@@ -311,4 +309,24 @@ class DetailFragment : Fragment() {
 
     }
 
+    private fun setupNetworkList(binding: FragmentDetailBinding) {
+        binding.networkList.apply {
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = resources.getInteger(R.integer.screening_width)
+            val columnCount = floor(dpWidth / scaling).toInt() + 1
+
+            layoutManager = GridLayoutManager(context, columnCount)
+            adapter = networkAdapter
+        }
+    }
+
+    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening){
+        if (screening.networks.isNotEmpty()){
+            networkAdapter.submitList(screening.networks)
+        } else {
+            binding.networksHeader.visibility = View.GONE
+        }
+    }
 }

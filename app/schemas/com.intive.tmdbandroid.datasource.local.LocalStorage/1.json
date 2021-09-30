@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "277b36a60e26a85214d052fc87fdd200",
+    "identityHash": "016e4507f17862924f247000e7d4f1c4",
     "entities": [
       {
         "tableName": "ScreeningORMEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `backdrop_path` TEXT, `genres` TEXT, `name` TEXT NOT NULL, `number_of_episodes` INTEGER, `number_of_seasons` INTEGER, `overview` TEXT NOT NULL, `poster_path` TEXT, `status` TEXT, `vote_average` REAL NOT NULL, `vote_count` INTEGER NOT NULL, `popularity` REAL NOT NULL, `release_date` TEXT, `media_type` TEXT NOT NULL, `adult` INTEGER NOT NULL, `genre_ids` TEXT, `video` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `backdrop_path` TEXT, `genres` TEXT, `name` TEXT NOT NULL, `number_of_episodes` INTEGER, `number_of_seasons` INTEGER, `overview` TEXT NOT NULL, `poster_path` TEXT, `status` TEXT, `vote_average` REAL NOT NULL, `vote_count` INTEGER NOT NULL, `popularity` REAL NOT NULL, `release_date` TEXT, `media_type` TEXT NOT NULL, `adult` INTEGER NOT NULL, `genre_ids` TEXT, `video` INTEGER NOT NULL, `networks` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -109,6 +109,12 @@
             "columnName": "video",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "networks",
+            "columnName": "networks",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -124,7 +130,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '277b36a60e26a85214d052fc87fdd200')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '016e4507f17862924f247000e7d4f1c4')"
     ]
   }
 }
