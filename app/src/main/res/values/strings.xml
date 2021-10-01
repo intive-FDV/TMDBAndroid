@@ -26,6 +26,9 @@
     <string name="rate_button_text">Rate it</string>
     <string name="networks_header_text">Available in:</string>
     <string name="network_img_description">Network Logo</string>
+    <string name="to_watch_url">http://www.intive.towatch.com</string>
+    <string name="linking_scheme">http</string>
+    <string name="linking_host">www.intive.towatch.com</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>

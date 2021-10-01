@@ -254,7 +254,7 @@ class DetailFragment : Fragment() {
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT,
-                            "Check out this $mediaType! \n http://www.intive.towatch.com/${screening.media_type}/${screening.id}")
+                            "Check out this $mediaType! \n ${resources.getString(R.string.to_watch_url)}/${screening.media_type}/${screening.id}")
                         type = "text/plain"
                     }
 
