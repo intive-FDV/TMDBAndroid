@@ -250,11 +250,12 @@ class DetailFragment : Fragment() {
                     true
                 }
                 R.id.ic_share -> {
+                    val mediaType = if (screening.media_type == "tv") "tv show" else screening.media_type
                     val sendIntent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT,
-                            "Check out this ${screening.media_type}! \n http://www.towatch.com/${screening.media_type}/${screening.id}")
+                            "Check out this $mediaType! \n http://www.intive.towatch.com/${screening.media_type}/${screening.id}")
                         type = "text/plain"
                     }
 
