@@ -35,4 +35,13 @@
     <include layout="@layout/layout_progressbar"
         android:id="@+id/layout_progressbar" />
 
+    <include
+        android:id="@+id/layout_nodata"
+        layout="@layout/layout_watchlist_hint"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

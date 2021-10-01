@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
@@ -68,7 +69,10 @@ class WatchlistFragment : Fragment() {
                     is State.Success<List<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
+
                         watchlistAdapter.submitList(it.data)
+
+                        binding.layoutNodata.root.isVisible = (watchlistAdapter.itemCount <= 0)
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.progressBar.visibility = View.GONE
