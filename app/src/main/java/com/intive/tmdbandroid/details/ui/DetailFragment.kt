@@ -336,6 +336,8 @@ class DetailFragment : Fragment() {
 
             window?.setLayout((width - (8 * density).toInt()), WindowManager.LayoutParams.WRAP_CONTENT)
 
+            setOnDismissListener { videoView.release() }
+
             show()
         }
     }

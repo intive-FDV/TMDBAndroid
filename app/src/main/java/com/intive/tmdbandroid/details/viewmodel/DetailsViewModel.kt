@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +22,7 @@ class DetailsViewModel @Inject internal constructor(
     private val movieTrailerUseCase: GetMovieTrailer
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<Screening>>(State.Loading)
+    private val _state = MutableStateFlow<State<Screening>>(State.Waiting)
     val uiState: StateFlow<State<Screening>> = _state
 
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
@@ -69,16 +68,12 @@ class DetailsViewModel @Inject internal constructor(
     }
 
     fun getMovieTrailer(id: Int) {
-        Timber.i("MAS - getMovieTrailer()")
         viewModelScope.launch {
-            Timber.i("MAS - viewmodel launch")
             movieTrailerUseCase(id)
                 .catch {
-                    Timber.i("MAS - viewmodel catch")
                     _trailerState.send(State.Error)
                 }
                 .collect { trailerKey ->
-                    Timber.i("MAS - viewmodel collect trailerKey: $trailerKey")
                     _trailerState.send(State.Success(trailerKey))
                 }
         }
