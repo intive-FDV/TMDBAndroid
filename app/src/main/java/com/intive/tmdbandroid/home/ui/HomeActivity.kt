@@ -42,6 +42,20 @@ class HomeActivity : AppCompatActivity() {
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        if(intent.action == Intent.ACTION_VIEW){
+            val shareIntent = Intent(this, DetailAndSearchActivity::class.java)
+            val screeningID = intent.data?.lastPathSegment?.toInt()
+            val mediaType = intent.data?.pathSegments?.get(0) == "movie"
+            shareIntent.putExtras(
+                bundleOf(
+                    "action" to "detail",
+                    "screeningID" to screeningID,
+                    "isMovieBoolean" to mediaType
+                )
+            )
+            startActivity(shareIntent)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
