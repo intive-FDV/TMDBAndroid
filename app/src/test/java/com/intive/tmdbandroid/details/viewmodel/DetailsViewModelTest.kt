@@ -8,6 +8,7 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.*
 import com.intive.tmdbandroid.usecase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -243,6 +244,42 @@ class DetailsViewModelTest {
 
         detailViewModel.watchlistUIState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Error)
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun getTVShowTrailerTest() = mainCoroutineRule.runBlockingTest {
+        `when`(tvShowTrailerUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    videoKey
+                )
+            }
+        )
+
+        detailViewModel.getTVShowTrailer(2)
+
+        detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun getMovieTrailerTest() = mainCoroutineRule.runBlockingTest {
+        `when`(movieTrailerUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    videoKey
+                )
+            }
+        )
+
+        detailViewModel.getMovieTrailer(2)
+
+        detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
         }
     }
 }
