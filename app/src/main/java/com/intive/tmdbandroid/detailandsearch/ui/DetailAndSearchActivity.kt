@@ -1,9 +1,7 @@
 package com.intive.tmdbandroid.detailandsearch.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.NavHostFragment
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ActivityDetailAndSearchBinding
