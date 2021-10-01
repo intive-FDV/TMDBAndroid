@@ -19,7 +19,9 @@ import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.TVShowsViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.floor
 
@@ -62,12 +64,16 @@ class TVShowsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.popularTVShows()
+        if (savedInstanceState == null)
+            lifecycleScope.launch {
+                delay(1000)
+                viewModel.popularTVShows()
+            }
     }
 
     private fun subscribePopularData(binding: FragmentTvshowsBinding) {
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultTVShows ->
+        lifecycleScope.launchWhenCreated {
+            viewModel.uiState.collect { resultTVShows ->
                 Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
