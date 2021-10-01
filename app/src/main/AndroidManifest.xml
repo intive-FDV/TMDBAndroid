@@ -17,7 +17,17 @@
         <activity
             android:name=".detailandsearch.ui.DetailAndSearchActivity"
             android:parentActivityName=".home.ui.HomeActivity"
-            android:exported="true" />
+            android:exported="true">
+
+            <intent-filter android:label="testLinking">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="www.towatch.com"/>
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".home.ui.HomeActivity"
             android:exported="true">

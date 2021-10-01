@@ -1,11 +1,13 @@
 package com.intive.tmdbandroid.details.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -235,6 +237,8 @@ class DetailFragment : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         val toolbar = binding.toolbar
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
+        toolbar.menu.findItem(R.id.ic_share).icon =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.ic_share)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
@@ -243,6 +247,19 @@ class DetailFragment : Fragment() {
                     } else {
                         viewModel.deleteFromWatchlist(screening)
                     }
+                    true
+                }
+                R.id.ic_share -> {
+                    val sendIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Check out this ${screening.media_type}! \n http://www.towatch.com/${screening.media_type}/${screening.id}")
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    requireActivity().startActivity(shareIntent)
                     true
                 }
                 else -> false

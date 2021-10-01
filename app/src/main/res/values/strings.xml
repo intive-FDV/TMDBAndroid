@@ -13,6 +13,7 @@
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
     <string name="add_to_watchlist">Add to Watchlist</string>
+    <string name="share_icon_title">Share</string>
     <string name="search_text">Search a TV Show or Movie</string>
     <string name="search_hint">Start typing to find awesome TV shows</string>
     <string name="hint_layout_description">Search Hint Icon</string>
