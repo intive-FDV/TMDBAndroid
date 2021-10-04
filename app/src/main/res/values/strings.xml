@@ -31,6 +31,7 @@
     <string name="to_watch_url">http://www.intive.towatch.com</string>
     <string name="linking_scheme">http</string>
     <string name="linking_host">www.intive.towatch.com</string>
+    <string name="recomendations_header_text">You can also watch:</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
