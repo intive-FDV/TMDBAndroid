@@ -9,6 +9,7 @@ data class TVShowListItemEntity(
     val name: String,
     val original_name: String,
     val overview: String,
+    val popularity: Double?,
     val poster_path: String?,
     val vote_average: Double,
     val vote_count: Int
@@ -26,7 +27,7 @@ data class TVShowListItemEntity(
             null,
             vote_average,
             vote_count,
-            0.0,
+            popularity ?: 0.0,
             first_air_date,
             "tv",
             false,

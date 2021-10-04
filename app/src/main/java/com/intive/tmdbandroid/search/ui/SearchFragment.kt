@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -93,6 +94,10 @@ class SearchFragment : Fragment() {
         } else {
             binding.layoutSearchHint.hintContainer.visibility = View.GONE
         }
+        if (viewModel.filterSelected.value == null) {
+            viewModel.filterSelected.value = binding.allFilter
+        }
+        setFilterSelectedColor(binding, viewModel.filterSelected.value)
         return binding.root
     }
 
@@ -163,5 +168,73 @@ class SearchFragment : Fragment() {
             }
         }
 
+        setListenerToFilters(binding)
+
+    }
+
+    private fun setListenerToFilters(binding: FragmentSearchBinding) {
+        binding.allFilter.setOnClickListener {
+            viewModel.filterSelected.value = it as TextView?
+            setFilterSelectedColor(binding, it)
+            if (viewModel.searchQuery.value.isNotEmpty()) {
+                viewModel.search(viewModel.searchQuery.value)
+                isLoad = true
+            }
+        }
+        binding.moviesFilter.setOnClickListener {
+            viewModel.filterSelected.value = it as TextView?
+            setFilterSelectedColor(binding, it)
+            if (viewModel.searchQuery.value.isNotEmpty()) {
+                viewModel.search(viewModel.searchQuery.value)
+                isLoad = true
+            }
+        }
+        binding.tvShowsFilter.setOnClickListener {
+            viewModel.filterSelected.value = it as TextView?
+            setFilterSelectedColor(binding, it)
+            if (viewModel.searchQuery.value.isNotEmpty()) {
+                viewModel.search(viewModel.searchQuery.value)
+                isLoad = true
+            }
+        }
+    }
+
+    private fun setFilterSelectedColor(binding: FragmentSearchBinding, selectedFilter: TextView?) {
+        when (selectedFilter?.id) {
+            R.id.all_filter -> {
+                binding.tvShowsFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.moviesFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.peopleFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+            R.id.movies_filter -> {
+                binding.tvShowsFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.allFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.peopleFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+            R.id.tv_shows_filter -> {
+                binding.allFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.moviesFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.peopleFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+            R.id.people_filter -> {
+                binding.tvShowsFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.moviesFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.allFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+        }
+        selectedFilter?.backgroundTintList =
+            AppCompatResources.getColorStateList(requireContext(), R.color.secondaryLightColor)
     }
 }
