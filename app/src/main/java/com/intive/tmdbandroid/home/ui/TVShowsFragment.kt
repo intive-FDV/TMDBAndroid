@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
@@ -20,6 +23,7 @@ import com.intive.tmdbandroid.home.viewmodel.TVShowsViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import kotlin.math.floor
 
@@ -74,7 +78,6 @@ class TVShowsFragment : Fragment() {
                 when (resultTVShows) {
                     is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
-                        binding.layoutProgressbar.root.visibility = View.GONE
 
                         tvShowPageAdapter.submitData(resultTVShows.data)
                     }
@@ -104,5 +107,17 @@ class TVShowsFragment : Fragment() {
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = tvShowPageAdapter
         }
+
+        lifecycleScope.launchWhenCreated {
+            tvShowPageAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.layoutProgressbar.root.isVisible = showLoadScreen(loadState)
+            }
+        }
+    }
+
+    private fun showLoadScreen(loadState: CombinedLoadStates): Boolean {
+        if (loadState.prepend.endOfPaginationReached &&
+                loadState.append is LoadState.NotLoading) return false
+        return true
     }
 }
