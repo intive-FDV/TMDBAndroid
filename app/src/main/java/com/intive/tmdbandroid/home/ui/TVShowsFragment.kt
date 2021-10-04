@@ -20,7 +20,6 @@ import com.intive.tmdbandroid.home.viewmodel.TVShowsViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -36,9 +35,9 @@ class TVShowsFragment : Fragment() {
             val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
             intent.putExtras(
                 bundleOf(
-                    "action" to "detail",
-                    "screeningID" to screening.id,
-                    "isMovieBoolean" to false
+                    (context?.getString(R.string.intent_extra_key_action) ?: "") to (context?.getString(R.string.intent_extra_key_action_detail) ?: ""),
+                    (context?.getString(R.string.intent_extra_key_screening_id) ?: "") to screening.id,
+                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to false
                 )
             )
             requireActivity().startActivity(intent)
@@ -69,7 +68,6 @@ class TVShowsFragment : Fragment() {
     private fun subscribePopularData(binding: FragmentTvshowsBinding) {
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { resultTVShows ->
-                Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
                     is State.Success<PagingData<Screening>> -> {
@@ -86,6 +84,7 @@ class TVShowsFragment : Fragment() {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
+                    else -> throw RuntimeException(context?.getString(R.string.state_error))
                 }
             }
         }

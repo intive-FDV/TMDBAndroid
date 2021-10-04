@@ -34,12 +34,12 @@ class WatchlistFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val clickListener = { screening: Screening ->
             val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
-            val isMovie = screening.media_type == "movie"
+            val isMovie = screening.media_type == context?.getString(R.string.screening_movie_type)
             intent.putExtras(
                 bundleOf(
-                    "action" to "detail",
-                    "screeningID" to screening.id,
-                    "isMovieBoolean" to isMovie
+                    (context?.getString(R.string.intent_extra_key_action) ?: "") to (context?.getString(R.string.intent_extra_key_action_detail) ?: ""),
+                    (context?.getString(R.string.intent_extra_key_screening_id) ?: "") to screening.id,
+                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to isMovie
                 )
             )
             requireActivity().startActivity(intent)
@@ -85,6 +85,7 @@ class WatchlistFragment : Fragment() {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
+                    else -> throw RuntimeException(context?.getString(R.string.state_error))
                 }
             }
         }

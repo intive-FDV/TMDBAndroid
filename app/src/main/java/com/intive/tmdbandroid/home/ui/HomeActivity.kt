@@ -27,6 +27,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val binding = ActivityHomeBinding.inflate(layoutInflater)
+        val context = binding.root.context
+
         setContentView(binding.root)
         setSupportActionBar(binding.homeToolbar)
 
@@ -46,12 +48,12 @@ class HomeActivity : AppCompatActivity() {
         if(intent.action == Intent.ACTION_VIEW){
             val shareIntent = Intent(this, DetailAndSearchActivity::class.java)
             val screeningID = intent.data?.lastPathSegment?.toInt()
-            val mediaType = intent.data?.pathSegments?.get(0) == "movie"
+            val mediaType = intent.data?.pathSegments?.get(0) == context.getString(R.string.screening_movie_type)
             shareIntent.putExtras(
                 bundleOf(
-                    "action" to "detail",
-                    "screeningID" to screeningID,
-                    "isMovieBoolean" to mediaType
+                    context.getString(R.string.intent_extra_key_action) to context.getString(R.string.intent_extra_key_action_detail),
+                    context.getString(R.string.intent_extra_key_screening_id) to screeningID,
+                    context.getString(R.string.intent_extra_key_is_movie) to mediaType
                 )
             )
             startActivity(shareIntent)
@@ -73,7 +75,7 @@ class HomeActivity : AppCompatActivity() {
                 val intent = Intent(this, DetailAndSearchActivity::class.java)
                 intent.putExtras(
                     bundleOf(
-                        "action" to "search"
+                        baseContext.getString(R.string.intent_extra_key_action) to baseContext.getString(R.string.intent_extra_key_action_default)
                     )
                 )
                 startActivity(intent)

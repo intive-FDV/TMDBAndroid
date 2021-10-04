@@ -20,7 +20,6 @@ import com.intive.tmdbandroid.home.viewmodel.MoviesViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -37,9 +36,9 @@ class MoviesFragment : Fragment() {
             val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
             intent.putExtras(
                 bundleOf(
-                    "action" to "detail",
-                    "screeningID" to screening.id,
-                    "isMovieBoolean" to true
+                    (context?.getString(R.string.intent_extra_key_action) ?: "") to (context?.getString(R.string.intent_extra_key_action_detail) ?: ""),
+                    (context?.getString(R.string.intent_extra_key_screening_id) ?: "") to screening.id,
+                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to true
                 )
             )
             requireActivity().startActivity(intent)
@@ -70,7 +69,6 @@ class MoviesFragment : Fragment() {
     private fun subscribePopularData(binding: FragmentMoviesBinding) {
         lifecycleScope.launchWhenCreated {
             viewModel.uiState.collect { resultMovies ->
-                Timber.i("MAS - popular movies status: $resultMovies")
 
                 when (resultMovies) {
                     is State.Success<PagingData<Screening>> -> {
@@ -87,6 +85,7 @@ class MoviesFragment : Fragment() {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
+                    else -> throw RuntimeException(context?.getString(R.string.state_error))
                 }
             }
         }

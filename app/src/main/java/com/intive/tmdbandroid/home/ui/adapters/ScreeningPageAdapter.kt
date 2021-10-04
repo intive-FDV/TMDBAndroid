@@ -11,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
 import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.model.TVShow
 
 class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : PagingDataAdapter<Screening, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {

@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val clickListener = { screening: Screening ->
-            val isMovie = screening.media_type == "movie"
+            val isMovie = screening.media_type == context?.getString(R.string.screening_movie_type)
             val action =
                 SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
             val currentDestination = findNavController().currentDestination?.id
@@ -55,7 +55,9 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         if (savedInstanceState != null) {
-            isLoad = savedInstanceState.getBoolean("isLoad", false)
+            isLoad = savedInstanceState.getBoolean(
+                context?.getString(R.string.saved_instance_state_is_load),
+                false)
         }
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
         setupToolbar(binding)
