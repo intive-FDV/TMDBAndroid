@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,9 @@ class DetailsViewModel @Inject internal constructor(
 
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
+
+    private val _sessionState = MutableStateFlow<State<Session>>(State.Loading)
+    val sessionState: StateFlow<State<Session>> = _sessionState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -93,7 +97,9 @@ class DetailsViewModel @Inject internal constructor(
 
     fun ratingMovie(idMovie: Int, rating: Double){
         viewModelScope.launch {
-            guestSessionUseCase()
+            guestSessionUseCase().catch {
+                _sessionState.value= State.Error
+            }
             ratingMovieUseCase(idMovie,rating)
         }
     }

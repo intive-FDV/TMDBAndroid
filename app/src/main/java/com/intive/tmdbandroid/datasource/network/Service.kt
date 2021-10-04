@@ -17,7 +17,7 @@ import com.intive.tmdbandroid.model.Session
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
-    private lateinit var session: Session
+    private lateinit var session: Flow<Session>
 
     fun getPaginatedPopularTVShows(page: Int): Flow<ResultTVShowsEntity> {
         return flow {
@@ -79,7 +79,8 @@ class Service {
         else{
             // Create JSON using JSONObject
             val jsonObject = JSONObject()
-            jsonObject.put("value", rating)
+            //jsonObject.put("value", rating)
+            jsonObject.put("value", "pepe")
 
             // Convert JSONObject to String
             val jsonObjectString = jsonObject.toString()
@@ -93,9 +94,11 @@ class Service {
         return  retorno
     }
 
-    suspend fun getGuestSession():Session{
+    fun getGuestSession():Flow<Session>{
         if(!this::session.isInitialized){
-            session = retrofit.create(ApiClient::class.java).getNewGuestSession(BuildConfig.API_KEY)
+            session =  flow {
+                emit(retrofit.create(ApiClient::class.java).getNewGuestSession(BuildConfig.API_KEY))
+            }
         }
         return session
     }

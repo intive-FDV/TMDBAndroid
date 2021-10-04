@@ -11,6 +11,7 @@ import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,7 +75,7 @@ class CatalogRepository @Inject constructor(
         return service.setTVShowRating(idMovie,rating)
     }
 
-    suspend fun getGuestSession():Session{
-        return service.getGuestSession()
+    suspend fun getGuestSession():Flow<Session>{
+        return flowOf(service.getGuestSession())
     }
 }
