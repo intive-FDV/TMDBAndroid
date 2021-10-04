@@ -1,10 +1,11 @@
 package com.intive.tmdbandroid.details.ui
 
 import android.content.Intent
+import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +22,10 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
 import com.intive.tmdbandroid.model.Screening
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -32,12 +37,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import kotlin.math.floor
 
-
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private var isSaveOnWatchlist: Boolean = false
     private var screeningItemId: Int? = null
+    private var isMovie: Boolean = false
 
     private val viewModel: DetailsViewModel by viewModels()
 
@@ -48,6 +53,7 @@ class DetailFragment : Fragment() {
 
         val args: DetailFragmentArgs by navArgs()
         screeningItemId = args.screeningID
+        isMovie = args.isMovieBoolean
     }
 
     override fun onCreateView(
@@ -58,6 +64,7 @@ class DetailFragment : Fragment() {
 
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
+        collectTrailer()
         setupNetworkList(binding)
 
         return binding.root
@@ -65,11 +72,11 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args: DetailFragmentArgs by navArgs()
+
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
             if(savedInstanceState==null){
-                if (args.isMovieBoolean) viewModel.movie(it)
+                if (isMovie) viewModel.movie(it)
                 else viewModel.tVShows(it)
             }
         }
@@ -128,6 +135,26 @@ class DetailFragment : Fragment() {
         }
     }
 
+    private fun collectTrailer() {
+        lifecycleScope.launchWhenStarted {
+            for (it in viewModel.trailerState) {
+                Timber.i("MAS - collectTrailer.state: $it")
+                when (it) {
+                    is State.Success<String> -> {
+                        if (it.data.isEmpty())
+                            Toast.makeText(context, "No trailer found. Sorry!", Toast.LENGTH_LONG).show()
+                        else {
+                            showDialog(it.data)
+                        }
+                    }
+                    else -> {
+                        Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
     private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
 
         setImages(binding, screening)
@@ -177,6 +204,15 @@ class DetailFragment : Fragment() {
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
         screeningItemId?.let { viewModel.existAsFavorite(it) }
+
+        binding.trailerTextView.setOnClickListener {
+            screeningItemId?.let {
+                if (isMovie)
+                    viewModel.getMovieTrailer(it)
+                else
+                    viewModel.getTVShowTrailer(it)
+            }
+        }
     }
 
     private fun setPercentage(
@@ -234,10 +270,13 @@ class DetailFragment : Fragment() {
     private fun setupToolbar(binding: FragmentDetailBinding, screening: Screening) {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+
         val toolbar = binding.toolbar
+
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.menu.findItem(R.id.ic_share).icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_share)
+
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
@@ -265,6 +304,7 @@ class DetailFragment : Fragment() {
                 else -> false
             }
         }
+
         binding.collapsingToolbarLayout.setupWithNavController(
             toolbar,
             navController,
@@ -288,7 +328,35 @@ class DetailFragment : Fragment() {
                 AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_selected)
         } else watchlistItem.icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_heart_unselected)
+    }
 
+    private fun showDialog(videoKey: String) {
+        val dialog = activity?.let { Dialog(it) }
+
+        dialog?.apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setCancelable(true)
+            setContentView(R.layout.dialog_trailer)
+
+            val videoView = findViewById<YouTubePlayerView>(R.id.screening_trailer)
+            lifecycle.addObserver(videoView)
+
+            videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                    youTubePlayer.loadOrCueVideo(lifecycle, videoKey, 0f)
+                }
+            })
+
+            val metrics = resources.displayMetrics
+            val width = metrics.widthPixels
+            val density = metrics.density
+
+            window?.setLayout((width - (8 * density).toInt()), WindowManager.LayoutParams.WRAP_CONTENT)
+
+            setOnDismissListener { videoView.release() }
+
+            show()
+        }
     }
 
     private fun setupNetworkList(binding: FragmentDetailBinding) {

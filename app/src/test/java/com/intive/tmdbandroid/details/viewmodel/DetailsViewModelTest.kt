@@ -5,12 +5,10 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.model.Genre
-import com.intive.tmdbandroid.model.Network
-import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.model.TVShow
+import com.intive.tmdbandroid.model.*
 import com.intive.tmdbandroid.usecase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -19,8 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
@@ -53,6 +50,21 @@ class DetailsViewModelTest {
         networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
+    private val movie = Movie(
+        backdrop_path = "BACKDROP_PATH",
+        release_date = "1983-10-20",
+        genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
+        id = 1,
+        title = "Simona la Cacarisa",
+        original_title = "El cochiloco",
+        overview = "Simona la cacarisa, el cochiloco",
+        poster_path = "POSTER_PATH",
+        vote_average = 10.5,
+        vote_count = 100,
+        status = "Online",
+        popularity = 34.0
+    )
+
     private val screening = Screening(
         backdrop_path = "BACKDROP_PATH",
         release_date = "1983-10-20",
@@ -74,6 +86,8 @@ class DetailsViewModelTest {
         networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
     )
 
+    private val videoKey = "VIDEO_KEY"
+
     private lateinit var detailViewModel: DetailsViewModel
     @Mock
     private lateinit var tVShowUseCase: DetailTVShowUseCase
@@ -85,6 +99,10 @@ class DetailsViewModelTest {
     private lateinit var getIfExistsUseCase: ExistUseCase
     @Mock
     private lateinit var movieUseCase: DetailMovieUseCase
+    @Mock
+    private lateinit var tvShowTrailerUseCase: GetTVShowTrailer
+    @Mock
+    private lateinit var movieTrailerUseCase: GetMovieTrailer
 
 
     @Before
@@ -94,7 +112,9 @@ class DetailsViewModelTest {
             movieUseCase,
             saveTVShowInWatchlistUseCase,
             deleteFromWatchlistUseCase,
-            getIfExistsUseCase
+            getIfExistsUseCase,
+            tvShowTrailerUseCase,
+            movieTrailerUseCase
         )
     }
 
@@ -113,6 +133,24 @@ class DetailsViewModelTest {
 
         detailViewModel.uiState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(tvShow.toScreening()))
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun movieTest() = mainCoroutineRule.runBlockingTest {
+        `when`(movieUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    movie
+                )
+            }
+        )
+
+        detailViewModel.movie(2)
+
+        detailViewModel.uiState.test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(movie.toScreening()))
         }
     }
 
@@ -206,6 +244,42 @@ class DetailsViewModelTest {
 
         detailViewModel.watchlistUIState.test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Error)
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun getTVShowTrailerTest() = mainCoroutineRule.runBlockingTest {
+        `when`(tvShowTrailerUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    videoKey
+                )
+            }
+        )
+
+        detailViewModel.getTVShowTrailer(2)
+
+        detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun getMovieTrailerTest() = mainCoroutineRule.runBlockingTest {
+        `when`(movieTrailerUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    videoKey
+                )
+            }
+        )
+
+        detailViewModel.getMovieTrailer(2)
+
+        detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
         }
     }
 }

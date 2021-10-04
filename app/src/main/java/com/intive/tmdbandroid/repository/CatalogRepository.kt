@@ -64,4 +64,12 @@ class CatalogRepository @Inject constructor(
             }
         ).flow
     }
+
+    fun getTVShowTrailer(id: Int): Flow<String> {
+        return service.getTVShowVideos(id)
+    }
+
+    fun getMovieTrailer(id: Int): Flow<String> {
+        return service.getMovieVideos(id)
+    }
 }
