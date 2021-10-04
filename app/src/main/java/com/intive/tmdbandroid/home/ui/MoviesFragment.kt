@@ -19,7 +19,7 @@ import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.MoviesViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import kotlin.math.floor
 
@@ -29,26 +29,22 @@ class MoviesFragment : Fragment() {
         defaultViewModelProviderFactory
     }
 
-    private val clickListener = { screening: Screening ->
-        val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
-        intent.putExtras(
-            bundleOf(
-                "action" to "detail",
-                "screeningID" to screening.id,
-                "isMovieBoolean" to true
-            )
-        )
-        requireActivity().startActivity(intent)
-    }
-    private val moviePageAdapter = ScreeningPageAdapter(clickListener)
+    private lateinit var moviePageAdapter: ScreeningPageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (savedInstanceState == null) {
-            Timber.i("MAS - movies instance == null")
-            viewModel.popularMovies()
+        val clickListener = { screening: Screening ->
+            val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
+            intent.putExtras(
+                bundleOf(
+                    "action" to "detail",
+                    "screeningID" to screening.id,
+                    "isMovieBoolean" to true
+                )
+            )
+            requireActivity().startActivity(intent)
         }
+        moviePageAdapter = ScreeningPageAdapter(clickListener)
     }
 
     override fun onCreateView(
@@ -60,35 +56,35 @@ class MoviesFragment : Fragment() {
         context ?: return binding.root
 
         initViews(binding)
-
         subscribePopularData(binding)
 
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null)
+            viewModel.popularMovies()
+    }
+
     private fun subscribePopularData(binding: FragmentMoviesBinding) {
-        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultMovies ->
+        lifecycleScope.launchWhenCreated {
+            viewModel.uiState.collect { resultMovies ->
                 Timber.i("MAS - popular movies status: $resultMovies")
 
                 when (resultMovies) {
                     is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
 
                         moviePageAdapter.submitData(resultMovies.data)
-
-                        if (moviePageAdapter.itemCount == 0) {
-                            binding.layoutEmpty.root.visibility = View.VISIBLE
-                        } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
                 }

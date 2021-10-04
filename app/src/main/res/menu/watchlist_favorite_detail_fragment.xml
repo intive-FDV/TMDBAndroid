@@ -8,4 +8,9 @@
         android:title="@string/add_to_watchlist"
         app:showAsAction="always"/>
 
+    <item tools:icon="@drawable/ic_share"
+        android:id="@+id/ic_share"
+        android:title="@string/share_icon_title"
+        app:showAsAction="always"/>
+
 </menu>

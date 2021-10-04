@@ -14,6 +14,7 @@
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
     <string name="add_to_watchlist">Add to Watchlist</string>
+    <string name="share_icon_title">Share</string>
     <string name="search_text">Search a TV Show or Movie</string>
     <string name="search_hint">Start typing to find awesome TV shows</string>
     <string name="watchlist_hint">Go look for something to watch</string>
@@ -28,6 +29,9 @@
     <string name="rate_button_text">Rate it</string>
     <string name="networks_header_text">Available in:</string>
     <string name="network_img_description">Network Logo</string>
+    <string name="to_watch_url">http://www.intive.towatch.com</string>
+    <string name="linking_scheme">http</string>
+    <string name="linking_host">www.intive.towatch.com</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
