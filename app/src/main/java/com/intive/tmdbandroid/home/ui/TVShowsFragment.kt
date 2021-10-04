@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -108,15 +110,14 @@ class TVShowsFragment : Fragment() {
 
         lifecycleScope.launchWhenCreated {
             tvShowPageAdapter.loadStateFlow.collectLatest { loadState ->
-                if (loadState.append is LoadState.NotLoading &&
-                    loadState.refresh is LoadState.NotLoading &&
-                    loadState.prepend.endOfPaginationReached
-                ) {
-                    binding.layoutProgressbar.root.visibility = View.GONE
-                } else {
-                    binding.layoutProgressbar.root.visibility = View.VISIBLE
-                }
+                binding.layoutProgressbar.root.isVisible = showLoadScreen(loadState)
             }
         }
+    }
+
+    private fun showLoadScreen(loadState: CombinedLoadStates): Boolean {
+        if (loadState.prepend.endOfPaginationReached &&
+                loadState.append is LoadState.NotLoading) return false
+        return true
     }
 }
