@@ -37,7 +37,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import kotlin.math.floor
 
-
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
