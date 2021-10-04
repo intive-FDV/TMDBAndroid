@@ -19,9 +19,7 @@ import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.MoviesViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.floor
 
@@ -66,10 +64,7 @@ class MoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null)
-            lifecycleScope.launch {
-                delay(1000)
-                viewModel.popularMovies()
-            }
+            viewModel.popularMovies()
     }
 
     private fun subscribePopularData(binding: FragmentMoviesBinding) {
