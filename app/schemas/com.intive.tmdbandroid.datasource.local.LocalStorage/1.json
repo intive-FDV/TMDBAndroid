@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "016e4507f17862924f247000e7d4f1c4",
+    "identityHash": "978038702e66361f704cb6bd5fa7d344",
     "entities": [
       {
         "tableName": "ScreeningORMEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `backdrop_path` TEXT, `genres` TEXT, `name` TEXT NOT NULL, `number_of_episodes` INTEGER, `number_of_seasons` INTEGER, `overview` TEXT NOT NULL, `poster_path` TEXT, `status` TEXT, `vote_average` REAL NOT NULL, `vote_count` INTEGER NOT NULL, `popularity` REAL NOT NULL, `release_date` TEXT, `media_type` TEXT NOT NULL, `adult` INTEGER NOT NULL, `genre_ids` TEXT, `video` INTEGER NOT NULL, `networks` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `backdrop_path` TEXT, `genres` TEXT, `name` TEXT NOT NULL, `number_of_episodes` INTEGER, `number_of_seasons` INTEGER, `overview` TEXT NOT NULL, `poster_path` TEXT, `status` TEXT, `vote_average` REAL NOT NULL, `vote_count` INTEGER NOT NULL, `popularity` REAL NOT NULL, `release_date` TEXT, `media_type` TEXT NOT NULL, `adult` INTEGER NOT NULL, `genre_ids` TEXT, `video` INTEGER NOT NULL, `networks` TEXT NOT NULL, `my_rate` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -115,6 +115,12 @@
             "columnName": "networks",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "my_rate",
+            "columnName": "my_rate",
+            "affinity": "REAL",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -125,12 +131,62 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "SessionORMEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `success` INTEGER NOT NULL, `guest_session_id` TEXT NOT NULL, `expires_at` TEXT NOT NULL, `status_message` TEXT NOT NULL, `status_code` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "guest_session_id",
+            "columnName": "guest_session_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expires_at",
+            "columnName": "expires_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status_message",
+            "columnName": "status_message",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status_code",
+            "columnName": "status_code",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '016e4507f17862924f247000e7d4f1c4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '978038702e66361f704cb6bd5fa7d344')"
     ]
   }
 }

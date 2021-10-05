@@ -13,11 +13,14 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import com.intive.tmdbandroid.model.Session
+import com.intive.tmdbandroid.usecase.SessionExistUseCase
+import kotlinx.coroutines.flow.collect
 
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
-    private lateinit var session: Flow<Session>
+    private lateinit var sessionFlow: Flow<Session>
+    private lateinit var session:Session
 
     fun getPaginatedPopularTVShows(page: Int): Flow<ResultTVShowsEntity> {
         return flow {
@@ -65,6 +68,9 @@ class Service {
             // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
+            sessionFlow.collect {
+                    element-> session=element
+            }
             retrofit.create(ApiClient::class.java).postMovieRanking(movieID,BuildConfig.API_KEY,session.guest_session_id,requestBody)
         }
 
@@ -95,11 +101,14 @@ class Service {
     }
 
     fun getGuestSession():Flow<Session>{
-        if(!this::session.isInitialized){
-            session =  flow {
+        if(!this::sessionFlow.isInitialized){
+            //re
+            //recupero de la bbdd, si es que hay algo. COmpruebo que no este vencido.
+            //Existe bbdd?NO / recupero esta vencido
+            sessionFlow =  flow {
                 emit(retrofit.create(ApiClient::class.java).getNewGuestSession(BuildConfig.API_KEY))
             }
         }
-        return session
+        return sessionFlow
     }
 }

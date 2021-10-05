@@ -12,7 +12,8 @@ data class Movie(
     val title: String,
     val vote_average: Double,
     val vote_count: Int,
-    val status: String
+    val status: String,
+    val my_rate: Double
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -33,7 +34,8 @@ data class Movie(
             adult = false,
             genre_ids = null,
             false,
-            emptyList()
+            emptyList(),
+            my_rate
         )
     }
 }

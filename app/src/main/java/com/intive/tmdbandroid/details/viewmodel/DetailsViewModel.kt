@@ -23,7 +23,8 @@ class DetailsViewModel @Inject internal constructor(
     private val existUseCase: ExistUseCase,
     private val ratingMovieUseCase: RatingMovieUseCase,
     private val ratingTVShowUseCase: RatingTVShowUseCase,
-    private val guestSessionUseCase: GuestSessionUseCase
+    private val guestSessionUseCase: GuestSessionUseCase,
+    private val sessionExistUseCase: SessionExistUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<Screening>>(State.Loading)
@@ -31,9 +32,6 @@ class DetailsViewModel @Inject internal constructor(
 
     private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
-
-    private val _sessionState = MutableStateFlow<State<Session>>(State.Loading)
-    val sessionState: StateFlow<State<Session>> = _sessionState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -97,9 +95,20 @@ class DetailsViewModel @Inject internal constructor(
 
     fun ratingMovie(idMovie: Int, rating: Double){
         viewModelScope.launch {
-            guestSessionUseCase().catch {
-                _sessionState.value= State.Error
+            //guestSessionUseCase().catch {
+                //_sessionState.value= State.Error
+            //}
+            viewModelScope.launch {
+                sessionExistUseCase()
+                    .catch {
+                        _state.value = State.Error
+                    }
+                    .collect { session ->
+                         sessionExistUseCase
+                    }
             }
+
+            guestSessionUseCase()
             ratingMovieUseCase(idMovie,rating)
         }
     }

@@ -26,6 +26,7 @@ data class ResultTVShowOrMovie(
     val name: String?,
     val original_name: String?,
     val poster_path: String?,
+    val my_rate: Double
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -46,7 +47,8 @@ data class ResultTVShowOrMovie(
             adult,
             genre_ids,
             video,
-            emptyList()
+            emptyList(),
+            my_rate
         )
     }
 }

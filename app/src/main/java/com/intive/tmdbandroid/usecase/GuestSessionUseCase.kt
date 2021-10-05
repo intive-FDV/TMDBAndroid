@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GuestSessionUseCase @Inject constructor(private val repository: CatalogRepository) {
-    suspend operator fun invoke(): Flow<Session> = repository.getGuestSession()
+    operator fun invoke(): Flow<Session> = repository.getGuestSession()
 }
