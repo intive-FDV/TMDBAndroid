@@ -11,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
 import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.model.TVShow
 
 class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : PagingDataAdapter<Screening, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {
@@ -60,7 +59,6 @@ class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : Pag
             title.text = item.name
 
             try {
-                //val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
                 date.text = item.release_date?.let { context.resources.getString(R.string.year, it.substring(0..3)) }
             } catch (e: Exception) {
                 date.text = ""
