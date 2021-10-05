@@ -27,6 +27,7 @@ import com.intive.tmdbandroid.search.ui.adapters.ScreeningSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -97,7 +98,6 @@ class SearchFragment : Fragment() {
         if (viewModel.filterSelected.value == null) {
             viewModel.filterSelected.value = binding.allFilter
         }
-        setFilterSelectedColor(binding, viewModel.filterSelected.value)
         return binding.root
     }
 
@@ -148,6 +148,16 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.filterSelected.collectLatest {
+                setFilterSelectedColor(binding, it)
+                if (viewModel.searchQuery.value.isNotEmpty()) {
+                    viewModel.search(viewModel.searchQuery.value)
+                    isLoad = true
+                }
+            }
+        }
     }
 
     private fun initViews(binding: FragmentSearchBinding) {
@@ -175,27 +185,12 @@ class SearchFragment : Fragment() {
     private fun setListenerToFilters(binding: FragmentSearchBinding) {
         binding.allFilter.setOnClickListener {
             viewModel.filterSelected.value = it as TextView?
-            setFilterSelectedColor(binding, it)
-            if (viewModel.searchQuery.value.isNotEmpty()) {
-                viewModel.search(viewModel.searchQuery.value)
-                isLoad = true
-            }
         }
         binding.moviesFilter.setOnClickListener {
             viewModel.filterSelected.value = it as TextView?
-            setFilterSelectedColor(binding, it)
-            if (viewModel.searchQuery.value.isNotEmpty()) {
-                viewModel.search(viewModel.searchQuery.value)
-                isLoad = true
-            }
         }
         binding.tvShowsFilter.setOnClickListener {
             viewModel.filterSelected.value = it as TextView?
-            setFilterSelectedColor(binding, it)
-            if (viewModel.searchQuery.value.isNotEmpty()) {
-                viewModel.search(viewModel.searchQuery.value)
-                isLoad = true
-            }
         }
     }
 
