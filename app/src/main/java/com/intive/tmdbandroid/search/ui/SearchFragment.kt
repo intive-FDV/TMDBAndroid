@@ -154,7 +154,7 @@ class SearchFragment : Fragment() {
             adapter = searchAdapter
         }
         lifecycleScope.launchWhenStarted {
-            searchAdapter.differ.loadStateFlow.collectLatest { loadState ->
+            searchAdapter.loadStateFlow.collectLatest { loadState ->
                 if (loadState.refresh is LoadState.NotLoading &&
                     loadState.append is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached

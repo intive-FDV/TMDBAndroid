@@ -42,7 +42,7 @@ class GetIfExistsUseCaseTest {
     @ExperimentalCoroutinesApi
     @ExperimentalTime
     fun invokeTestEmpty() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(watchlistRepository.exist(anyInt())).willReturn(flowOf(false))
+        BDDMockito.given(watchlistRepository.exist(anyInt())).willReturn(false)
 
         val expected = getIfExistsUseCase(2)
 
@@ -56,7 +56,7 @@ class GetIfExistsUseCaseTest {
     @ExperimentalCoroutinesApi
     @ExperimentalTime
     fun invokeTestNotEmpty() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(watchlistRepository.exist(anyInt())).willReturn(flowOf(true))
+        BDDMockito.given(watchlistRepository.exist(anyInt())).willReturn(true)
 
         val expected = getIfExistsUseCase(2)
 

@@ -53,7 +53,7 @@ class CatalogRepository @Inject constructor(
         return service.getMovieByID(id)
     }
 
-    fun search(name: String): Flow<PagingData<Screening>> {
+    fun searchByName(name: String): Flow<PagingData<Screening>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,

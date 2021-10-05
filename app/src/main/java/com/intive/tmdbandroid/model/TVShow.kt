@@ -2,7 +2,6 @@ package com.intive.tmdbandroid.model
 
 data class TVShow(
     val backdrop_path: String?,
-    val created_by: List<CreatedBy>,
     val first_air_date: String?,
     val genres: List<Genre>,
     val id: Int,

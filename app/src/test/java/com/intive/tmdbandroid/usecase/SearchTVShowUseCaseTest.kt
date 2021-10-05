@@ -67,7 +67,7 @@ class SearchTVShowUseCaseTest {
     @ExperimentalTime
     fun invokeTest() {
         mainCoroutineRule.runBlockingTest {
-            Mockito.`when`(catalogRepository.search(anyString()))
+            Mockito.`when`(catalogRepository.searchByName(anyString()))
                 .thenReturn(
                     flow {
                         emit(
@@ -81,7 +81,7 @@ class SearchTVShowUseCaseTest {
                 Assert.assertEquals(awaitItem(), screening)
                 awaitComplete()
             }
-            Mockito.verify(catalogRepository, Mockito.only()).search("cristina kirchner")
+            Mockito.verify(catalogRepository, Mockito.only()).searchByName("cristina kirchner")
 
         }
     }
