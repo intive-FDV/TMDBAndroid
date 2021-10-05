@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.databinding.ItemNetworkImageBinding
-import com.intive.tmdbandroid.databinding.ItemRecomendationBinding
-import com.intive.tmdbandroid.model.Network
+import com.intive.tmdbandroid.databinding.ItemRecommendationBinding
 import com.intive.tmdbandroid.model.Screening
+import timber.log.Timber
 
-class RecomendationAdapter : ListAdapter<Screening, RecomendationAdapter.ScreeningHolder>(COMPARATOR) {
+class RecommendationAdapter(private val widthSize: Int, private val clickListener: ((Screening) -> Unit)) : ListAdapter<Screening, RecommendationAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {
         private val COMPARATOR = object : DiffUtil.ItemCallback<Screening>() {
             override fun areItemsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
@@ -25,26 +24,37 @@ class RecomendationAdapter : ListAdapter<Screening, RecomendationAdapter.Screeni
         holder.bind(getItem(position))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreeningHolder = ScreeningHolder(
-        ItemRecomendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreeningHolder {
+        val binding =ItemRecommendationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-    class ScreeningHolder(binding: ItemRecomendationBinding ) : RecyclerView.ViewHolder(binding.root)  {
+        Timber.i("MAS - width: $widthSize")
+        binding.containerWatchlistScreening.layoutParams.width = widthSize
+
+        return ScreeningHolder(
+            binding,
+            clickListener
+        )
+    }
+
+    class ScreeningHolder(binding: ItemRecommendationBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
         private val image = binding.recomendationImage
         private val title = binding.recomendationTitle
 
         private val context = binding.root.context
         private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
-        fun bind (screening: Screening) {
+        fun bind (item: Screening) {
+            itemView.setOnClickListener {
+                clickListener.invoke(item)
+            }
 
-            title.text = screening.name
+            title.text = item.name
 
             val options = RequestOptions()
                 .placeholder(R.drawable.ic_image)
                 .error(R.drawable.ic_image)
 
-            val backdropURL = imgUrl + screening.backdrop_path
+            val backdropURL = imgUrl + item.backdrop_path
 
             Glide.with(context)
                 .load(backdropURL)
