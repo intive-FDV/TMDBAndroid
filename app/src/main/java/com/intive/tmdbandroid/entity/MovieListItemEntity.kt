@@ -25,7 +25,6 @@ data class MovieListItemEntity(
             poster_path,
             null,
             vote_average,
-            vote_count,
             0.0,
             release_date,
             "tv",

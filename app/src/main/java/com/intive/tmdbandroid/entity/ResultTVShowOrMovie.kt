@@ -39,7 +39,6 @@ data class ResultTVShowOrMovie(
             poster_path,
             null,
             vote_average,
-            vote_count,
             popularity,
             release_date = release_date ?: first_air_date,
             media_type,

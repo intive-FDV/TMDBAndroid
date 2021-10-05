@@ -14,7 +14,6 @@ data class TVShow(
     val poster_path: String?,
     val status: String?,
     val vote_average: Double,
-    val vote_count: Int,
     val networks: List<Network>
 ) {
     fun toScreening(): Screening {
@@ -29,7 +28,6 @@ data class TVShow(
             poster_path,
             status,
             vote_average,
-            vote_count,
             popularity = 0.0,
             release_date = first_air_date,
             media_type = "tv",

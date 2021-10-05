@@ -41,13 +41,11 @@ class DetailsViewModelTest {
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
-        vote_count = 100,
-        created_by = emptyList(),
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,
         status = "Online",
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
+        networks = listOf(Network("/netflixlogo.jpg"))
     )
 
     private val movie = Movie(
@@ -56,11 +54,9 @@ class DetailsViewModelTest {
         genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
         id = 1,
         title = "Simona la Cacarisa",
-        original_title = "El cochiloco",
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
-        vote_count = 100,
         status = "Online",
         popularity = 34.0
     )
@@ -77,13 +73,12 @@ class DetailsViewModelTest {
         poster_path = "POSTER_PATH",
         status = "Online",
         vote_average = 10.5,
-        vote_count = 100,
         popularity = 34.0,
         media_type = "tv",
         adult = false,
         genre_ids = null,
         video = false,
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
+        networks = listOf(Network("/netflixlogo.jpg"))
     )
 
     private val videoKey = "VIDEO_KEY"

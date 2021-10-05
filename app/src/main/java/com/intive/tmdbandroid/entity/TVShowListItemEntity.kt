@@ -25,7 +25,6 @@ data class TVShowListItemEntity(
             poster_path,
             null,
             vote_average,
-            vote_count,
             0.0,
             first_air_date,
             "tv",
