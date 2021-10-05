@@ -74,7 +74,6 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         screeningItemId?.let {
-            Timber.i("MAS - screeningID: $it")
             if(savedInstanceState==null){
                 if (isMovie) viewModel.movie(it)
                 else viewModel.tVShows(it)
@@ -106,6 +105,7 @@ class DetailFragment : Fragment() {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
+                    else -> {}
                 }
             }
         }
@@ -130,6 +130,7 @@ class DetailFragment : Fragment() {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
+                    else -> {}
                 }
             }
         }
@@ -221,9 +222,9 @@ class DetailFragment : Fragment() {
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.popularityRatingNumber.text = "$percentage%"
-
         val context = binding.root.context
+
+        binding.popularityRatingNumber.text = context.getString(R.string.popularity, percentage)
 
         when {
             percentage < 25 -> binding.popularityThumbIcon.imageTintList =

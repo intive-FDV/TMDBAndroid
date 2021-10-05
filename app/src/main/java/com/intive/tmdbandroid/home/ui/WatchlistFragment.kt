@@ -34,12 +34,11 @@ class WatchlistFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val clickListener = { screening: Screening ->
             val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
-            val isMovie = screening.media_type == context?.getString(R.string.screening_movie_type)
             intent.putExtras(
                 bundleOf(
                     (context?.getString(R.string.intent_extra_key_action) ?: "") to (context?.getString(R.string.intent_extra_key_action_detail) ?: ""),
                     (context?.getString(R.string.intent_extra_key_screening_id) ?: "") to screening.id,
-                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to isMovie
+                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to (screening.media_type == context?.getString(R.string.screening_movie_type))
                 )
             )
             requireActivity().startActivity(intent)
