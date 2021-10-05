@@ -6,10 +6,10 @@ import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.entity.ResultMoviesEntity
 import com.intive.tmdbandroid.entity.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Movie
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
@@ -71,6 +71,20 @@ class Service {
                 unOfficial.isNotEmpty() -> emit(unOfficial[0].key)
                 else -> emit("")
             }
+        }
+    }
+
+    fun getTvShowSimilar(tvShowID: Int): Flow<List<Screening>> {
+        return flow {
+            val resultEntity = retrofit.create(ApiClient::class.java).getTVShowSimilar(tvShowID, BuildConfig.API_KEY)
+            emit(resultEntity.toScreeningList())
+        }
+    }
+
+    fun getMovieSimilar(movieID: Int): Flow<List<Screening>> {
+        return flow {
+            val resultEntity = retrofit.create(ApiClient::class.java).getMovieSimilar(movieID, BuildConfig.API_KEY)
+            emit(resultEntity.toScreeningList())
         }
     }
 }
