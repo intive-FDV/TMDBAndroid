@@ -1,7 +1,7 @@
 package com.intive.tmdbandroid.details.ui
 
-import android.content.Intent
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -15,11 +15,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
+import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
 import com.intive.tmdbandroid.model.Screening
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -33,8 +35,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.recyclerview.widget.GridLayoutManager
-import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -275,9 +275,6 @@ class DetailFragment : Fragment() {
         val toolbar = binding.toolbar
 
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
-        toolbar.menu.findItem(R.id.ic_share).icon =
-            AppCompatResources.getDrawable(requireContext(), R.drawable.ic_share)
-
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
