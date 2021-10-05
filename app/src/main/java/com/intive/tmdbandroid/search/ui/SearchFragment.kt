@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
@@ -27,6 +28,7 @@ import com.intive.tmdbandroid.search.ui.adapters.ScreeningSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -164,38 +166,39 @@ class SearchFragment : Fragment() {
                     loadState.append.endOfPaginationReached
                 ) {
                     binding.layoutEmpty.root.isVisible = searchAdapter.itemCount < 1
+                    goToTopOfTheList(resultsList)
                 }
             }
         }
-
         setListenerToFilters(binding)
+    }
 
+    private fun goToTopOfTheList(recyclerView: RecyclerView) {
+        val lm = recyclerView.layoutManager
+        lm?.scrollToPosition(0)
     }
 
     private fun setListenerToFilters(binding: FragmentSearchBinding) {
         binding.allFilter.setOnClickListener {
-            viewModel.filterSelected.value = it as TextView?
-            setFilterSelectedColor(binding, it)
-            if (viewModel.searchQuery.value.isNotEmpty()) {
-                viewModel.search(viewModel.searchQuery.value)
-                isLoad = true
-            }
+            filterClick(it as TextView, binding)
         }
         binding.moviesFilter.setOnClickListener {
-            viewModel.filterSelected.value = it as TextView?
-            setFilterSelectedColor(binding, it)
-            if (viewModel.searchQuery.value.isNotEmpty()) {
-                viewModel.search(viewModel.searchQuery.value)
-                isLoad = true
-            }
+            filterClick(it as TextView, binding)
         }
         binding.tvShowsFilter.setOnClickListener {
-            viewModel.filterSelected.value = it as TextView?
-            setFilterSelectedColor(binding, it)
-            if (viewModel.searchQuery.value.isNotEmpty()) {
-                viewModel.search(viewModel.searchQuery.value)
-                isLoad = true
+            filterClick(it as TextView, binding)
+        }
+    }
+
+    private fun filterClick(textView: TextView, binding: FragmentSearchBinding) {
+        viewModel.filterSelected.value = textView
+        setFilterSelectedColor(binding, textView)
+        if (viewModel.searchQuery.value.isNotEmpty()) {
+            lifecycleScope.launch {
+                searchAdapter.differ.submitData(PagingData.empty())
             }
+            viewModel.search(viewModel.searchQuery.value)
+            isLoad = true
         }
     }
 
