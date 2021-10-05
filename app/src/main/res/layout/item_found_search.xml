@@ -77,7 +77,7 @@
             android:id="@+id/itemPosterSearch"
             android:layout_width="66dp"
             android:layout_height="114dp"
-            android:contentDescription="TV Show Poster"
+            android:contentDescription="@string/details_poster_description"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1.5"
