@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
+import com.intive.tmdbandroid.databinding.ItemScreeningSmallBinding
 import com.intive.tmdbandroid.model.Screening
 
 class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : PagingDataAdapter<Screening, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
@@ -25,11 +25,11 @@ class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : Pag
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreeningHolder = ScreeningHolder(
-        ItemScreenengSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        ItemScreeningSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         clickListener
     )
 
-    class ScreeningHolder(binding: ItemScreenengSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
+    class ScreeningHolder(binding: ItemScreeningSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
         private val title = binding.itemTitle
         private val backdrop = binding.itemBackdrop
         private val date = binding.itemDate
