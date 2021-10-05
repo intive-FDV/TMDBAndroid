@@ -31,6 +31,10 @@
     <string name="to_watch_url">http://www.intive.towatch.com</string>
     <string name="linking_scheme">http</string>
     <string name="linking_host">www.intive.towatch.com</string>
+    <string name="all_filter">All</string>
+    <string name="tv_shows_filter">TV Shows</string>
+    <string name="movies_filter">Movies</string>
+    <string name="people_filter">People</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>

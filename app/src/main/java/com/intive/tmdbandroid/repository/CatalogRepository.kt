@@ -53,14 +53,14 @@ class CatalogRepository @Inject constructor(
         return service.getMovieByID(id)
     }
 
-    fun search(name: String): Flow<PagingData<Screening>> {
+    fun search(query: String, filterSelected: String?): Flow<PagingData<Screening>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                ScreeningSearchSource(service = service, name)
+                ScreeningSearchSource(service = service, query, filterSelected)
             }
         ).flow
     }
