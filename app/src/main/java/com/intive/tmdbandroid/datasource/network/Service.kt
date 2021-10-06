@@ -9,7 +9,6 @@ import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
