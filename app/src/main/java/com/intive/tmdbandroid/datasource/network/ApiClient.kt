@@ -35,6 +35,14 @@ interface ApiClient {
     suspend fun getMovieVideos(@Path("movie_id") movieID: Int,
                                @Query("api_key") apiKey: String) : VideoEntity
 
+    @GET("tv/{tv_id}/similar")
+    suspend fun getTVShowSimilar(@Path("tv_id") tvShowID: Int,
+                              @Query("api_key") apiKey: String) : ResultTVShowsEntity
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getMovieSimilar(@Path("movie_id") movieID: Int,
+                                @Query("api_key") apiKey: String) : ResultMoviesEntity
+
     // SEARCH
 
     @GET("search/multi")

@@ -95,9 +95,13 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var movieUseCase: DetailMovieUseCase
     @Mock
-    private lateinit var tvShowTrailerUseCaseUseCase: GetTVShowTrailerUseCase
+    private lateinit var tvShowTrailerUseCase: GetTVShowTrailerUseCase
     @Mock
-    private lateinit var movieTrailerUseCaseUseCase: GetMovieTrailerUseCase
+    private lateinit var movieTrailerUseCase: GetMovieTrailerUseCase
+    @Mock
+    private lateinit var getTVShowSimilarUseCase: GetTVShowSimilarUseCase
+    @Mock
+    private lateinit var getMovieSimilarUseCase: GetMovieSimilarUseCase
 
 
     @Before
@@ -108,8 +112,10 @@ class DetailsViewModelTest {
             saveTVShowInWatchlistUseCase,
             deleteFromWatchlistUseCase,
             getIfExistsUseCase,
-            tvShowTrailerUseCaseUseCase,
-            movieTrailerUseCaseUseCase
+            tvShowTrailerUseCase,
+            movieTrailerUseCase,
+            getTVShowSimilarUseCase,
+            getMovieSimilarUseCase
         )
     }
 
@@ -245,7 +251,7 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun getTVShowTrailerTest() = mainCoroutineRule.runBlockingTest {
-        `when`(tvShowTrailerUseCaseUseCase(anyInt())).thenReturn(
+        `when`(tvShowTrailerUseCase(anyInt())).thenReturn(
             flow {
                 emit(
                     videoKey
@@ -263,7 +269,7 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun getMovieTrailerTest() = mainCoroutineRule.runBlockingTest {
-        `when`(movieTrailerUseCaseUseCase(anyInt())).thenReturn(
+        `when`(movieTrailerUseCase(anyInt())).thenReturn(
             flow {
                 emit(
                     videoKey
@@ -275,6 +281,42 @@ class DetailsViewModelTest {
 
         detailViewModel.trailerState.consumeAsFlow().test {
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun getTVShowSimilarTest() = mainCoroutineRule.runBlockingTest {
+        `when`(getTVShowSimilarUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    listOf(screening)
+                )
+            }
+        )
+
+        detailViewModel.getTVShowSimilar(2)
+
+        detailViewModel.recommendedUIState.test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(listOf(screening)))
+        }
+    }
+
+    @Test
+    @ExperimentalTime
+    fun getMovieSimilarTest() = mainCoroutineRule.runBlockingTest {
+        `when`(getMovieSimilarUseCase(anyInt())).thenReturn(
+            flow {
+                emit(
+                    listOf(screening)
+                )
+            }
+        )
+
+        detailViewModel.getMovieSimilar(2)
+
+        detailViewModel.recommendedUIState.test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(listOf(screening)))
         }
     }
 }
