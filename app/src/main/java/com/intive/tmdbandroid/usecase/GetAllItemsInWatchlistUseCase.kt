@@ -8,12 +8,6 @@ import javax.inject.Inject
 
 class GetAllItemsInWatchlistUseCase @Inject constructor(private val watchlistRepository: WatchlistRepository) {
 
-    suspend operator fun invoke(): Flow<List<Screening>>  {
-        return flowOf(
-            watchlistRepository.allFavorites().map {
-                it.toScreening()
-            }
-        )
-    }
+    suspend operator fun invoke(): Flow<List<Screening>> = watchlistRepository.allFavorites()
 
 }
