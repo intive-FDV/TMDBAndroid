@@ -16,6 +16,11 @@
             android:name="isMovieBoolean"
             app:argType="boolean"
             android:defaultValue="false" />
+
+        <!-- (1) Local action to self (detail fragment) -->
+        <action
+            android:id="@+id/action_openRecommendation"
+            app:destination="@id/detailFragmentDest"/>
     </fragment>
 
     <fragment

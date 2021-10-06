@@ -82,4 +82,12 @@ class CatalogRepository @Inject constructor(
     fun getMovieTrailer(id: Int): Flow<String> {
         return service.getMovieVideos(id)
     }
+
+    fun getTVShowSimilar(id: Int): Flow<List<Screening>> {
+        return service.getTvShowSimilar(id)
+    }
+
+    fun getMovieSimilar(id: Int): Flow<List<Screening>> {
+        return service.getMovieSimilar(id)
+    }
 }

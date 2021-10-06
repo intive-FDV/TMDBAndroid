@@ -1,13 +1,14 @@
 package com.intive.tmdbandroid.details.ui
 
-import android.content.Intent
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,11 +16,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
+import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
+import com.intive.tmdbandroid.details.ui.adapters.RecommendationAdapter
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
 import com.intive.tmdbandroid.model.Screening
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -33,8 +38,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.recyclerview.widget.GridLayoutManager
-import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import kotlin.math.floor
 
 @AndroidEntryPoint
@@ -47,6 +50,7 @@ class DetailFragment : Fragment() {
     private val viewModel: DetailsViewModel by viewModels()
 
     private val networkAdapter = NetworkAdapter()
+    private lateinit var recommendationAdapter: RecommendationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,9 +69,16 @@ class DetailFragment : Fragment() {
         collectScreeningDetailFromViewModel(binding)
         collectWatchlistDataFromViewModel(binding)
         collectTrailer()
-        setupNetworkList(binding)
+        collectRecommendations(binding)
+
+        initViews(binding)
 
         return binding.root
+    }
+
+    private fun initViews(binding: FragmentDetailBinding) {
+        setupNetworkList(binding)
+        setupRecommendedList(binding)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -155,6 +166,32 @@ class DetailFragment : Fragment() {
         }
     }
 
+    private fun collectRecommendations(binding: FragmentDetailBinding) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.recommendedUIState.collectLatest {
+                Timber.i("MAS - collectRecommendations.state: $it")
+                when (it) {
+                    is State.Success -> {
+                        if (it.data.isEmpty()) {
+                            binding.recomendedList.isVisible = false
+                            binding.recomendedHeader.isVisible = false
+                        } else {
+                            recommendationAdapter.submitList(it.data)
+                            binding.recomendedList.isVisible = true
+                            binding.recomendedHeader.isVisible = true
+                        }
+                    }
+                    is State.Error -> {
+                        Toast.makeText(context, "Couldn't get recommendations. Sorry!", Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                        //DO NOTHING
+                    }
+                }
+            }
+        }
+    }
+
     private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
 
         setImages(binding, screening)
@@ -203,7 +240,14 @@ class DetailFragment : Fragment() {
         else binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
-        screeningItemId?.let { viewModel.existAsFavorite(it) }
+        screeningItemId?.let {
+            viewModel.existAsFavorite(it)
+
+            if (isMovie)
+                viewModel.getMovieSimilar(it)
+            else
+                viewModel.getTVShowSimilar(it)
+        }
 
         binding.trailerTextView.setOnClickListener {
             screeningItemId?.let {
@@ -313,9 +357,7 @@ class DetailFragment : Fragment() {
 
         toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
-            if (navController.navigateUp()) {
-                navController.navigateUp()
-            }else {
+            if (!navController.navigateUp()) {
                 activity?.finish()
             }
         }
@@ -369,6 +411,26 @@ class DetailFragment : Fragment() {
 
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = networkAdapter
+        }
+    }
+
+    private fun setupRecommendedList(binding: FragmentDetailBinding) {
+        binding.recomendedList.apply {
+            val displayMetrics = context.resources.displayMetrics
+            val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+            val scaling = resources.getInteger(R.integer.screening_width)
+            val columnCount = floor(dpWidth / scaling).toInt()
+
+            val widthSize = (floor(dpWidth / columnCount) * displayMetrics.density).toInt()
+
+            recommendationAdapter = RecommendationAdapter(widthSize) { screening: Screening ->
+                val action = DetailFragmentDirections.actionOpenRecommendation(screening.id, isMovie)
+                findNavController().navigate(action)
+            }
+
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = recommendationAdapter
         }
     }
 

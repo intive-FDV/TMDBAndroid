@@ -4,6 +4,7 @@ import com.intive.tmdbandroid.BuildConfig
 import com.intive.tmdbandroid.common.RetrofitHelper
 import com.intive.tmdbandroid.entity.*
 import com.intive.tmdbandroid.model.Movie
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -78,6 +79,20 @@ class Service {
     fun getDetailPerson(personID: Int): Flow<ResultPerson> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getDetailPersonByID(personID, BuildConfig.API_KEY))
+        }
+    }
+
+    fun getTvShowSimilar(tvShowID: Int): Flow<List<Screening>> {
+        return flow {
+            val resultEntity = retrofit.create(ApiClient::class.java).getTVShowSimilar(tvShowID, BuildConfig.API_KEY)
+            emit(resultEntity.toScreeningList())
+        }
+    }
+
+    fun getMovieSimilar(movieID: Int): Flow<List<Screening>> {
+        return flow {
+            val resultEntity = retrofit.create(ApiClient::class.java).getMovieSimilar(movieID, BuildConfig.API_KEY)
+            emit(resultEntity.toScreeningList())
         }
     }
 
