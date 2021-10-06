@@ -73,7 +73,9 @@ class WatchlistFragment : Fragment() {
                     is State.Success<List<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
                         binding.layoutProgressbar.root.visibility = View.GONE
-                        binding.layoutEmpty.root.isVisible = it.data.isEmpty()
+
+                        binding.layoutNodata.root.isVisible = it.data.isEmpty()
+
                         watchlistAdapter.submitList(it.data)
                     }
                     is State.Error -> {

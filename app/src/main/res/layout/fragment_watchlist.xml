@@ -28,8 +28,8 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <include
-        android:id="@+id/layout_empty"
-        layout="@layout/layout_empty"
+        android:id="@+id/layout_nodata"
+        layout="@layout/layout_watchlist_hint"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
