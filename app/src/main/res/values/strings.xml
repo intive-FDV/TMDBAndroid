@@ -12,6 +12,9 @@
     <string name="tvShows">TV shows</string>
     <string name="year">(%1$s)</string>
 
+    <!-- Watchlist Hint Layout -->
+    <string name="watchlist_hint">Go look for something to watch</string>
+
     <!-- Detail Fragment -->
     <string name="overview">Overview</string>
     <string name="collapsing_toolbar_description">Backdrop Poster Header</string>

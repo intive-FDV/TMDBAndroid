@@ -119,8 +119,8 @@ class SearchFragment : Fragment() {
             viewModel.uiState.collectLatest { screening ->
                 when (screening) {
                     is State.Success<PagingData<Screening>> -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.resultSearchHeader.text =
@@ -131,20 +131,20 @@ class SearchFragment : Fragment() {
                         searchAdapter.submitData(screening.data)
                     }
                     is State.Error -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutError.root.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
-                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutProgressbar.root.visibility = View.VISIBLE
                     }
                     is State.Waiting -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.VISIBLE
                     }

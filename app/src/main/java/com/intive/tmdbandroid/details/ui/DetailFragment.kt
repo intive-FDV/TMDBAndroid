@@ -104,18 +104,18 @@ class DetailFragment : Fragment() {
             viewModel.uiState.collect { state ->
                 when (state) {
                     is State.Success -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
                         setupUI(binding, state.data)
                     }
                     is State.Error -> {
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.VISIBLE
                     }
                     else -> {}
                 }
@@ -128,19 +128,19 @@ class DetailFragment : Fragment() {
             viewModel.watchlistUIState.collectLatest {
                 when (it) {
                     is State.Success -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
                         selectOrUnselectWatchlistFav(binding, it.data)
                         isSaveOnWatchlist = it.data
                     }
                     State.Error -> {
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
                     State.Loading -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.VISIBLE
                     }
                     else -> {}
                 }
