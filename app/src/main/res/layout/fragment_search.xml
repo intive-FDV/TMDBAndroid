@@ -109,10 +109,16 @@
         app:layout_constraintTop_toBottomOf="@id/result_search_header"
         tools:listitem="@layout/item_found_search" />
 
-
     <include
         android:id="@+id/layout_error"
-        layout="@layout/layout_error" />
+        layout="@layout/layout_error"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/result_search_header" />
 
     <include
         android:id="@+id/layout_empty"
@@ -128,7 +134,13 @@
     <include
         android:id="@+id/layout_progressbar"
         layout="@layout/layout_progressbar"
-        tools:visibility="gone" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/result_search_header" />
 
     <include
         android:id="@+id/layout_search_hint"
@@ -141,4 +153,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/all_filter"
         tools:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

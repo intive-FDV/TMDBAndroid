@@ -78,17 +78,17 @@ class MoviesFragment : Fragment() {
 
                 when (resultMovies) {
                     is State.Success<PagingData<Screening>> -> {
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
 
                         moviePageAdapter.submitData(resultMovies.data)
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.root.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutError.root.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                     }
                     else -> throw RuntimeException(context?.getString(R.string.state_error))
                 }

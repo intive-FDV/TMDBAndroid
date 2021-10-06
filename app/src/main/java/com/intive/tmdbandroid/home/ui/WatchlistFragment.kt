@@ -71,7 +71,7 @@ class WatchlistFragment : Fragment() {
             viewModel.uiState.collectLatest {
                 when(it) {
                     is State.Success<List<Screening>> -> {
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutProgressbar.root.visibility = View.GONE
 
                         binding.layoutNodata.root.isVisible = it.data.isEmpty()
@@ -80,11 +80,11 @@ class WatchlistFragment : Fragment() {
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.root.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutError.root.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                     }
                     else -> throw RuntimeException(context?.getString(R.string.state_error))
                 }
