@@ -9,12 +9,14 @@ import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.WatchlistRepository
 import com.intive.tmdbandroid.usecase.InsertInWatchlistUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
@@ -62,6 +64,10 @@ class SaveTVShowInWatchlistUseCaseTest {
     @ExperimentalCoroutinesApi
     @ExperimentalTime
     fun invokeTest() = mainCoroutineRule.runBlockingTest {
+        BDDMockito.given(watchlistRepository.insert(screening)).willReturn(
+            flowOf(true)
+        )
+
         val expected = saveTVShowInWatchlistUseCase(screening)
 
         expected.test {
