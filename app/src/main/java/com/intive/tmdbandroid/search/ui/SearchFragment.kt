@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentSearchBinding
@@ -26,6 +28,7 @@ import com.intive.tmdbandroid.search.ui.adapters.ScreeningSearchAdapter
 import com.intive.tmdbandroid.search.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -94,6 +97,10 @@ class SearchFragment : Fragment() {
         } else {
             binding.layoutSearchHint.hintContainer.visibility = View.GONE
         }
+        if (viewModel.filterSelected.value == null) {
+            viewModel.filterSelected.value = binding.allFilter
+        }
+        setFilterSelectedColor(binding, viewModel.filterSelected.value)
         return binding.root
     }
 
@@ -160,9 +167,78 @@ class SearchFragment : Fragment() {
                     loadState.append.endOfPaginationReached
                 ) {
                     binding.layoutEmpty.root.isVisible = searchAdapter.itemCount < 1
+                    goToTopOfTheList(resultsList)
                 }
             }
         }
+        setListenerToFilters(binding)
+    }
 
+    private fun goToTopOfTheList(recyclerView: RecyclerView) {
+        val lm = recyclerView.layoutManager
+        lm?.scrollToPosition(0)
+    }
+
+    private fun setListenerToFilters(binding: FragmentSearchBinding) {
+        binding.allFilter.setOnClickListener {
+            filterClick(it as TextView, binding)
+        }
+        binding.moviesFilter.setOnClickListener {
+            filterClick(it as TextView, binding)
+        }
+        binding.tvShowsFilter.setOnClickListener {
+            filterClick(it as TextView, binding)
+        }
+    }
+
+    private fun filterClick(textView: TextView, binding: FragmentSearchBinding) {
+        viewModel.filterSelected.value = textView
+        setFilterSelectedColor(binding, textView)
+        if (viewModel.searchQuery.value.isNotEmpty()) {
+            lifecycleScope.launch {
+                searchAdapter.differ.submitData(PagingData.empty())
+            }
+            viewModel.search(viewModel.searchQuery.value)
+            isLoad = true
+        }
+    }
+
+    private fun setFilterSelectedColor(binding: FragmentSearchBinding, selectedFilter: TextView?) {
+        when (selectedFilter?.id) {
+            R.id.all_filter -> {
+                binding.tvShowsFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.moviesFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.peopleFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+            R.id.movies_filter -> {
+                binding.tvShowsFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.allFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.peopleFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+            R.id.tv_shows_filter -> {
+                binding.allFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.moviesFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.peopleFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+            R.id.people_filter -> {
+                binding.tvShowsFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.moviesFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+                binding.allFilter.backgroundTintList =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.lightgrey)
+            }
+        }
+        selectedFilter?.backgroundTintList =
+            AppCompatResources.getColorStateList(requireContext(), R.color.secondaryLightColor)
     }
 }

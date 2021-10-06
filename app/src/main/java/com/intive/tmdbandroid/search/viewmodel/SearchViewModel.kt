@@ -1,5 +1,6 @@
 package com.intive.tmdbandroid.search.viewmodel
 
+import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -23,7 +24,7 @@ class SearchViewModel @Inject constructor(
 
     fun search(name:String) {
         viewModelScope.launch {
-            searchUseCase(name)
+            searchUseCase(name, filterSelected.value?.text?.toString())
                 .onStart {
                     _state.value = State.Loading
                 }
@@ -38,5 +39,7 @@ class SearchViewModel @Inject constructor(
     }
 
     val searchQuery = MutableStateFlow("")
+
+    val filterSelected = MutableStateFlow<TextView?>(null)
 
 }

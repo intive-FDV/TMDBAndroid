@@ -55,6 +55,10 @@
     <string name="search_result_header">Results for: %1$s</string>
     <string name="screening_movie_type">movie</string>
     <string name="saved_instance_state_is_load">isLoad</string>
+    <string name="all_filter">All</string>
+    <string name="tv_shows_filter">TV Shows</string>
+    <string name="movies_filter">Movies</string>
+    <string name="people_filter">People</string>
 
     <!-- Plurals -->
     <plurals name="numberOfSeasons">
