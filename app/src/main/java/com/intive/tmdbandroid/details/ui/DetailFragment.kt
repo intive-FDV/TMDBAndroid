@@ -135,8 +135,7 @@ class DetailFragment : Fragment() {
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.root.visibility = View.GONE
-                        binding.layoutErrorDetail.root.visibility = View.VISIBLE
-                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
+                        Toast.makeText(context, "Couldn't save to watchlist. Please try later", Toast.LENGTH_LONG).show()
                     }
                     State.Loading -> {
                         binding.layoutErrorDetail.root.visibility = View.GONE
