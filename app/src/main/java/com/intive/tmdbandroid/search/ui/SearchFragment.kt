@@ -196,7 +196,7 @@ class SearchFragment : Fragment() {
         setFilterSelectedColor(binding, textView)
         if (viewModel.searchQuery.value.isNotEmpty()) {
             lifecycleScope.launch {
-                searchAdapter.differ.submitData(PagingData.empty())
+                searchAdapter.submitData(PagingData.empty())
             }
             viewModel.search(viewModel.searchQuery.value)
             isLoad = true
