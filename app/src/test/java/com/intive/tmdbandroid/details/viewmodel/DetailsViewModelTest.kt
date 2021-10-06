@@ -95,9 +95,9 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var movieUseCase: DetailMovieUseCase
     @Mock
-    private lateinit var tvShowTrailerUseCase: GetTVShowTrailer
+    private lateinit var tvShowTrailerUseCaseUseCase: GetTVShowTrailerUseCase
     @Mock
-    private lateinit var movieTrailerUseCase: GetMovieTrailer
+    private lateinit var movieTrailerUseCaseUseCase: GetMovieTrailerUseCase
 
 
     @Before
@@ -108,8 +108,8 @@ class DetailsViewModelTest {
             saveTVShowInWatchlistUseCase,
             deleteFromWatchlistUseCase,
             getIfExistsUseCase,
-            tvShowTrailerUseCase,
-            movieTrailerUseCase
+            tvShowTrailerUseCaseUseCase,
+            movieTrailerUseCaseUseCase
         )
     }
 
@@ -245,7 +245,7 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun getTVShowTrailerTest() = mainCoroutineRule.runBlockingTest {
-        `when`(tvShowTrailerUseCase(anyInt())).thenReturn(
+        `when`(tvShowTrailerUseCaseUseCase(anyInt())).thenReturn(
             flow {
                 emit(
                     videoKey
@@ -263,7 +263,7 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun getMovieTrailerTest() = mainCoroutineRule.runBlockingTest {
-        `when`(movieTrailerUseCase(anyInt())).thenReturn(
+        `when`(movieTrailerUseCaseUseCase(anyInt())).thenReturn(
             flow {
                 emit(
                     videoKey
