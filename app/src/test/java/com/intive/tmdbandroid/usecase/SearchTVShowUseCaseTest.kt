@@ -15,9 +15,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
@@ -67,7 +65,7 @@ class SearchTVShowUseCaseTest {
     @ExperimentalTime
     fun invokeTest() {
         mainCoroutineRule.runBlockingTest {
-            Mockito.`when`(catalogRepository.search(anyString()))
+            `when`(catalogRepository.search(anyString(), eq("All")))
                 .thenReturn(
                     flow {
                         emit(
@@ -76,12 +74,12 @@ class SearchTVShowUseCaseTest {
                     }
                 )
 
-            val actual = searchUseCase("cristina kirchner")
+            val actual = searchUseCase("cristina kirchner", "All")
             actual.test {
                 Assert.assertEquals(awaitItem(), screening)
                 awaitComplete()
             }
-            Mockito.verify(catalogRepository, Mockito.only()).search("cristina kirchner")
+            verify(catalogRepository, only()).search("cristina kirchner", "All")
 
         }
     }
