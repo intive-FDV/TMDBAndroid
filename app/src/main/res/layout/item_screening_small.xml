@@ -12,7 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_short">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_backdrop"
@@ -44,7 +45,9 @@
             android:id="@+id/item_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_short"
+            android:layout_marginTop="@dimen/margin_short"
+            android:layout_marginEnd="@dimen/margin_short"
+            android:layout_marginStart="@dimen/margin_short"
             android:textSize="@dimen/comment_size"
             app:layout_constraintTop_toBottomOf="@+id/item_title"
             app:layout_constraintBottom_toBottomOf="parent"
