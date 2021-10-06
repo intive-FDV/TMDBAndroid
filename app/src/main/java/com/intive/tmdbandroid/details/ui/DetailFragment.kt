@@ -319,7 +319,7 @@ class DetailFragment : Fragment() {
 
         val toolbar = binding.toolbar
 
-        toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
+        toolbar.inflateMenu(R.menu.detail_fragment_menu)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
