@@ -204,8 +204,6 @@ class DetailFragment : Fragment() {
 
         setupToolbar(binding, screening)
 
-        binding.toolbar.title = screening.name
-
         binding.statusDetailTextView.text = screening.status
 
         val genresListText = screening.genres?.map {
@@ -317,6 +315,7 @@ class DetailFragment : Fragment() {
 
         val toolbar = binding.toolbar
 
+        toolbar.title = screening.name
         toolbar.inflateMenu(R.menu.watchlist_favorite_detail_fragment)
         toolbar.menu.findItem(R.id.ic_share).icon =
             AppCompatResources.getDrawable(requireContext(), R.drawable.ic_share)

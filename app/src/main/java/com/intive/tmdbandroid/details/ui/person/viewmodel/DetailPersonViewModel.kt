@@ -3,8 +3,8 @@ package com.intive.tmdbandroid.details.ui.person.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.entity.ResultCombinedCredits
 import com.intive.tmdbandroid.entity.ResultPerson
+import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.person.GetCombinedCreditsUseCase
 import com.intive.tmdbandroid.usecase.person.GetDetailPersonUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ class DetailPersonViewModel @Inject constructor(
     private val getDetailPersonUseCase: GetDetailPersonUseCase
 ): ViewModel() {
 
-    private val _stateCombinedCredits = MutableStateFlow<State<ResultCombinedCredits>>(State.Waiting)
+    private val _stateCombinedCredits = MutableStateFlow<State<List<Screening>>>(State.Waiting)
     val uiStateCombinedCredits = _stateCombinedCredits
 
     private val _stateDetailPerson = MutableStateFlow<State<ResultPerson>>(State.Waiting)
@@ -36,8 +36,8 @@ class DetailPersonViewModel @Inject constructor(
                 .catch {
                     _stateCombinedCredits.value = State.Error
                 }
-                .collect {
-                    _stateCombinedCredits.value = State.Success(it)
+                .collect { screenings ->
+                    _stateCombinedCredits.value = State.Success(screenings)
                 }
         }
     }

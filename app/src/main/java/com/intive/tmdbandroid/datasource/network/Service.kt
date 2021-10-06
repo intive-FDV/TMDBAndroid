@@ -70,9 +70,10 @@ class Service {
         }
     }
 
-    fun getCombinedCredits(personID: Int): Flow<ResultCombinedCredits> {
+    fun getCombinedCredits(personID: Int): Flow<List<Screening>> {
         return flow {
-            emit(retrofit.create(ApiClient::class.java).getCombinedCreditsByID(personID, BuildConfig.API_KEY))
+            val result = retrofit.create(ApiClient::class.java).getCombinedCreditsByID(personID, BuildConfig.API_KEY)
+            emit(result.cast.map { it.toScreening() })
         }
     }
 
