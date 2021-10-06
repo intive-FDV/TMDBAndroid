@@ -48,7 +48,7 @@
     <string name="warning">Warning</string>
 
     <!-- Search Hint Layout -->
-    <string name="search_hint">Start typing to find awesome TV shows and Movies</string>
+    <string name="search_hint">Start typing to find awesome\nTV shows and Movies</string>
     <string name="hint_layout_description">Search Hint Icon</string>
 
     <!-- Search Fragment -->
