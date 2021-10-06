@@ -2,10 +2,7 @@ package com.intive.tmdbandroid.datasource.network
 
 import com.intive.tmdbandroid.BuildConfig
 import com.intive.tmdbandroid.common.RetrofitHelper
-import com.intive.tmdbandroid.entity.ResultListTVShowOrMovies
-import com.intive.tmdbandroid.entity.ResultMoviesEntity
-import com.intive.tmdbandroid.entity.ResultPeopleEntity
-import com.intive.tmdbandroid.entity.ResultTVShowsEntity
+import com.intive.tmdbandroid.entity.*
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
@@ -69,6 +66,18 @@ class Service {
                 unOfficial.isNotEmpty() -> emit(unOfficial[0].key)
                 else -> emit("")
             }
+        }
+    }
+
+    fun getCombinedCredits(personID: Int): Flow<ResultCombinedCredits> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getCombinedCreditsByID(personID, BuildConfig.API_KEY))
+        }
+    }
+
+    fun getDetailPerson(personID: Int): Flow<ResultPerson> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getDetailPersonByID(personID, BuildConfig.API_KEY))
         }
     }
 

@@ -35,6 +35,7 @@
     <string name="tv_shows_filter">TV Shows</string>
     <string name="movies_filter">Movies</string>
     <string name="people_filter">People</string>
+    <string name="biography">Biography</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>

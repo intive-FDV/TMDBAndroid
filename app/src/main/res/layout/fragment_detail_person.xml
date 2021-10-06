@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".details.ui.person.ui.DetailPersonFragment">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorContainer_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayoutDetail"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="@color/primaryColor"
+                app:expandedTitleMarginBottom="20dp"
+                app:expandedTitleMarginStart="15dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+                <ImageView
+                    android:id="@+id/image_detail_imageView"
+                    android:layout_width="155dp"
+                    android:layout_height="230dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/details_poster_description"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_launcher_foreground" />
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+                    app:contentInsetStart="0dp"
+                    app:contentInsetStartWithNavigation="0dp"
+                    app:layout_collapseMode="pin"
+                    app:titleMarginStart="16dp" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp">
+
+                <ImageView
+                    android:id="@+id/popularity_thumb_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/thumb_description"
+                    android:src="@drawable/ic_thumb_up"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/red" />
+
+                <TextView
+                    android:id="@+id/popularity_rating_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/popularity_thumb_icon"
+                    app:layout_constraintStart_toEndOf="@id/popularity_thumb_icon"
+                    app:layout_constraintTop_toTopOf="@id/popularity_thumb_icon"
+                    tools:text="23%" />
+
+                <TextView
+                    android:id="@+id/biography_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/biography"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/popularity_rating_number" />
+
+                <TextView
+                    android:id="@+id/biography_detail_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/biography_textView"
+                    tools:text="An overview would go here, but I can't think right now so I'm just blabing away for it to have some placeholder text." />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/credits_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/biography_detail_textView" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <include
+        android:id="@+id/layout_error_detail"
+        layout="@layout/layout_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/layout_loading_detail"
+        layout="@layout/layout_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/coordinatorContainer_detail"
+        app:layout_anchorGravity="center" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
