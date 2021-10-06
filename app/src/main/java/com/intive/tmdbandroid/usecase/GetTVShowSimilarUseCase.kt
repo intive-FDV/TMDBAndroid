@@ -1,6 +1,5 @@
 package com.intive.tmdbandroid.usecase
 
-import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.flow.Flow

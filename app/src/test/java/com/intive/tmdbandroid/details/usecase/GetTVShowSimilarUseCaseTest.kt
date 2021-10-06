@@ -7,11 +7,8 @@ import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.CatalogRepository
-import com.intive.tmdbandroid.usecase.GetMovieTrailer
 import com.intive.tmdbandroid.usecase.GetTVShowSimilarUseCase
-import com.intive.tmdbandroid.usecase.SearchUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
@@ -22,8 +19,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
