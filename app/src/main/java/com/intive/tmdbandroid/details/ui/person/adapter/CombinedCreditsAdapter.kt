@@ -58,16 +58,6 @@ class CombinedCreditsAdapter(
         }
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        Glide.get(holder.itemView.context).clearMemory()
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        Glide.get(recyclerView.context).clearMemory()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemScreeningWatchlistBinding.inflate(

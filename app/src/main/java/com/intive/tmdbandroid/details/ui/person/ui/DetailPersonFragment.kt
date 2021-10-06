@@ -61,7 +61,7 @@ class DetailPersonFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentDetailPersonBinding.inflate(inflater, container, false)
-        initAdapter(binding)
+        initRecyclerView(binding)
         collectCombineCredits(binding)
         collectDetailPerson(binding)
         return binding.root
@@ -77,14 +77,14 @@ class DetailPersonFragment : Fragment() {
         }
     }
 
-    private fun initAdapter(binding: FragmentDetailPersonBinding) {
+    private fun initRecyclerView(binding: FragmentDetailPersonBinding) {
         binding.creditsRecyclerView.apply {
             val displayMetrics = context.resources.displayMetrics
             val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
             val scaling = resources.getInteger(R.integer.screening_width)
             val columnCount = floor(dpWidth / scaling).toInt()
-
+            minimumHeight = displayMetrics.heightPixels
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = combinedCreditsAdapter
         }
@@ -187,7 +187,8 @@ class DetailPersonFragment : Fragment() {
     ) {
         val percentage = (popularity * 10).toInt()
 
-        binding.popularityRatingNumber.text = "$percentage%"
+        binding.popularityRatingNumber.text =
+            requireContext().resources.getString(R.string.popularity, percentage)
 
         val context = binding.root.context
 
@@ -217,7 +218,8 @@ class DetailPersonFragment : Fragment() {
             appBarConfiguration
         )
 
-        toolbar.navigationIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
+        toolbar.navigationIcon =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
             if (!navController.navigateUp()) {
                 activity?.finish()
@@ -226,7 +228,12 @@ class DetailPersonFragment : Fragment() {
     }
 
     private fun setBiography(biography: String, binding: FragmentDetailPersonBinding) {
-        binding.biographyDetailTextView.text = biography
+        if (biography.isBlank()) {
+            binding.biographyTextView.isVisible = false
+            binding.biographyDetailTextView.isVisible = false
+        } else {
+            binding.biographyDetailTextView.text = biography
+        }
     }
 
 }
