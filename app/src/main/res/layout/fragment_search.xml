@@ -32,13 +32,73 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
+        android:id="@+id/all_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_status"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="2dp"
+        android:text="@string/all_filter"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/tv_shows_filter"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
+
+    <TextView
+        android:id="@+id/tv_shows_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_status"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="2dp"
+        android:text="@string/tv_shows_filter"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/movies_filter"
+        app:layout_constraintStart_toEndOf="@+id/all_filter"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
+
+    <TextView
+        android:id="@+id/movies_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_status"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="2dp"
+        android:text="@string/movies_filter"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/people_filter"
+        app:layout_constraintStart_toEndOf="@+id/tv_shows_filter"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
+
+    <TextView
+        android:id="@+id/people_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_status"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="2dp"
+        android:text="@string/people_filter"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/movies_filter"
+        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
+
+    <TextView
         android:id="@+id/result_search_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/search_results"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar"
+        app:layout_constraintTop_toBottomOf="@id/all_filter"
         tools:text="@string/search_result_header" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -73,15 +133,18 @@
 
     <include
         android:id="@+id/layout_progressbar"
-        layout="@layout/layout_progressbar" />
+        layout="@layout/layout_progressbar"
+        tools:visibility="gone" />
 
     <include
         android:id="@+id/layout_search_hint"
         layout="@layout/layout_search_hint"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_search_toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/all_filter"
+        tools:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

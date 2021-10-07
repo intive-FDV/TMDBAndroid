@@ -20,6 +20,9 @@ class DetailsViewModel @Inject internal constructor(
     private val existUseCase: ExistUseCase,
     private val tvShowTrailerUseCase: GetTVShowTrailer,
     private val movieTrailerUseCase: GetMovieTrailer,
+    private val getTVShowSimilarUseCase: GetTVShowSimilarUseCase,
+    private val getMovieSimilarUseCase: GetMovieSimilarUseCase
+    private val movieTrailerUseCase: GetMovieTrailer,
     private val ratingMovieUseCase: RatingMovieUseCase,
     private val ratingTVShowUseCase: RatingTVShowUseCase,
     private val guestSessionUseCase: GuestSessionUseCase,
@@ -38,6 +41,9 @@ class DetailsViewModel @Inject internal constructor(
 
     private val _trailerState = Channel<State<String>>()
     val trailerState = _trailerState
+
+    private val _recommendedState = MutableStateFlow<State<List<Screening>>>(State.Waiting)
+    val recommendedUIState: StateFlow<State<List<Screening>>> = _recommendedState
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -120,6 +126,24 @@ class DetailsViewModel @Inject internal constructor(
                 .collect {
                     _watchlistState.value = State.Success(it)
                 }
+        }
+    }
+
+    fun getTVShowSimilar(id: Int) {
+        viewModelScope.launch {
+            getTVShowSimilarUseCase(id)
+                .onStart { _recommendedState.value = State.Loading }
+                .catch { _recommendedState.value = State.Error }
+                .collect { _recommendedState.value = State.Success(it) }
+        }
+    }
+
+    fun getMovieSimilar(id: Int) {
+        viewModelScope.launch {
+            getMovieSimilarUseCase(id)
+                .onStart { _recommendedState.value = State.Loading }
+                .catch { _recommendedState.value = State.Error }
+                .collect { _recommendedState.value = State.Success(it) }
         }
     }
 

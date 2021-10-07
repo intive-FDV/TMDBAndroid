@@ -1,25 +1,30 @@
-package com.intive.tmdbandroid.usecase
+package com.intive.tmdbandroid.details.usecase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.Network
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.CatalogRepository
+import com.intive.tmdbandroid.usecase.GetMovieSimilarUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.BDDMockito
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
-class SearchTVShowUseCaseTest {
+@RunWith(MockitoJUnitRunner::class)
+class GetMovieSimilarUseCaseTest {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
@@ -27,8 +32,7 @@ class SearchTVShowUseCaseTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val screening = PagingData.from(
-        listOf(
+    private val screenings = listOf(
             Screening(
                 backdrop_path = "BACKDROP_PATH",
                 release_date = "1983-10-20",
@@ -47,42 +51,31 @@ class SearchTVShowUseCaseTest {
                 adult = false,
                 genre_ids = null,
                 video = false,
-                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
-                my_rate = 3.5,
-                my_favorite = true
+                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
             )
         )
-    )
 
-    private lateinit var searchUseCase: SearchUseCase
+    private lateinit var getMovieSimilarUseCase: GetMovieSimilarUseCase
+    @Mock
     private lateinit var catalogRepository: CatalogRepository
 
     @Before
     fun setup(){
-        catalogRepository = mock(CatalogRepository::class.java)
-        searchUseCase = SearchUseCase(catalogRepository)
+        getMovieSimilarUseCase = GetMovieSimilarUseCase(catalogRepository)
     }
 
     @Test
     @ExperimentalTime
     fun invokeTest() {
         mainCoroutineRule.runBlockingTest {
-            `when`(catalogRepository.search(anyString(), eq("All")))
-                .thenReturn(
-                    flow {
-                        emit(
-                            screening
-                        )
-                    }
-                )
+            BDDMockito.given(catalogRepository.getMovieSimilar(anyInt())).willReturn(flowOf(screenings))
 
-            val actual = searchUseCase("cristina kirchner", "All")
-            actual.test {
-                Assert.assertEquals(awaitItem(), screening)
+            val expected = getMovieSimilarUseCase(2)
+
+            expected.test {
+                Assert.assertEquals(awaitItem(), screenings)
                 awaitComplete()
             }
-            verify(catalogRepository, only()).search("cristina kirchner", "All")
-
         }
     }
 }

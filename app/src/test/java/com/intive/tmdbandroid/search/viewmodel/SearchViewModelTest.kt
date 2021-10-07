@@ -72,7 +72,7 @@ class SearchViewModelTest{
     @ExperimentalCoroutinesApi
     @Ignore("There's a problem in how the cachedIn ext func from paging data works (it's using a flow to handle the cache which makes the content of the success not to be a paging data but actually a new flow). Ignoring this test for now, until we get a better way to test the paging library.")
     fun tvShowsTest() = mainCoroutineRule.runBlockingTest {
-        `when`(searchUseCase.invoke(anyString())).thenReturn(
+        `when`(searchUseCase.invoke(anyString(), "All")).thenReturn(
             flow {
                 emit(
                     screening
@@ -94,7 +94,7 @@ class SearchViewModelTest{
     fun searchTvShowError() {
         mainCoroutineRule.runBlockingTest {
             val runtimeException = RuntimeException()
-            BDDMockito.given(searchUseCase.invoke(anyString())).willReturn(flow {
+            BDDMockito.given(searchUseCase.invoke(anyString(), eq("All"))).willReturn(flow {
                 throw runtimeException
             })
 
