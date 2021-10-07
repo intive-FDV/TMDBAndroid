@@ -9,7 +9,6 @@ import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,9 +20,7 @@ class DetailsViewModel @Inject internal constructor(
     private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
     private val existUseCase: ExistUseCase,
     private val tvShowTrailerUseCase: GetTVShowTrailer,
-    private val movieTrailerUseCase: GetMovieTrailer
-    //private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
-    private val existUseCase: ExistUseCase,
+    private val movieTrailerUseCase: GetMovieTrailer,
     private val ratingMovieUseCase: RatingMovieUseCase,
     private val ratingTVShowUseCase: RatingTVShowUseCase,
     private val guestSessionUseCase: GuestSessionUseCase,

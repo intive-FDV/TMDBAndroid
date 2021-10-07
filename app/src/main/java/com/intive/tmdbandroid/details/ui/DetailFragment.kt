@@ -1,9 +1,7 @@
 package com.intive.tmdbandroid.details.ui
 
 import android.app.Dialog
-import android.opengl.Visibility
 import android.content.Intent
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.RatingBar
-import android.widget.TextView
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.NonNull
@@ -93,13 +90,13 @@ class DetailFragment : Fragment() {
         }
         val button_rating = view.findViewById<Button>(R.id.rate_button)
         button_rating.setOnClickListener {
-            screeningItemId?.let { it1 -> showDialogRate(args) }
+            screeningItemId?.let { it1 -> showDialogRate(it1) }
         }
 
 
     }
 
-    private fun showDialogRate(args: DetailFragmentArgs) {
+    private fun showDialogRate(idItem:Int) {
         val dialog = this.context?.let { Dialog(it) }
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog?.setCancelable(false)
@@ -110,9 +107,9 @@ class DetailFragment : Fragment() {
         if(screening.my_rate==0.0) {
             yesBtn.setOnClickListener {
 
-                if (args.isMovieBoolean) viewModel.ratingMovie(args.screeningID, ratingBar.rating.toDouble())
+                if (isMovie) viewModel.ratingMovie(idItem, ratingBar.rating.toDouble())
                 else {
-                    viewModel.ratingTvShow(args.screeningID, ratingBar.rating.toDouble())
+                    viewModel.ratingTvShow(idItem, ratingBar.rating.toDouble())
                 }
                 screening.my_rate = ratingBar.rating.toDouble()
                 viewModel.addToWatchlist(screening)
