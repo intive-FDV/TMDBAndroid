@@ -24,10 +24,12 @@ class WatchlistRepository @Inject constructor(
         dao.deleteFavorite(screening.toScreeningORMEntity())
     }
 
-    suspend fun updateFavorite(screening: Screening)  = dao.updateFavorite(screening.toScreeningORMEntity())
+    suspend fun updateFavorite(screening: Screening) {
+        dao.updateFavorite(screening.toScreeningORMEntity())
+    }
 
     suspend fun exist(id: Int): Flow<Screening> {
-        val existFlow = dao.existAsFavorite(id).toScreening()
+        val existFlow = dao.existAsFavorite(id)?.toScreening()
         return flowOf(existFlow)
     }
 }
