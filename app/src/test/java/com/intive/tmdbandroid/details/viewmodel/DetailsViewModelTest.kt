@@ -17,7 +17,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
@@ -136,17 +137,15 @@ class DetailsViewModelTest {
             insertInWatchlistUseCase,
             existUseCase,
             tvShowTrailerUseCase,
+            getTVShowSimilarUseCase,
+            getMovieSimilarUseCase,
             movieTrailerUseCase,
             ratingMovieUseCase,
             ratingTVShowUseCase,
             guestSessionUseCase,
             sessionExistUseCase,
             insertInSessiontUseCase,
-            updateInWatchlistUseCase,
-
-            movieTrailerUseCase,
-            getTVShowSimilarUseCase,
-            getMovieSimilarUseCase
+            updateInWatchlistUseCase
         )
     }
 

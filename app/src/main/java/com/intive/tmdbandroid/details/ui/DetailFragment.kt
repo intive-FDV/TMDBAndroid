@@ -23,14 +23,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
-import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import com.intive.tmdbandroid.details.ui.adapters.RecommendationAdapter
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
@@ -241,7 +239,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
+    private fun setupUI(binding: FragmentDetailBinding) {
 
         setImages(binding, screening)
 

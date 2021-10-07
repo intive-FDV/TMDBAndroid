@@ -19,9 +19,8 @@ class DetailsViewModel @Inject internal constructor(
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
     private val existUseCase: ExistUseCase,
     private val tvShowTrailerUseCase: GetTVShowTrailer,
-    private val movieTrailerUseCase: GetMovieTrailer,
     private val getTVShowSimilarUseCase: GetTVShowSimilarUseCase,
-    private val getMovieSimilarUseCase: GetMovieSimilarUseCase
+    private val getMovieSimilarUseCase: GetMovieSimilarUseCase,
     private val movieTrailerUseCase: GetMovieTrailer,
     private val ratingMovieUseCase: RatingMovieUseCase,
     private val ratingTVShowUseCase: RatingTVShowUseCase,
