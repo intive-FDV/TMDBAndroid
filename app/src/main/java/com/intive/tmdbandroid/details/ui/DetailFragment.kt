@@ -94,7 +94,7 @@ class DetailFragment : Fragment() {
         dialog?.setCancelable(false)
         dialog?.setContentView(R.layout.rank_dialog)
         val yesBtn = dialog?.findViewById(R.id.rank_dialog_button_rate) as Button
-        val noBtn = dialog.findViewById(R.id.rank_dialog_button_cancel) as TextView
+        val noBtn = dialog.findViewById(R.id.rank_dialog_button_cancel) as Button
         val ratingBar: RatingBar = dialog?.findViewById(R.id.dialog_ratingbar) as RatingBar
         if(screening.my_rate==0.0) {
             yesBtn.setOnClickListener {

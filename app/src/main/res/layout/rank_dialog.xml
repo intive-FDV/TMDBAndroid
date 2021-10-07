@@ -51,7 +51,7 @@
             android:layout_marginRight="3dp"
             android:focusable="false"
             android:text="CANCEL"
-            android:textColor="#FF0000"
+            android:textColor="#2196F3"
             android:textSize="20dip"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"

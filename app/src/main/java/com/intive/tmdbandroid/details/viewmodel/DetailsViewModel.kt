@@ -82,18 +82,6 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-//    fun deleteFromWatchlist(screening: Screening) {
-//        viewModelScope.launch {
-//            deleteFromWatchlistUseCase(screening)
-//                .catch {
-//                    _watchlistState.value = State.Error
-//                }
-//                .collect {
-//                    _watchlistState.value = State.Success(it)
-//                }
-//        }
-//    }
-
     fun existAsFavorite(id: Int) {
         viewModelScope.launch {
             existUseCase(id)

@@ -10,7 +10,7 @@ class UpdateFromWatchlistUseCase @Inject constructor(private val watchlistReposi
 
     suspend operator fun invoke(screening: Screening): Flow<Screening> {
         watchlistRepository.updateFavorite(screening)
-        return (watchlistRepository.exist(screening.id))
+        return (watchlistRepository.getScreeningById(screening.id))
     }
 
 }

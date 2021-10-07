@@ -10,7 +10,7 @@ class InsertInWatchlistUseCase @Inject constructor(private val watchlistReposito
 
     suspend operator fun invoke(screening: Screening): Flow<Screening> {
         watchlistRepository.insert(screening)
-        return flowOf(screening)
+        return watchlistRepository.getScreeningById(screening.id)
     }
 
 }
