@@ -12,7 +12,8 @@ data class TVShowListItemEntity(
     val poster_path: String?,
     val vote_average: Double,
     val vote_count: Int,
-    val my_rate: Double
+    val my_rate: Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -34,7 +35,8 @@ data class TVShowListItemEntity(
             null,
             false,
             emptyList(),
-            my_rate
+            my_rate,
+            my_favorite
         )
     }
 }

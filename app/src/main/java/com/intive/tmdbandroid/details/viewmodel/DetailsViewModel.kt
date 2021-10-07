@@ -7,10 +7,7 @@ import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,19 +16,23 @@ class DetailsViewModel @Inject internal constructor(
     private val tVShowUseCase: DetailTVShowUseCase,
     private val movieUseCase: DetailMovieUseCase,
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
-    private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
+    //private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
     private val existUseCase: ExistUseCase,
     private val ratingMovieUseCase: RatingMovieUseCase,
     private val ratingTVShowUseCase: RatingTVShowUseCase,
     private val guestSessionUseCase: GuestSessionUseCase,
-    private val sessionExistUseCase: SessionExistUseCase
+    private val sessionExistUseCase: SessionExistUseCase,
+    private val insertInSessiontUseCase: InsertInSessiontUseCase,
+    private val updateInWatchlistUseCase : UpdateFromWatchlistUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<Screening>>(State.Loading)
     val uiState: StateFlow<State<Screening>> = _state
 
-    private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
-    val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
+    private val _watchlistState = MutableStateFlow<State<Screening>>(State.Loading)
+    val watchlistUIState: StateFlow<State<Screening>> = _watchlistState
+
+    private lateinit var session:Session
 
     fun tVShows(id: Int) {
         viewModelScope.launch {
@@ -69,9 +70,9 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun deleteFromWatchlist(screening: Screening) {
+    fun updateToWatchlist(screening: Screening) {
         viewModelScope.launch {
-            deleteFromWatchlistUseCase(screening)
+            updateInWatchlistUseCase(screening)
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -80,6 +81,18 @@ class DetailsViewModel @Inject internal constructor(
                 }
         }
     }
+
+//    fun deleteFromWatchlist(screening: Screening) {
+//        viewModelScope.launch {
+//            deleteFromWatchlistUseCase(screening)
+//                .catch {
+//                    _watchlistState.value = State.Error
+//                }
+//                .collect {
+//                    _watchlistState.value = State.Success(it)
+//                }
+//        }
+//    }
 
     fun existAsFavorite(id: Int) {
         viewModelScope.launch {
@@ -93,30 +106,29 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun ratingMovie(idMovie: Int, rating: Double){
-        viewModelScope.launch {
-            //guestSessionUseCase().catch {
-                //_sessionState.value= State.Error
-            //}
-            viewModelScope.launch {
-                sessionExistUseCase()
-                    .catch {
-                        _state.value = State.Error
-                    }
-                    .collect { session ->
-                         sessionExistUseCase
-                    }
-            }
+    private suspend fun getSession() {
+        session = sessionExistUseCase()
+        if(session.id==0){
+            var sessionFlow = guestSessionUseCase()
+            session = sessionFlow.single()
+            session.status_message="empty"
+            insertInSessiontUseCase(session)
+        }
 
-            guestSessionUseCase()
-            ratingMovieUseCase(idMovie,rating)
+
+    }
+
+    fun ratingMovie(idMovie: Int, rating: Double) {
+        viewModelScope.launch {
+            getSession()
+            ratingMovieUseCase(idMovie, rating,session)
         }
     }
 
-    fun ratingTvShow(idMovie: Int, rating: Double){
+    fun ratingTvShow(idMovie: Int, rating: Double) {
         viewModelScope.launch {
-            guestSessionUseCase()
-            ratingTVShowUseCase(idMovie,rating)
+            getSession()
+            ratingTVShowUseCase(idMovie, rating,session)
         }
     }
 }

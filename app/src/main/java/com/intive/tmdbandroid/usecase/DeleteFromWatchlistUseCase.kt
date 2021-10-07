@@ -8,9 +8,9 @@ import javax.inject.Inject
 
 class DeleteFromWatchlistUseCase @Inject constructor(private val watchlistRepository: WatchlistRepository) {
 
-    suspend operator fun invoke(screening: Screening): Flow<Boolean> {
+    suspend operator fun invoke(screening: Screening): Flow<Screening> {
         watchlistRepository.delete(screening)
-        return flowOf(false)
+        return flowOf(screening)
     }
 
 }

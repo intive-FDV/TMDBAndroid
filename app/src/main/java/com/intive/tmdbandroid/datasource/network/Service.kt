@@ -13,14 +13,13 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import com.intive.tmdbandroid.model.Session
-import com.intive.tmdbandroid.usecase.SessionExistUseCase
 import kotlinx.coroutines.flow.collect
 
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
-    private lateinit var sessionFlow: Flow<Session>
-    private lateinit var session:Session
+    //private lateinit var sessionFlow: Flow<Session>
+    //private lateinit var session:Session
 
     fun getPaginatedPopularTVShows(page: Int): Flow<ResultTVShowsEntity> {
         return flow {
@@ -52,7 +51,7 @@ class Service {
         }
     }
 
-    suspend fun setMovieRating(movieID: Int, rating: Double): Boolean {
+    suspend fun setMovieRating(movieID: Int, rating: Double,session:Session): Boolean {
         var retorno:Boolean = true
         if(rating < 0.5 || rating > 10){
             retorno=false
@@ -68,16 +67,13 @@ class Service {
             // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
             val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
-            sessionFlow.collect {
-                    element-> session=element
-            }
             retrofit.create(ApiClient::class.java).postMovieRanking(movieID,BuildConfig.API_KEY,session.guest_session_id,requestBody)
         }
 
         return  retorno
     }
 
-    suspend fun setTVShowRating(tvShowID: Int, rating: Double): Boolean {
+    suspend fun setTVShowRating(tvShowID: Int, rating: Double,session:Session): Boolean {
         var retorno:Boolean = true
         if(rating < 0.5 || rating > 10){
             retorno=false
@@ -85,8 +81,7 @@ class Service {
         else{
             // Create JSON using JSONObject
             val jsonObject = JSONObject()
-            //jsonObject.put("value", rating)
-            jsonObject.put("value", "pepe")
+            jsonObject.put("value", rating)
 
             // Convert JSONObject to String
             val jsonObjectString = jsonObject.toString()
@@ -101,14 +96,11 @@ class Service {
     }
 
     fun getGuestSession():Flow<Session>{
-        if(!this::sessionFlow.isInitialized){
-            //re
-            //recupero de la bbdd, si es que hay algo. COmpruebo que no este vencido.
-            //Existe bbdd?NO / recupero esta vencido
-            sessionFlow =  flow {
+        //if(!this::sessionFlow.isInitialized){
+        return   flow {
                 emit(retrofit.create(ApiClient::class.java).getNewGuestSession(BuildConfig.API_KEY))
             }
-        }
-        return sessionFlow
+        //}
+        //return sessionFlow
     }
 }

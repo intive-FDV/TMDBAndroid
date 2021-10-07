@@ -17,7 +17,8 @@ data class TVShow(
     val vote_average: Double,
     val vote_count: Int,
     val networks: List<Network>,
-    val my_rate:Double
+    val my_rate:Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -39,7 +40,8 @@ data class TVShow(
             genre_ids = null,
             video = false,
             networks,
-            my_rate
+            my_rate,
+            my_favorite
         )
     }
 }

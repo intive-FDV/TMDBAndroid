@@ -19,8 +19,8 @@ interface Dao{
     @Delete
     suspend fun deleteFavorite(screeningORMEntity: ScreeningORMEntity)
 
-    @Query("SELECT EXISTS(SELECT * FROM ScreeningORMEntity WHERE id = :id)")
-    suspend fun existAsFavorite(id: Int): Boolean
+    @Query("SELECT * FROM ScreeningORMEntity WHERE id = :id")
+    suspend fun existAsFavorite(id: Int): ScreeningORMEntity
 
     @Query("SELECT * FROM SessionORMEntity WHERE id = 1")
     suspend fun existSession(): List<SessionORMEntity>

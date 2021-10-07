@@ -35,6 +35,7 @@ data class ScreeningORMEntity(
     @TypeConverters(NetworkConverter::class)
     val networks: List<Network>,
     val my_rate: Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -56,7 +57,8 @@ data class ScreeningORMEntity(
             genre_ids,
             video,
             networks,
-            my_rate
+            my_rate,
+            my_favorite
         )
     }
 }

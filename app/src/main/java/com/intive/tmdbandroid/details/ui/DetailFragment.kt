@@ -1,6 +1,7 @@
 package com.intive.tmdbandroid.details.ui
 
 import android.app.Dialog
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +19,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
+import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,8 +35,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.recyclerview.widget.GridLayoutManager
-import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import kotlin.math.floor
 
 
@@ -46,6 +47,8 @@ class DetailFragment : Fragment() {
     private val viewModel: DetailsViewModel by viewModels()
 
     private val networkAdapter = NetworkAdapter()
+
+    private lateinit var screening: Screening
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,37 +75,42 @@ class DetailFragment : Fragment() {
         val args: DetailFragmentArgs by navArgs()
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
-            if(savedInstanceState==null){
+            if (savedInstanceState == null) {
                 if (args.isMovieBoolean) viewModel.movie(it)
                 else viewModel.tVShows(it)
             }
         }
-        val button_rating=view.findViewById<Button>(R.id.rate_button)
-        button_rating.setOnClickListener{
-            screeningItemId?.let { it1 -> showDialog(it1,args) }
+        val button_rating = view.findViewById<Button>(R.id.rate_button)
+        button_rating.setOnClickListener {
+            screeningItemId?.let { it1 -> showDialogRate(args) }
         }
-
 
 
     }
 
-    private fun showDialog(screeningItemId:Int, args:DetailFragmentArgs) {
+    private fun showDialogRate(args: DetailFragmentArgs) {
         val dialog = this.context?.let { Dialog(it) }
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog?.setCancelable(false)
         dialog?.setContentView(R.layout.rank_dialog)
         val yesBtn = dialog?.findViewById(R.id.rank_dialog_button_rate) as Button
         val noBtn = dialog.findViewById(R.id.rank_dialog_button_cancel) as TextView
-        yesBtn.setOnClickListener {
-            val ratingBar: RatingBar = dialog?.findViewById(R.id.dialog_ratingbar) as RatingBar
-            screeningItemId?.let {
-                if (args.isMovieBoolean) viewModel.ratingMovie(it,ratingBar.rating.toDouble())
-                else{
-                    viewModel.ratingTvShow(it,ratingBar.rating.toDouble())
-                }
-            }
+        val ratingBar: RatingBar = dialog?.findViewById(R.id.dialog_ratingbar) as RatingBar
+        if(screening.my_rate==0.0) {
+            yesBtn.setOnClickListener {
 
-            dialog.dismiss()
+                if (args.isMovieBoolean) viewModel.ratingMovie(args.screeningID, ratingBar.rating.toDouble())
+                else {
+                    viewModel.ratingTvShow(args.screeningID, ratingBar.rating.toDouble())
+                }
+                screening.my_rate = ratingBar.rating.toDouble()
+                viewModel.addToWatchlist(screening)
+                dialog.dismiss()
+            }
+        }
+        else{
+            yesBtn.visibility = View.GONE
+            ratingBar.rating=(screening.my_rate).toFloat()
         }
         noBtn.setOnClickListener { dialog.dismiss() }
         dialog?.show()
@@ -122,7 +130,8 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(binding, state.data)
+                        screening = state.data
+                        setupUI(binding)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -145,8 +154,11 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        selectOrUnselectWatchlistFav(binding, it.data)
-                        isSaveOnWatchlist = it.data
+                        selectOrUnselectWatchlistFav(binding, if(it.data==null) false else it.data.my_favorite)
+                        isSaveOnWatchlist = if(it.data==null) false else it.data.my_favorite
+                        //updating screening
+                        screening.my_favorite = isSaveOnWatchlist
+                        screening.my_rate = if(it.data==null) 0.0 else it.data.my_rate
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -162,7 +174,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
+    private fun setupUI(binding: FragmentDetailBinding) {
 
         setImages(binding, screening)
 
@@ -206,7 +218,7 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        if(screening.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
+        if (screening.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
         else binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
@@ -274,9 +286,11 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
+                        screening.my_favorite=true
                         viewModel.addToWatchlist(screening)
                     } else {
-                        viewModel.deleteFromWatchlist(screening)
+                        screening.my_favorite=false
+                        viewModel.updateToWatchlist(screening)
                     }
                     true
                 }
@@ -293,7 +307,7 @@ class DetailFragment : Fragment() {
         toolbar.setNavigationOnClickListener {
             if (navController.navigateUp()) {
                 navController.navigateUp()
-            }else {
+            } else {
                 activity?.finish()
             }
         }
@@ -322,8 +336,8 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening){
-        if (screening.networks.isNotEmpty()){
+    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening) {
+        if (screening.networks.isNotEmpty()) {
             networkAdapter.submitList(screening.networks)
         } else {
             binding.networksHeader.visibility = View.GONE

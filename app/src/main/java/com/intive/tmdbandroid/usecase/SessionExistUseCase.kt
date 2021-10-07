@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class SessionExistUseCase @Inject constructor(private val sessionRepository: SessionRepository) {
 
-    suspend operator fun invoke(): Flow<List<Session>> = sessionRepository.existSession()
+    suspend operator fun invoke(): Session = sessionRepository.existSession()
 
 }

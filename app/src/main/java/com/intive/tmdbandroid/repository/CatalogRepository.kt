@@ -66,12 +66,12 @@ class CatalogRepository @Inject constructor(
         ).flow
     }
 
-    suspend fun setMovieRating(idMovie: Int,rating: Double):Boolean{
-        return service.setMovieRating(idMovie,rating)
+    suspend fun setMovieRating(idMovie: Int,rating: Double, session:Session):Boolean{
+        return service.setMovieRating(idMovie,rating,session)
     }
 
-    suspend fun setTVShowRating(idMovie: Int,rating: Double):Boolean{
-        return service.setTVShowRating(idMovie,rating)
+    suspend fun setTVShowRating(idMovie: Int,rating: Double, session:Session):Boolean{
+        return service.setTVShowRating(idMovie,rating,session)
     }
 
     fun getGuestSession():Flow<Session>{
