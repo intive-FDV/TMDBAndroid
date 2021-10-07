@@ -17,7 +17,6 @@ class DetailsViewModel @Inject internal constructor(
     private val tVShowUseCase: DetailTVShowUseCase,
     private val movieUseCase: DetailMovieUseCase,
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
-    private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
     private val existUseCase: ExistUseCase,
     private val tvShowTrailerUseCase: GetTVShowTrailer,
     private val movieTrailerUseCase: GetMovieTrailer,
