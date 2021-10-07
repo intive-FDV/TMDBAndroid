@@ -11,10 +11,10 @@ interface Dao{
     suspend fun allFavorites(): List<ScreeningORMEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavorite(screeningORMEntity: ScreeningORMEntity)
+    suspend fun insertFavorite(screeningORMEntity: ScreeningORMEntity) : ScreeningORMEntity
 
     @Update
-    suspend fun updateFavorite(screeningORMEntity: ScreeningORMEntity)
+    suspend fun updateFavorite(screeningORMEntity: ScreeningORMEntity) : ScreeningORMEntity
 
     @Delete
     suspend fun deleteFavorite(screeningORMEntity: ScreeningORMEntity)
