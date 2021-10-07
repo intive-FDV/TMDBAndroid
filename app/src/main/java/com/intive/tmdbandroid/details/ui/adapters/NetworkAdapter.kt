@@ -35,16 +35,8 @@ class NetworkAdapter : ListAdapter<Network, NetworkAdapter.NetworkHolder>(COMPAR
         private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
         fun bind (network: Network) {
-
-            val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
-                strokeWidth = 5f
-                centerRadius = 25f
-            }
-            circularProgressDrawable.start()
-
             val options = RequestOptions()
-                .centerCrop()
-                .placeholder(circularProgressDrawable)
+                .placeholder(R.drawable.ic_image)
                 .error(R.drawable.ic_image)
 
             val backdropURL = imgUrl + network.logo_path

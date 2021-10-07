@@ -79,7 +79,6 @@ class ScreeningSearchAdapter(
         private val itemMediaType = binding.itemMediaTypeSearch
 
         fun bind(item: Screening) {
-
             itemView.setOnClickListener {
                 clickListener.invoke(item)
             }
