@@ -1,6 +1,10 @@
 package com.intive.tmdbandroid.datasource.network
 
-import com.intive.tmdbandroid.entity.*
+import com.intive.tmdbandroid.entity.network.ResultListTVShowOrMovies
+import com.intive.tmdbandroid.entity.person.ResultPeopleEntity
+import com.intive.tmdbandroid.entity.movie.ResultMoviesEntity
+import com.intive.tmdbandroid.entity.tvshow.ResultTVShowsEntity
+import com.intive.tmdbandroid.entity.video.VideoEntity
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.TVShow
 import retrofit2.http.GET

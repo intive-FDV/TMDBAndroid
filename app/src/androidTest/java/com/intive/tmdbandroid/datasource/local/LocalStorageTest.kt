@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.intive.tmdbandroid.entity.ScreeningORMEntity
+import com.intive.tmdbandroid.entity.room.ScreeningORMEntity
 import com.intive.tmdbandroid.model.Genre
 import com.intive.tmdbandroid.model.Network
 import junit.framework.TestCase

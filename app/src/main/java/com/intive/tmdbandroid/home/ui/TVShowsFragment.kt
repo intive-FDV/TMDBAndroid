@@ -85,11 +85,10 @@ class TVShowsFragment : Fragment() {
                         binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutError.root.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    else -> {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.root.visibility = View.GONE
                     }
-                    else -> throw RuntimeException(context?.getString(R.string.state_error))
                 }
             }
         }

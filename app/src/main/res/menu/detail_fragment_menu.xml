@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item tools:icon="@drawable/ic_heart_unselected"
+    <item android:icon="@drawable/ic_heart_unselected"
         android:id="@+id/ic_heart_watchlist"
         android:title="@string/add_to_watchlist"
         app:showAsAction="always"/>

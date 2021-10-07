@@ -1,12 +1,12 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.movie
 
 import com.intive.tmdbandroid.model.Screening
 
-data class TVShowListItemEntity(
+data class MovieListItemEntity(
     val backdrop_path: String?,
-    val first_air_date: String?,
+    val release_date: String?,
     val id: Int,
-    val name: String,
+    val title: String,
     val overview: String,
     val popularity: Double?,
     val poster_path: String?,
@@ -17,7 +17,7 @@ data class TVShowListItemEntity(
             backdrop_path,
             null,
             id,
-            name,
+            title,
             null,
             null,
             overview,
@@ -25,13 +25,12 @@ data class TVShowListItemEntity(
             null,
             vote_average,
             popularity ?: 0.0,
-            first_air_date,
-            "tv",
+            release_date,
+            "movie",
             false,
             null,
             false,
             emptyList()
-
         )
     }
 }

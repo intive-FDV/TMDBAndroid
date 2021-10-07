@@ -66,10 +66,12 @@ class DetailFragment : Fragment() {
     ): View {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        collectScreeningDetailFromViewModel(binding)
-        collectWatchlistDataFromViewModel(binding)
-        collectTrailer()
-        collectRecommendations(binding)
+        if(savedInstanceState == null){
+            collectScreeningDetailFromViewModel(binding)
+            collectWatchlistDataFromViewModel(binding)
+            collectTrailer()
+            collectRecommendations(binding)
+        }
 
         initViews(binding)
 
@@ -113,11 +115,10 @@ class DetailFragment : Fragment() {
                         binding.layoutErrorDetail.root.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    else -> {
                         binding.layoutErrorDetail.root.visibility = View.GONE
                         binding.layoutLoadingDetail.root.visibility = View.VISIBLE
                     }
-                    else -> {}
                 }
             }
         }
@@ -137,11 +138,10 @@ class DetailFragment : Fragment() {
                         binding.layoutLoadingDetail.root.visibility = View.GONE
                         Toast.makeText(context, "Couldn't save to watchlist. Please try later", Toast.LENGTH_LONG).show()
                     }
-                    State.Loading -> {
+                    else -> {
                         binding.layoutErrorDetail.root.visibility = View.GONE
                         binding.layoutLoadingDetail.root.visibility = View.VISIBLE
                     }
-                    else -> {}
                 }
             }
         }
@@ -158,6 +158,9 @@ class DetailFragment : Fragment() {
                         else {
                             showDialog(it.data)
                         }
+                    }
+                    is State.Loading -> {
+                        Toast.makeText(context, "Loading trailer...", Toast.LENGTH_LONG).show()
                     }
                     else -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()

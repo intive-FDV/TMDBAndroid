@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.person
 
 data class ResultPeopleEntity(
     val page: Int,

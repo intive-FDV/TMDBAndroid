@@ -6,10 +6,7 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.GetAllItemsInWatchlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +15,15 @@ class WatchlistViewModel @Inject internal constructor(
     private val getAllItemsInWatchlistUseCase: GetAllItemsInWatchlistUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<List<Screening>>>(State.Loading)
+    private val _state = MutableStateFlow<State<List<Screening>>>(State.Waiting)
     val uiState: StateFlow<State<List<Screening>>> = _state
 
     fun watchlistScreening() {
         viewModelScope.launch {
             getAllItemsInWatchlistUseCase()
+                .onStart {
+                    _state.value = State.Loading
+                }
                 .catch {
                     _state.value = State.Error
                 }

@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.network
 
 import com.intive.tmdbandroid.model.Screening
 

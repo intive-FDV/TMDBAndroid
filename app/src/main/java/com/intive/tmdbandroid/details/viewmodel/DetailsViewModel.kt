@@ -27,7 +27,7 @@ class DetailsViewModel @Inject internal constructor(
     private val _state = MutableStateFlow<State<Screening>>(State.Waiting)
     val uiState: StateFlow<State<Screening>> = _state
 
-    private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Loading)
+    private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Waiting)
     val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
 
     private val _trailerState = Channel<State<String>>()
@@ -51,6 +51,9 @@ class DetailsViewModel @Inject internal constructor(
     fun getTVShowTrailer(id: Int) {
         viewModelScope.launch {
             tvShowTrailerUseCase(id)
+                .onStart {
+                    _trailerState.send(State.Loading)
+                }
                 .catch {
                     _trailerState.send(State.Error)
                 }
@@ -75,6 +78,9 @@ class DetailsViewModel @Inject internal constructor(
     fun getMovieTrailer(id: Int) {
         viewModelScope.launch {
             movieTrailerUseCase(id)
+                .onStart {
+                    _trailerState.send(State.Loading)
+                }
                 .catch {
                     _trailerState.send(State.Error)
                 }
@@ -87,6 +93,9 @@ class DetailsViewModel @Inject internal constructor(
     fun addToWatchlist(screening: Screening) {
         viewModelScope.launch {
             insertInWatchlistUseCase(screening)
+                .onStart {
+                    _watchlistState.value = State.Loading
+                }
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -99,6 +108,9 @@ class DetailsViewModel @Inject internal constructor(
     fun deleteFromWatchlist(screening: Screening) {
         viewModelScope.launch {
             deleteFromWatchlistUseCase(screening)
+                .onStart {
+                    _watchlistState.value = State.Loading
+                }
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -111,6 +123,9 @@ class DetailsViewModel @Inject internal constructor(
     fun existAsFavorite(id: Int) {
         viewModelScope.launch {
             existUseCase(id)
+                .onStart {
+                    _watchlistState.value = State.Loading
+                }
                 .catch {
                     _watchlistState.value = State.Error
                 }

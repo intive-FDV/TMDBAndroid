@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

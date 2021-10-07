@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.model
 
-import com.intive.tmdbandroid.entity.ScreeningORMEntity
+import com.intive.tmdbandroid.entity.room.ScreeningORMEntity
 
 data class Screening(
     val backdrop_path: String?,
