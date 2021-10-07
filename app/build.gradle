@@ -110,6 +110,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation "androidx.room:room-ktx:$roomVersion"
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
 
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"

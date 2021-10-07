@@ -17,7 +17,7 @@
         <activity
             android:name=".detailandsearch.ui.DetailAndSearchActivity"
             android:parentActivityName=".home.ui.HomeActivity"
-            android:exported="true" />
+            android:exported="true"/>
         <activity
             android:name=".home.ui.HomeActivity"
             android:exported="true">
@@ -25,6 +25,13 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/linking_scheme"
+                    android:host="@string/linking_host"/>
             </intent-filter>
         </activity>
     </application>

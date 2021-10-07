@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.intive.tmdbandroid.R
@@ -19,6 +22,7 @@ import com.intive.tmdbandroid.home.ui.adapters.ScreeningPageAdapter
 import com.intive.tmdbandroid.home.viewmodel.TVShowsViewModel
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import kotlin.math.floor
@@ -28,27 +32,22 @@ class TVShowsFragment : Fragment() {
     private val viewModel: TVShowsViewModel by navGraphViewModels(R.id.bottom_nav_graph) {
         defaultViewModelProviderFactory
     }
-
-    private val clickListener = { screening: Screening ->
-        val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
-        intent.putExtras(
-            bundleOf(
-                "action" to "detail",
-                "screeningID" to screening.id,
-                "isMovieBoolean" to false
-            )
-        )
-        requireActivity().startActivity(intent)
-    }
-    private val tvShowPageAdapter = ScreeningPageAdapter(clickListener)
+    private lateinit var tvShowPageAdapter: ScreeningPageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (savedInstanceState == null) {
-            Timber.i("MAS - tvshows instance = null")
-            viewModel.popularTVShows()
+        val clickListener = { screening: Screening ->
+            val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
+            intent.putExtras(
+                bundleOf(
+                    "action" to "detail",
+                    "screeningID" to screening.id,
+                    "isMovieBoolean" to false
+                )
+            )
+            requireActivity().startActivity(intent)
         }
+        tvShowPageAdapter = ScreeningPageAdapter(clickListener)
     }
 
     override fun onCreateView(
@@ -60,35 +59,34 @@ class TVShowsFragment : Fragment() {
         context ?: return binding.root
 
         initViews(binding)
-
         subscribePopularData(binding)
 
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null)
+            viewModel.popularTVShows()
+    }
+
     private fun subscribePopularData(binding: FragmentTvshowsBinding) {
-        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collectLatest { resultTVShows ->
+        lifecycleScope.launchWhenCreated {
+            viewModel.uiState.collect { resultTVShows ->
                 Timber.i("MAS - popular tvshows status: $resultTVShows")
 
                 when (resultTVShows) {
                     is State.Success<PagingData<Screening>> -> {
                         binding.layoutError.errorContainer.visibility = View.GONE
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
 
                         tvShowPageAdapter.submitData(resultTVShows.data)
-
-                        if (tvShowPageAdapter.itemCount == 0) {
-                            binding.layoutEmpty.root.visibility = View.VISIBLE
-                        } else binding.layoutEmpty.root.visibility = View.GONE
                     }
                     is State.Error -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutError.errorContainer.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutProgressbar.root.visibility = View.VISIBLE
                         binding.layoutError.errorContainer.visibility = View.GONE
                     }
                 }
@@ -109,5 +107,17 @@ class TVShowsFragment : Fragment() {
             layoutManager = GridLayoutManager(context, columnCount)
             adapter = tvShowPageAdapter
         }
+
+        lifecycleScope.launchWhenCreated {
+            tvShowPageAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.layoutProgressbar.root.isVisible = showLoadScreen(loadState)
+            }
+        }
+    }
+
+    private fun showLoadScreen(loadState: CombinedLoadStates): Boolean {
+        if (loadState.prepend.endOfPaginationReached &&
+                loadState.append is LoadState.NotLoading) return false
+        return true
     }
 }

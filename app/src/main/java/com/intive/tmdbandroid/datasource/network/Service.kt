@@ -15,11 +15,10 @@ import org.json.JSONObject
 import com.intive.tmdbandroid.model.Session
 import kotlinx.coroutines.flow.collect
 
+import timber.log.Timber
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
-    //private lateinit var sessionFlow: Flow<Session>
-    //private lateinit var session:Session
 
     fun getPaginatedPopularTVShows(page: Int): Flow<ResultTVShowsEntity> {
         return flow {
@@ -48,6 +47,36 @@ class Service {
     fun getMovieByID(movieID: Int): Flow<Movie> {
         return flow {
             emit(retrofit.create(ApiClient::class.java).getMovieByID(movieID, BuildConfig.API_KEY))
+        }
+    }
+
+    fun getTVShowVideos(tvShowID: Int): Flow<String> {
+        return flow {
+            val videoList = retrofit.create(ApiClient::class.java).getTVShowVideos(tvShowID, BuildConfig.API_KEY).results
+
+            val official = videoList.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
+            val unOfficial = videoList.filter { it.site == "YouTube" && it.type == "Trailer" }
+
+            when {
+                official.isNotEmpty() -> emit(official[0].key)
+                unOfficial.isNotEmpty() -> emit(unOfficial[0].key)
+                else -> emit("")
+            }
+        }
+    }
+
+    fun getMovieVideos(movieID: Int): Flow<String> {
+        return flow {
+            val videoList = retrofit.create(ApiClient::class.java).getMovieVideos(movieID, BuildConfig.API_KEY).results
+
+            val official = videoList.filter { it.site == "YouTube" && it.type == "Trailer" && it.official }
+            val unOfficial = videoList.filter { it.site == "YouTube" && it.type == "Trailer" }
+
+            when {
+                official.isNotEmpty() -> emit(official[0].key)
+                unOfficial.isNotEmpty() -> emit(unOfficial[0].key)
+                else -> emit("")
+            }
         }
     }
 

@@ -7,12 +7,14 @@
     <string name="popular_movies">Popular movies</string>
     <string name="popular_tvShows">Popular TV shows</string>
     <string name="base_imageURL">https://image.tmdb.org/t/p/w780</string>
+    <string name="base_youtubeURL">https://www.youtube.com/watch?v=%1$s</string>
     <string name="popularity">"%1$d%%"</string>
     <string name="error_message">Oops! Something went wrong.\nSorry about that :(</string>
     <string name="empty_message">Nothing to see here</string>
     <string name="warning">Warning</string>
     <string name="overview">Overview</string>
     <string name="add_to_watchlist">Add to Watchlist</string>
+    <string name="share_icon_title">Share</string>
     <string name="search_text">Search a TV Show or Movie</string>
     <string name="search_hint">Start typing to find awesome TV shows</string>
     <string name="hint_layout_description">Search Hint Icon</string>
@@ -20,11 +22,15 @@
     <string name="details_poster_description">TV Show Poster</string>
     <string name="search_result_header">Results for: %1$s</string>
     <string name="year">(%1$s)</string>
+    <string name="watch_trailer">Trailer</string>
     <string name="no_overview">No overview available</string>
     <string name="thumb_description">Rating Icon</string>
     <string name="rate_button_text">Rate it</string>
     <string name="networks_header_text">Available in:</string>
     <string name="network_img_description">Network Logo</string>
+    <string name="to_watch_url">http://www.intive.towatch.com</string>
+    <string name="linking_scheme">http</string>
+    <string name="linking_host">www.intive.towatch.com</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
