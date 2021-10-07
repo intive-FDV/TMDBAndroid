@@ -263,7 +263,9 @@ class DetailFragment : Fragment() {
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.popularityRatingNumber.text = "$percentage%"
+        binding.popularityRatingNumber.text =
+            requireContext().resources.getString(R.string.popularity, percentage)
+
 
         val context = binding.root.context
 
