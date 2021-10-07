@@ -2,6 +2,7 @@ package com.intive.tmdbandroid.home.ui.adapters
 
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
@@ -25,9 +26,15 @@ class ScreeningHolder(binding: ItemScreeningBinding, private val clickListener: 
             clickListener.invoke(item)
         }
 
+        val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
+            strokeWidth = 5f
+            centerRadius = 25f
+        }
+        circularProgressDrawable.start()
+
         val options = RequestOptions()
             .centerCrop()
-            .placeholder(R.drawable.ic_image)
+            .placeholder(circularProgressDrawable)
             .error(R.drawable.ic_image)
 
         val posterURL = imgUrl + item.poster_path
