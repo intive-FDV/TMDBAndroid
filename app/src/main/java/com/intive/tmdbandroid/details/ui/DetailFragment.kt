@@ -99,12 +99,23 @@ class DetailFragment : Fragment() {
                 else viewModel.tVShows(it)
             }
         }
-        val button_rating = view.findViewById<Button>(R.id.rate_button)
-        button_rating.setOnClickListener {
-            screeningItemId?.let { it1 -> showDialogRate(it1) }
+    }
+
+    private fun showRateOrStar(){
+        val buttonRating = view?.findViewById<Button>(R.id.rate_button)
+        val ratingbarUser = view?.findViewById<RatingBar>(R.id.ratingbar_user)
+        if(screening.my_rate==0.0) {
+            ratingbarUser?.visibility=View.GONE
+            buttonRating?.visibility=View.VISIBLE
+            buttonRating?.setOnClickListener {
+                screeningItemId?.let { it1 -> showDialogRate(it1) }
+            }
         }
-
-
+        else{
+            ratingbarUser?.visibility=View.VISIBLE
+            buttonRating?.visibility=View.GONE
+            ratingbarUser?.rating=(screening.my_rate).toFloat()
+        }
     }
 
     private fun showDialogRate(idItem:Int) {
@@ -178,6 +189,7 @@ class DetailFragment : Fragment() {
                         //updating screening
                         screening.my_favorite = isSaveOnWatchlist
                         screening.my_rate = if(it.data==null) 0.0 else it.data.my_rate
+                        showRateOrStar()
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
