@@ -31,6 +31,22 @@
             android:id="@+id/action_searchFragment_to_DetailFragment"
             app:destination="@id/detailFragmentDest"
             app:popUpTo="@id/searchFragmentDest" />
+        <action
+            android:id="@+id/action_searchFragmentDest_to_detailPersonFragment"
+            app:destination="@id/detailPersonFragmentDest"
+            app:popUpTo="@id/searchFragmentDest" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailPersonFragmentDest"
+        android:name="com.intive.tmdbandroid.details.ui.person.ui.DetailPersonFragment"
+        tools:layout="@layout/fragment_detail_person" >
+        <action
+            android:id="@+id/action_detailPersonFragment_to_detailFragmentDest"
+            app:destination="@id/detailFragmentDest"
+            app:popUpTo="@id/detailPersonFragmentDest" />
+        <argument
+            android:name="personID"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

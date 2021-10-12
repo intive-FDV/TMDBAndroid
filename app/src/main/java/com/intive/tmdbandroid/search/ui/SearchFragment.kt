@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -41,8 +42,13 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val clickListener = { screening: Screening ->
-            val action =
-                SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, screening.media_type == context?.getString(R.string.screening_movie_type))
+            val isMovie = screening.media_type == "movie"
+            val isPerson = screening.media_type == "person"
+            val action: NavDirections = if (isPerson) {
+                SearchFragmentDirections.actionSearchFragmentDestToDetailPersonFragment(screening.id)
+            } else {
+                SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
+            }
             val currentDestination = findNavController().currentDestination?.id
             if (currentDestination == R.id.searchFragmentDest) {
                 findNavController().navigate(action)
@@ -187,6 +193,9 @@ class SearchFragment : Fragment() {
             filterClick(it as TextView, binding)
         }
         binding.tvShowsFilter.setOnClickListener {
+            filterClick(it as TextView, binding)
+        }
+        binding.peopleFilter.setOnClickListener {
             filterClick(it as TextView, binding)
         }
     }

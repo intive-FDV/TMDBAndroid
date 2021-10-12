@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.ScreeningPagingSource
 import com.intive.tmdbandroid.datasource.ScreeningSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
+import com.intive.tmdbandroid.entity.ResultPerson
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
@@ -51,6 +52,14 @@ class CatalogRepository @Inject constructor(
 
     fun getMovieByID(id: Int): Flow<Movie> {
         return service.getMovieByID(id)
+    }
+
+    fun getCombinedCredits(personID: Int): Flow<List<Screening>> {
+       return service.getCombinedCredits(personID)
+    }
+
+    fun getDetailPerson(personID: Int): Flow<ResultPerson> {
+        return service.getDetailPerson(personID)
     }
 
     fun searchByName(query: String, filterSelected: String?): Flow<PagingData<Screening>> {

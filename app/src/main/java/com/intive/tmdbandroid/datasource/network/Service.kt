@@ -73,6 +73,19 @@ class Service {
         }
     }
 
+    fun getCombinedCredits(personID: Int): Flow<List<Screening>> {
+        return flow {
+            val result = retrofit.create(ApiClient::class.java).getCombinedCreditsByID(personID, BuildConfig.API_KEY)
+            emit(result.cast.map { it.toScreening() })
+        }
+    }
+
+    fun getDetailPerson(personID: Int): Flow<ResultPerson> {
+        return flow {
+            emit(retrofit.create(ApiClient::class.java).getDetailPersonByID(personID, BuildConfig.API_KEY))
+        }
+    }
+
     fun getTvShowSimilar(tvShowID: Int): Flow<List<Screening>> {
         return flow {
             val resultEntity = retrofit.create(ApiClient::class.java).getTVShowSimilar(tvShowID, BuildConfig.API_KEY)

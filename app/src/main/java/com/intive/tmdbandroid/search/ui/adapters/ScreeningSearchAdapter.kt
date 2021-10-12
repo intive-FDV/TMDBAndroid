@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
@@ -49,7 +50,6 @@ class ScreeningSearchAdapter(
         private val itemMediaType = binding.itemMediaTypeSearch
 
         fun bind(item: Screening) {
-
             itemView.setOnClickListener {
                 clickListener.invoke(item)
             }
@@ -70,12 +70,22 @@ class ScreeningSearchAdapter(
             }
 
             itemTitle.text = item.name
-            itemRating.rating = item.vote_average.toFloat() / 2
+            if (item.vote_average == 0.0) {
+                itemRating.rating = item.popularity.toFloat()
+            } else {
+                itemRating.rating = item.vote_average.toFloat() / 2
+            }
             itemMediaType.text = item.media_type.uppercase()
+
+            val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
+                strokeWidth = 5f
+                centerRadius = 25f
+            }
+            circularProgressDrawable.start()
 
             val options = RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_image)
+                .placeholder(circularProgressDrawable)
                 .error(R.drawable.ic_image)
 
             val posterURL =
