@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
@@ -40,9 +41,15 @@ class WatchlistAdapter(private val clickListener: ((Screening) -> Unit)) : ListA
                 clickListener.invoke(item)
             }
 
+            val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
+                strokeWidth = 5f
+                centerRadius = 25f
+            }
+            circularProgressDrawable.start()
+
             val options = RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_image)
+                .placeholder(circularProgressDrawable)
                 .error(R.drawable.ic_image)
 
             val backdropURL = imgUrl + item.backdrop_path

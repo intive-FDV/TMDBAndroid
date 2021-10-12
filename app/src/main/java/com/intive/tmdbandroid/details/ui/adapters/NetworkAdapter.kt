@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
@@ -34,7 +35,6 @@ class NetworkAdapter : ListAdapter<Network, NetworkAdapter.NetworkHolder>(COMPAR
         private val imgUrl = binding.root.resources.getString(R.string.base_imageURL)
 
         fun bind (network: Network) {
-
             val options = RequestOptions()
                 .placeholder(R.drawable.ic_image)
                 .error(R.drawable.ic_image)
