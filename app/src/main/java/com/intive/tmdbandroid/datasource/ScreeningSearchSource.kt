@@ -65,19 +65,21 @@ class ScreeningSearchSource(
                         nextKey = nextKey
                     )
                 }
-//                "People" -> {
-//                    service.getPersonByTitle(query, pageNumber).collect { response ->
-//                        val prevKey = if (pageNumber > DEFAULT_PAGE_INDEX) pageNumber - 1 else null
-//                        val nextKey = if (response.results.isNotEmpty()) pageNumber + 1 else null
-//                        val screenings: List<Screening> = response.results.map { it.toScreening() }
-//
-//                        LoadResult.Page(
-//                            data = screenings,
-//                            prevKey = prevKey,
-//                            nextKey = nextKey
-//                        )
-//                    }
-//                }
+                "People" -> {
+                    var screenings: List<Screening> = emptyList()
+                    var prevKey: Int? = null
+                    var nextKey: Int? = null
+                    service.getPersonByTitle(query, pageNumber).collect { response ->
+                        prevKey = if (pageNumber > DEFAULT_PAGE_INDEX) pageNumber - 1 else null
+                        nextKey = if (response.results.isNotEmpty()) pageNumber + 1 else null
+                        screenings = response.results.map { it.toScreening() }
+                    }
+                    LoadResult.Page(
+                        data = screenings,
+                        prevKey = prevKey,
+                        nextKey = nextKey
+                    )
+                }
                 else -> LoadResult.Error(Exception("No filter available"))
             }
         } catch (e: Exception) {

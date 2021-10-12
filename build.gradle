@@ -42,10 +42,10 @@ ext {
     pagingVersion = '3.0.1'
     glideVersion = '4.11.0'
     paletteVersion = '1.0.0'
-    constraintLayoutVersion = '2.1.0'
+    constraintLayoutVersion = '2.1.1'
     coreKTXVersion = '1.6.0'
     timberVersion = '5.0.1'
-    roomVersion='2.4.0-alpha04'
+    roomVersion='2.3.0'
 
     mockitoVersion = '3.6.28'
     archTestingVersion = '2.1.0'
