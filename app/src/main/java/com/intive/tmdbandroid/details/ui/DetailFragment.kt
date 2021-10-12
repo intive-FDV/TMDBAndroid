@@ -114,7 +114,7 @@ class DetailFragment : Fragment() {
         dialog?.setContentView(R.layout.rank_dialog)
         val yesBtn = dialog?.findViewById(R.id.rank_dialog_button_rate) as Button
         val noBtn = dialog.findViewById(R.id.rank_dialog_button_cancel) as Button
-        val ratingBar: RatingBar = dialog?.findViewById(R.id.dialog_ratingbar) as RatingBar
+        val ratingBar: RatingBar = dialog.findViewById(R.id.dialog_ratingbar) as RatingBar
         if(screening.my_rate==0.0) {
             yesBtn.setOnClickListener {
 
@@ -132,7 +132,7 @@ class DetailFragment : Fragment() {
             ratingBar.rating=(screening.my_rate).toFloat()
         }
         noBtn.setOnClickListener { dialog.dismiss() }
-        dialog?.show()
+        dialog.show()
 
     }
 

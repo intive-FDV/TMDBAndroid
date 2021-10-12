@@ -99,8 +99,6 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var tVShowUseCase: DetailTVShowUseCase
     @Mock
-    private lateinit var saveTVShowInWatchlistUseCase: InsertInWatchlistUseCase
-    @Mock
     private lateinit var insertInWatchlistUseCase: InsertInWatchlistUseCase
     @Mock
     private lateinit var existUseCase: ExistUseCase
@@ -188,7 +186,7 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun addToWatchlistTestSuccess() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(saveTVShowInWatchlistUseCase(screening)).willReturn(
+        BDDMockito.given(insertInWatchlistUseCase(screening)).willReturn(
             flow {
                 emit(screening)
             })
@@ -196,7 +194,7 @@ class DetailsViewModelTest {
         detailViewModel.addToWatchlist(screening)
 
         detailViewModel.watchlistUIState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(screening)
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(screening))
         }
     }
 
@@ -204,7 +202,7 @@ class DetailsViewModelTest {
     @ExperimentalTime
     fun addToWatchlistTestFailure() = mainCoroutineRule.runBlockingTest {
         val runtimeException = RuntimeException()
-        BDDMockito.given(saveTVShowInWatchlistUseCase(screening)).willReturn(
+        BDDMockito.given(insertInWatchlistUseCase(screening)).willReturn(
             flow {
                 throw runtimeException
             })
@@ -228,7 +226,7 @@ class DetailsViewModelTest {
         detailViewModel.existAsFavorite(2)
 
         detailViewModel.watchlistUIState.test {
-            Truth.assertThat(awaitItem()).isAnyOf(State.Success(true), State.Success(false))
+            Truth.assertThat(awaitItem()).isAnyOf(State.Success(screening), State.Success(false))
         }
     }
 

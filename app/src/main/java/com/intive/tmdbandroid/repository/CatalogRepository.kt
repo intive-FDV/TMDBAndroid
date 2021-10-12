@@ -83,7 +83,7 @@ class CatalogRepository @Inject constructor(
     }
 
     fun getGuestSession():Flow<Session>{
-        return (service.getGuestSession())
+        return service.getGuestSession()
     }
 
     fun getTVShowSimilar(id: Int): Flow<List<Screening>> {

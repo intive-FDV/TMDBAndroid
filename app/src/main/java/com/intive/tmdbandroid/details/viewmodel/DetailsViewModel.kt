@@ -165,10 +165,10 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun ratingTvShow(idMovie: Int, rating: Double) {
+    fun ratingTvShow(idTVShow: Int, rating: Double) {
         viewModelScope.launch {
             getSession()
-            ratingTVShowUseCase(idMovie, rating,session)
+            ratingTVShowUseCase(idTVShow, rating,session)
         }
     }
 }

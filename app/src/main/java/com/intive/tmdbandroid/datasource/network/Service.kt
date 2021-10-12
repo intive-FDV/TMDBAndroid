@@ -125,12 +125,9 @@ class Service {
     }
 
     fun getGuestSession():Flow<Session>{
-        //if(!this::sessionFlow.isInitialized){
         return   flow {
                 emit(retrofit.create(ApiClient::class.java).getNewGuestSession(BuildConfig.API_KEY))
             }
-        //}
-        //return sessionFlow
     }
 
     fun getTvShowSimilar(tvShowID: Int): Flow<List<Screening>> {
