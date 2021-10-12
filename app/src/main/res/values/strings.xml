@@ -37,6 +37,7 @@
     <string name="movies_filter">Movies</string>
     <string name="people_filter">People</string>
     <string name="recomendations_header_text">You can also watch:</string>
+    <string name="biography">Biography</string>
 
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>

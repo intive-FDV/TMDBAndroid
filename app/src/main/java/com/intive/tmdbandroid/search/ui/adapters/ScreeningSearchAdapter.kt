@@ -99,7 +99,11 @@ class ScreeningSearchAdapter(
             }
 
             itemTitle.text = item.name
-            itemRating.rating = item.vote_average.toFloat() / 2
+            if (item.vote_average == 0.0) {
+                itemRating.rating = item.popularity.toFloat()
+            } else {
+                itemRating.rating = item.vote_average.toFloat() / 2
+            }
             itemMediaType.text = item.media_type.uppercase()
 
             val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {

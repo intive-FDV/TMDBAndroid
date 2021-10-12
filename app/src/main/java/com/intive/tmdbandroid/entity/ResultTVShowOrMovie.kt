@@ -26,6 +26,7 @@ data class ResultTVShowOrMovie(
     val name: String?,
     val original_name: String?,
     val poster_path: String?,
+    val profile_path: String?,
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -36,7 +37,7 @@ data class ResultTVShowOrMovie(
             null,
             null,
             overview ?: "",
-            poster_path,
+            poster_path ?: profile_path,
             null,
             vote_average,
             vote_count,
