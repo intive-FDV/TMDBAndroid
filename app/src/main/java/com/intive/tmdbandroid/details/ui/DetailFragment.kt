@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.RatingBar
-import android.view.*
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
@@ -168,7 +168,7 @@ class DetailFragment : Fragment() {
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    else -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
@@ -184,11 +184,19 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        selectOrUnselectWatchlistFav(binding, if(it.data==null) false else it.data.my_favorite)
-                        isSaveOnWatchlist = if(it.data==null) false else it.data.my_favorite
-                        //updating screening
-                        screening.my_favorite = isSaveOnWatchlist
-                        screening.my_rate = if(it.data==null) 0.0 else it.data.my_rate
+                        if (it.data == null) {
+                            selectOrUnselectWatchlistFav(binding, false)
+                            isSaveOnWatchlist = false
+                            //updating screening
+                            screening.my_favorite = false
+                            screening.my_rate = 0.0
+                        } else {
+                            selectOrUnselectWatchlistFav(binding, it.data.my_favorite)
+                            isSaveOnWatchlist = it.data.my_favorite
+                            //updating screening
+                            screening.my_favorite = isSaveOnWatchlist
+                            screening.my_rate = it.data.my_rate
+                        }
                         showRateOrStar()
                     }
                     State.Error -> {
@@ -196,7 +204,7 @@ class DetailFragment : Fragment() {
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    State.Loading -> {
+                    else -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
@@ -324,7 +332,7 @@ class DetailFragment : Fragment() {
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.popularityRatingNumber.text = "$percentage%"
+        binding.popularityRatingNumber.text =resources.getString(R.string.popularity, percentage)
 
         val context = binding.root.context
 
