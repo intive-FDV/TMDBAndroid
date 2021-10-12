@@ -27,7 +27,6 @@ data class PersonItemEntity(
             poster_path = profile_path,
             status = null,
             vote_average = 0.0,
-            vote_count = 0,
             popularity,
             release_date = null,
             media_type = "person",

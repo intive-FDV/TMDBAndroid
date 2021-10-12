@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.usecase.person
 
-import com.intive.tmdbandroid.entity.ResultPerson
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.repository.CatalogRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

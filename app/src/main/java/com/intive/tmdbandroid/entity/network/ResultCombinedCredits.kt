@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.network
 
 import com.intive.tmdbandroid.model.Screening
 
@@ -25,7 +25,6 @@ data class CastItem(
             poster_path = null,
             status = null,
             vote_average = 0.0,
-            vote_count = 0,
             popularity = 0.0,
             release_date = null,
             media_type,

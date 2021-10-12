@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.ScreeningPagingSource
 import com.intive.tmdbandroid.datasource.ScreeningSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
-import com.intive.tmdbandroid.entity.ResultPerson
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow

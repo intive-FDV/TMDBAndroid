@@ -1,7 +1,9 @@
 package com.intive.tmdbandroid.datasource.network
 
 import com.intive.tmdbandroid.entity.network.ResultListTVShowOrMovies
+import com.intive.tmdbandroid.entity.network.ResultCombinedCredits
 import com.intive.tmdbandroid.entity.person.ResultPeopleEntity
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.entity.movie.ResultMoviesEntity
 import com.intive.tmdbandroid.entity.tvshow.ResultTVShowsEntity
 import com.intive.tmdbandroid.entity.video.VideoEntity

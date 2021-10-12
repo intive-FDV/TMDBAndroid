@@ -5,6 +5,7 @@ import com.intive.tmdbandroid.common.RetrofitHelper
 import com.intive.tmdbandroid.entity.network.ResultListTVShowOrMovies
 import com.intive.tmdbandroid.entity.movie.ResultMoviesEntity
 import com.intive.tmdbandroid.entity.person.ResultPeopleEntity
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.entity.tvshow.ResultTVShowsEntity
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening

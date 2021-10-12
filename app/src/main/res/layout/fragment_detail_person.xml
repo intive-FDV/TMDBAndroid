@@ -129,20 +129,22 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-
     <include
         android:id="@+id/layout_error_detail"
         layout="@layout/layout_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_anchor="@+id/coordinatorContainer_detail"
+        app:layout_anchorGravity="center" />
 
     <include
         android:id="@+id/layout_loading_detail"
         layout="@layout/layout_progressbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_anchor="@+id/coordinatorContainer_detail"
         app:layout_anchorGravity="center" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
