@@ -108,6 +108,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
