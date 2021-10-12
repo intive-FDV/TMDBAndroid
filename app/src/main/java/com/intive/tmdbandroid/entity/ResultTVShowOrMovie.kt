@@ -27,7 +27,7 @@ data class ResultTVShowOrMovie(
     val original_name: String?,
     val poster_path: String?,
     val my_rate: Double,
-    val my_favorite: Boolean
+    val my_favorite: Boolean,
     val profile_path: String?,
 ) {
     fun toScreening(): Screening {
