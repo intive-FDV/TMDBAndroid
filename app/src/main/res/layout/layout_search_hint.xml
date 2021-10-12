@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/ic_warning_empty_imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/search_hint_icon_size"
+        android:layout_height="@dimen/search_hint_icon_size"
         android:layout_marginTop="-24dp"
         android:contentDescription="@string/hint_layout_description"
         android:src="@drawable/ic_search"

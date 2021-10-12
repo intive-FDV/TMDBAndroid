@@ -16,7 +16,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayoutDetail"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="@dimen/appbar_height"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
 
