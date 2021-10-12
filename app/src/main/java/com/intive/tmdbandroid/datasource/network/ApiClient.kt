@@ -35,6 +35,14 @@ interface ApiClient {
     suspend fun getMovieVideos(@Path("movie_id") movieID: Int,
                                @Query("api_key") apiKey: String) : VideoEntity
 
+    @GET("person/{person_id}/combined_credits")
+    suspend fun getCombinedCreditsByID(@Path("person_id") personID: Int,
+                                       @Query("api_key") apiKey: String) : ResultCombinedCredits
+
+    @GET("person/{person_id}")
+    suspend fun getDetailPersonByID(@Path("person_id") personID: Int,
+                                    @Query("api_key") apiKey: String) : ResultPerson
+
     @GET("tv/{tv_id}/similar")
     suspend fun getTVShowSimilar(@Path("tv_id") tvShowID: Int,
                               @Query("api_key") apiKey: String) : ResultTVShowsEntity
