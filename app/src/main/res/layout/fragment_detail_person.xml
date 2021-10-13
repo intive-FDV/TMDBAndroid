@@ -66,41 +66,16 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
-                <ImageView
-                    android:id="@+id/popularity_thumb_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/thumb_description"
-                    android:src="@drawable/ic_thumb_up"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/red" />
-
-                <TextView
-                    android:id="@+id/popularity_rating_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/popularity_thumb_icon"
-                    app:layout_constraintStart_toEndOf="@id/popularity_thumb_icon"
-                    app:layout_constraintTop_toTopOf="@id/popularity_thumb_icon"
-                    tools:text="23%" />
-
                 <TextView
                     android:id="@+id/biography_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
                     android:text="@string/biography"
-                    android:textColor="@color/material_on_background_emphasis_high_type"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/popularity_rating_number" />
-
+                    app:layout_constraintTop_toTopOf="parent"/>
                 <TextView
                     android:id="@+id/biography_detail_textView"
                     android:layout_width="match_parent"
@@ -108,7 +83,7 @@
                     android:layout_marginVertical="20dp"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="@color/material_on_background_emphasis_high_type"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/biography_textView"
