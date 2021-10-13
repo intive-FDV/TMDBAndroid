@@ -1,10 +1,13 @@
 package com.intive.tmdbandroid.home.ui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,6 +20,8 @@ import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.databinding.ActivityHomeBinding
 import com.intive.tmdbandroid.detailandsearch.ui.DetailAndSearchActivity
 import dagger.hilt.android.AndroidEntryPoint
+
+const val THEME_DEFAULT = 0
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -45,6 +50,11 @@ class HomeActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        val themePreference = getPreferences(MODE_PRIVATE).getInt(baseContext.getString(R.string.theme_shared_pref), THEME_DEFAULT)
+        if(themePreference != THEME_DEFAULT){
+            AppCompatDelegate.setDefaultNightMode(themePreference)
+        }
+
         if(intent.action == Intent.ACTION_VIEW){
             val shareIntent = Intent(this, DetailAndSearchActivity::class.java)
             val screeningID = intent.data?.lastPathSegment?.toInt()
@@ -58,6 +68,7 @@ class HomeActivity : AppCompatActivity() {
             )
             startActivity(shareIntent)
         }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -66,10 +77,14 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
+        if(getPreferences(MODE_PRIVATE).getInt(baseContext.getString(R.string.theme_shared_pref), THEME_DEFAULT)
+            == AppCompatDelegate.MODE_NIGHT_YES) {
+            menu.findItem(R.id.switch_theme).icon = AppCompatResources.getDrawable(baseContext, R.drawable.ic_bedtime)
+        }
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem):Boolean {
         return when (item.itemId) {
             R.id.search -> {
                 val intent = Intent(this, DetailAndSearchActivity::class.java)
@@ -79,6 +94,27 @@ class HomeActivity : AppCompatActivity() {
                     )
                 )
                 startActivity(intent)
+                true
+            }
+            R.id.switch_theme  -> {
+                val themePreference = getPreferences(MODE_PRIVATE)
+                println("shared preference: ${themePreference.getInt(baseContext.getString(R.string.theme_shared_pref), THEME_DEFAULT)}")
+                when (baseContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        with(themePreference.edit()){
+                            putInt(baseContext.getString(R.string.theme_shared_pref), AppCompatDelegate.MODE_NIGHT_YES)
+                            apply()
+                        }
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        with(themePreference.edit()){
+                            putInt(baseContext.getString(R.string.theme_shared_pref), AppCompatDelegate.MODE_NIGHT_NO)
+                            apply()
+                        }
+                    }
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

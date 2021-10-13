@@ -8,6 +8,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_short"
     app:cardCornerRadius="@dimen/corner_radius"
+    style="@style/CardView"
     app:cardElevation="@dimen/elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +35,8 @@
             android:layout_margin="@dimen/margin_short"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/black"
+            android:textColor="@color/material_on_background_emphasis_high_type"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/item_backdrop"
             app:layout_constraintEnd_toStartOf="@id/popularity_card"
