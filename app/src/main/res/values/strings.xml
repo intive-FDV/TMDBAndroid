@@ -66,6 +66,12 @@
     <string name="biography">Biography</string>
     <string name="theme_shared_pref">theme</string>
 
+    <!-- Rate Dialog -->
+    <string name="rate_title">Add Rating</string>
+    <string name="rate_subtitle">How would you rate this?</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="confirm_button_text">Rate</string>
+
     <!-- Plurals -->
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
