@@ -109,17 +109,17 @@
                     app:layout_constraintBottom_toBottomOf="@+id/popularity_thumb_icon"
                     app:layout_constraintStart_toEndOf="@id/popularity_thumb_icon"/>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/rate_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rate_button_text"
                     app:icon="@drawable/ic_add"
+                    app:iconTint="@color/material_on_background_emphasis_high_type"
                     android:textColor="@color/material_on_background_emphasis_high_type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    style="?attr/materialButtonOutlinedStyle"
-                    />
+                    style="?attr/materialButtonOutlinedStyle"/>
 
                 <TextView
                     android:id="@+id/overview_textView"
