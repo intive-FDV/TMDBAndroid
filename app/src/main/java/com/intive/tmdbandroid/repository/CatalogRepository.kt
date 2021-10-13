@@ -87,8 +87,8 @@ class CatalogRepository @Inject constructor(
         return service.setMovieRating(idTVShow,rating,session)
     }
 
-    suspend fun setTVShowRating(idMovie: Int,rating: Double, session:Session):Boolean{
-        return service.setTVShowRating(idMovie,rating,session)
+    suspend fun setTVShowRating(idTVShow: Int,rating: Double, session:Session):Boolean{
+        return service.setTVShowRating(idTVShow,rating,session)
     }
 
     fun getGuestSession():Flow<Session>{

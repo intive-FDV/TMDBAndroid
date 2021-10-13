@@ -120,6 +120,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     style="?attr/materialButtonOutlinedStyle"/>
+
+                <RatingBar
+                    android:id="@+id/ratingbar_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:isIndicator="true"
                     android:numStars="5"
                     tools:rating="2.5"
@@ -128,6 +135,7 @@
                     android:theme="@style/RatingBar"
                     style="?attr/ratingBarStyleSmall"
                     />
+
 
                 <TextView
                     android:id="@+id/overview_textView"
