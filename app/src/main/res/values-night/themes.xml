@@ -14,6 +14,6 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="CardView">
-        <item name="cardBackgroundColor">#222222</item>
+        <item name="cardBackgroundColor">@color/mine_shaft</item>
     </style>
 </resources>
