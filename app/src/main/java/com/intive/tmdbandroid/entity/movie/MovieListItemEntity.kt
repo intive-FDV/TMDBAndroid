@@ -7,12 +7,10 @@ data class MovieListItemEntity(
     val release_date: String?,
     val id: Int,
     val title: String,
-    val original_title: String,
     val overview: String,
     val popularity: Double?,
     val poster_path: String?,
     val vote_average: Double,
-    val vote_count: Int,
     val my_rate: Double,
     val my_favorite: Boolean
 ) {
@@ -28,7 +26,6 @@ data class MovieListItemEntity(
             poster_path,
             null,
             vote_average,
-            vote_count,
             popularity ?: 0.0,
             release_date,
             "movie",

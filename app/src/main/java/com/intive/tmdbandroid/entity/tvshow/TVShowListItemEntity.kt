@@ -11,7 +11,6 @@ data class TVShowListItemEntity(
     val popularity: Double?,
     val poster_path: String?,
     val vote_average: Double,
-    val vote_count: Int,
     val my_rate: Double,
     val my_favorite: Boolean
 ) {

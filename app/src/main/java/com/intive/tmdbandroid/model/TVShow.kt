@@ -2,7 +2,6 @@ package com.intive.tmdbandroid.model
 
 data class TVShow(
     val backdrop_path: String?,
-    val created_by: List<CreatedBy>,
     val first_air_date: String?,
     val genres: List<Genre>,
     val id: Int,
@@ -10,12 +9,10 @@ data class TVShow(
     val name: String,
     val number_of_episodes: Int?,
     val number_of_seasons: Int?,
-    val original_name: String,
     val overview: String,
     val poster_path: String?,
     val status: String?,
     val vote_average: Double,
-    val vote_count: Int,
     val networks: List<Network>,
     val my_rate:Double,
     val my_favorite: Boolean
@@ -32,7 +29,6 @@ data class TVShow(
             poster_path,
             status,
             vote_average,
-            vote_count,
             popularity = 0.0,
             release_date = first_air_date,
             media_type = "tv",

@@ -1,6 +1,7 @@
 package com.intive.tmdbandroid.entity.movie
 
 import com.google.gson.annotations.SerializedName
+import com.intive.tmdbandroid.entity.MovieListItemEntity
 import com.intive.tmdbandroid.model.Screening
 
 data class ResultMoviesEntity(

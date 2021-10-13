@@ -38,7 +38,9 @@ class LocalStorageTest : TestCase() {
         adult = false,
         genre_ids = null,
         video = false,
-        networks = listOf(Network("/netflixlogo.jpg"))
+        networks = listOf(Network("/netflixlogo.jpg")),
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     private val screeningUpdate = ScreeningORMEntity(
@@ -58,7 +60,9 @@ class LocalStorageTest : TestCase() {
         adult = false,
         genre_ids = null,
         video = false,
-        networks = listOf(Network("/netflixlogo.jpg"))
+        networks = listOf(Network("/netflixlogo.jpg")),
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     // Override function setUp() and annotate it with @Before

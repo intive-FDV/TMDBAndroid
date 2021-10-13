@@ -32,17 +32,15 @@ class DetailTVShowUseCaseTest{
         genres = listOf(Genre(1, "genre1"), Genre(2,"genre2")),
         id = 1,
         name = "Simona la Cacarisa",
-        original_name = "El cochiloco",
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
-        vote_count = 100,
         created_by = emptyList(),
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,
         status = "Online",
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        networks = listOf(Network("/netflixlogo.jpg")),
         my_rate = 3.5,
         my_favorite = true
     )

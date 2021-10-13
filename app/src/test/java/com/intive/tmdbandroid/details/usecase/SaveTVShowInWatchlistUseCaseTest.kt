@@ -9,12 +9,14 @@ import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.repository.WatchlistRepository
 import com.intive.tmdbandroid.usecase.InsertInWatchlistUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
@@ -41,13 +43,12 @@ class SaveTVShowInWatchlistUseCaseTest {
         poster_path = "POSTER_PATH",
         status = "Online",
         vote_average = 10.5,
-        vote_count = 100,
         popularity = 34.0,
         media_type = "tv",
         adult = false,
         genre_ids = null,
         video = false,
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        networks = listOf(Network("/netflixlogo.jpg")),
         my_rate = 3.5,
         my_favorite = true
     )
