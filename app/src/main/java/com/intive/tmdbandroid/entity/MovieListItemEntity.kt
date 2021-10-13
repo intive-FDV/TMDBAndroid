@@ -12,7 +12,9 @@ data class MovieListItemEntity(
     val popularity: Double?,
     val poster_path: String?,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    val my_rate: Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -33,7 +35,9 @@ data class MovieListItemEntity(
             false,
             null,
             false,
-            emptyList()
+            emptyList(),
+            my_rate,
+            my_favorite
         )
     }
 }

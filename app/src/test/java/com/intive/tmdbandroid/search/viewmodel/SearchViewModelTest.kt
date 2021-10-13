@@ -50,7 +50,9 @@ class SearchViewModelTest{
                 adult = false,
                 genre_ids = null,
                 video = false,
-                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
+                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+                my_rate = 3.5,
+                my_favorite = true
             )
         )
     )

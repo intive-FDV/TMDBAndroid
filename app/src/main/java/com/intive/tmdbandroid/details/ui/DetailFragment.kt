@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
+import com.intive.tmdbandroid.databinding.RankDialogBinding
 import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import com.intive.tmdbandroid.details.ui.adapters.RecommendationAdapter
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
@@ -51,6 +52,8 @@ class DetailFragment : Fragment() {
 
     private val networkAdapter = NetworkAdapter()
     private lateinit var recommendationAdapter: RecommendationAdapter
+
+    private lateinit var screening: Screening
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +89,54 @@ class DetailFragment : Fragment() {
 
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
-            if(savedInstanceState==null){
+            if (savedInstanceState == null) {
                 if (isMovie) viewModel.movie(it)
                 else viewModel.tVShows(it)
             }
         }
+    }
+
+    private fun showRateOrStar(binding: FragmentDetailBinding) {
+
+        if (screening.my_rate == 0.0) {
+            binding.ratingbarUser.visibility = View.GONE
+            binding.rateButton.visibility = View.VISIBLE
+            binding.rateButton.setOnClickListener {
+                screeningItemId?.let { it1 -> showDialogRate(it1) }
+            }
+        } else {
+            binding.ratingbarUser.visibility = View.VISIBLE
+            binding.rateButton.visibility = View.GONE
+            binding.ratingbarUser.rating = (screening.my_rate).toFloat()
+        }
+    }
+
+    private fun showDialogRate(idItem: Int) {
+        val bindingDialog = RankDialogBinding.inflate(LayoutInflater.from(context))
+        val dialog =  Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(bindingDialog.root)
+        if (screening.my_rate == 0.0) {
+            bindingDialog.rankDialogButtonRate.setOnClickListener {
+
+                if (isMovie) viewModel.ratingMovie(idItem, bindingDialog.dialogRatingbar.rating.toDouble())
+                else {
+                    viewModel.ratingTvShow(idItem, bindingDialog.dialogRatingbar.rating.toDouble())
+                }
+                screening.my_rate = bindingDialog.dialogRatingbar.rating.toDouble()
+                viewModel.addToWatchlist(screening)
+                dialog.dismiss()
+            }
+        } else {
+            bindingDialog.rankDialogButtonRate.visibility = View.GONE
+            bindingDialog.dialogRatingbar.rating = (screening.my_rate).toFloat()
+        }
+        bindingDialog.rankDialogButtonCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+
     }
 
     override fun onDestroyView() {
@@ -106,14 +152,15 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        setupUI(binding, state.data)
+                        screening = state.data
+                        setupUI(binding)
                     }
                     is State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    else -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
@@ -129,15 +176,27 @@ class DetailFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        selectOrUnselectWatchlistFav(binding, it.data)
-                        isSaveOnWatchlist = it.data
+                        if (it.data == null) {
+                            selectOrUnselectWatchlistFav(binding, false)
+                            isSaveOnWatchlist = false
+                            //updating screening
+                            screening.my_favorite = false
+                            screening.my_rate = 0.0
+                        } else {
+                            selectOrUnselectWatchlistFav(binding, it.data.my_favorite)
+                            isSaveOnWatchlist = it.data.my_favorite
+                            //updating screening
+                            screening.my_favorite = isSaveOnWatchlist
+                            screening.my_rate = it.data.my_rate
+                        }
+                        showRateOrStar(binding)
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
                         binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
-                    State.Loading -> {
+                    else -> {
                         binding.layoutErrorDetail.errorContainer.visibility = View.GONE
                         binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
                     }
@@ -192,7 +251,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setupUI(binding: FragmentDetailBinding, screening: Screening) {
+    private fun setupUI(binding: FragmentDetailBinding) {
 
         setImages(binding, screening)
 
@@ -234,7 +293,7 @@ class DetailFragment : Fragment() {
                 )
             }
 
-        if(screening.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
+        if (screening.overview.isEmpty()) binding.overviewDetailTextView.text = resources.getString(R.string.no_overview)
         else binding.overviewDetailTextView.text = screening.overview
         binding.coordinatorContainerDetail.visibility = View.VISIBLE
 
@@ -326,9 +385,11 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
+                        screening.my_favorite = true
                         viewModel.addToWatchlist(screening)
                     } else {
-                        viewModel.deleteFromWatchlist(screening)
+                        screening.my_favorite = false
+                        viewModel.updateToWatchlist(screening)
                     }
                     true
                 }
@@ -338,7 +399,8 @@ class DetailFragment : Fragment() {
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT,
-                            "Check out this $mediaType! \n ${resources.getString(R.string.to_watch_url)}/${screening.media_type}/${screening.id}")
+                            "Check out this $mediaType! \n ${resources.getString(R.string.to_watch_url)}/${screening.media_type}/${screening.id}"
+                        )
                         type = "text/plain"
                     }
 
@@ -435,8 +497,8 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening){
-        if (screening.networks.isNotEmpty()){
+    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening) {
+        if (screening.networks.isNotEmpty()) {
             networkAdapter.submitList(screening.networks)
         } else {
             binding.networksHeader.visibility = View.GONE

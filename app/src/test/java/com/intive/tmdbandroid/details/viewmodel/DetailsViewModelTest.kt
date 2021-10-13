@@ -17,7 +17,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.time.ExperimentalTime
 
@@ -47,7 +48,9 @@ class DetailsViewModelTest {
         number_of_episodes = 5,
         number_of_seasons = 2,
         status = "Online",
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     private val movie = Movie(
@@ -62,7 +65,9 @@ class DetailsViewModelTest {
         vote_average = 10.5,
         vote_count = 100,
         status = "Online",
-        popularity = 34.0
+        popularity = 34.0,
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     private val screening = Screening(
@@ -83,7 +88,9 @@ class DetailsViewModelTest {
         adult = false,
         genre_ids = null,
         video = false,
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     private val videoKey = "VIDEO_KEY"
@@ -92,13 +99,17 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var tVShowUseCase: DetailTVShowUseCase
     @Mock
-    private lateinit var saveTVShowInWatchlistUseCase: InsertInWatchlistUseCase
+    private lateinit var insertInWatchlistUseCase: InsertInWatchlistUseCase
     @Mock
-    private lateinit var deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase
-    @Mock
-    private lateinit var getIfExistsUseCase: ExistUseCase
+    private lateinit var existUseCase: ExistUseCase
     @Mock
     private lateinit var movieUseCase: DetailMovieUseCase
+    @Mock
+    private lateinit var ratingMovieUseCase: RatingMovieUseCase
+    @Mock
+    private lateinit var ratingTVShowUseCase: RatingTVShowUseCase
+    @Mock
+    private lateinit var guestSessionUseCase: GuestSessionUseCase
     @Mock
     private lateinit var tvShowTrailerUseCase: GetTVShowTrailer
     @Mock
@@ -107,6 +118,13 @@ class DetailsViewModelTest {
     private lateinit var getTVShowSimilarUseCase: GetTVShowSimilarUseCase
     @Mock
     private lateinit var getMovieSimilarUseCase: GetMovieSimilarUseCase
+    @Mock
+    private lateinit var sessionExistUseCase: SessionExistUseCase
+    @Mock
+    private lateinit var insertInSessiontUseCase: InsertInSessiontUseCase
+    @Mock
+    private lateinit var updateInWatchlistUseCase : UpdateFromWatchlistUseCase
+
 
 
     @Before
@@ -114,13 +132,18 @@ class DetailsViewModelTest {
         detailViewModel = DetailsViewModel(
             tVShowUseCase,
             movieUseCase,
-            saveTVShowInWatchlistUseCase,
-            deleteFromWatchlistUseCase,
-            getIfExistsUseCase,
+            insertInWatchlistUseCase,
+            existUseCase,
             tvShowTrailerUseCase,
-            movieTrailerUseCase,
             getTVShowSimilarUseCase,
-            getMovieSimilarUseCase
+            getMovieSimilarUseCase,
+            movieTrailerUseCase,
+            ratingMovieUseCase,
+            ratingTVShowUseCase,
+            guestSessionUseCase,
+            sessionExistUseCase,
+            insertInSessiontUseCase,
+            updateInWatchlistUseCase
         )
     }
 
@@ -163,15 +186,15 @@ class DetailsViewModelTest {
     @Test
     @ExperimentalTime
     fun addToWatchlistTestSuccess() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(saveTVShowInWatchlistUseCase(screening)).willReturn(
+        BDDMockito.given(insertInWatchlistUseCase(screening)).willReturn(
             flow {
-                emit(true)
+                emit(screening)
             })
 
         detailViewModel.addToWatchlist(screening)
 
         detailViewModel.watchlistUIState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(State.Success(true))
+            Truth.assertThat(awaitItem()).isEqualTo(State.Success(screening))
         }
     }
 
@@ -179,7 +202,7 @@ class DetailsViewModelTest {
     @ExperimentalTime
     fun addToWatchlistTestFailure() = mainCoroutineRule.runBlockingTest {
         val runtimeException = RuntimeException()
-        BDDMockito.given(saveTVShowInWatchlistUseCase(screening)).willReturn(
+        BDDMockito.given(insertInWatchlistUseCase(screening)).willReturn(
             flow {
                 throw runtimeException
             })
@@ -191,49 +214,19 @@ class DetailsViewModelTest {
         }
     }
 
-    @Test
-    @ExperimentalTime
-    fun deleteFromWatchlistTestSuccess() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(deleteFromWatchlistUseCase(screening)).willReturn(
-            flow {
-                emit(false)
-            })
-
-        detailViewModel.deleteFromWatchlist(screening)
-
-        detailViewModel.watchlistUIState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(State.Success(false))
-        }
-    }
-
-    @Test
-    @ExperimentalTime
-    fun deleteFromWatchlistTestFailure() = mainCoroutineRule.runBlockingTest {
-        val runtimeException = RuntimeException()
-        BDDMockito.given(deleteFromWatchlistUseCase(screening)).willReturn(
-            flow {
-                throw runtimeException
-            })
-
-        detailViewModel.deleteFromWatchlist(screening)
-
-        detailViewModel.watchlistUIState.test {
-            Truth.assertThat(awaitItem()).isEqualTo(State.Error)
-        }
-    }
 
     @Test
     @ExperimentalTime
     fun existAsFavoriteTestSuccess() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(getIfExistsUseCase(anyInt())).willReturn(
+        BDDMockito.given(existUseCase(anyInt())).willReturn(
             flow {
-                emit(false)
+                emit(screening)
             })
 
         detailViewModel.existAsFavorite(2)
 
         detailViewModel.watchlistUIState.test {
-            Truth.assertThat(awaitItem()).isAnyOf(State.Success(true), State.Success(false))
+            Truth.assertThat(awaitItem()).isAnyOf(State.Success(screening), State.Success(false))
         }
     }
 
@@ -241,7 +234,7 @@ class DetailsViewModelTest {
     @ExperimentalTime
     fun existAsFavoriteTestFailure() = mainCoroutineRule.runBlockingTest {
         val runtimeException = RuntimeException()
-        BDDMockito.given(getIfExistsUseCase(anyInt())).willReturn(
+        BDDMockito.given(existUseCase(anyInt())).willReturn(
             flow {
                 throw runtimeException
             })

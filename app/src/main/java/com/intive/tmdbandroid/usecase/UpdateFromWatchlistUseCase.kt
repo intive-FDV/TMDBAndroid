@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class InsertInWatchlistUseCase @Inject constructor(private val watchlistRepository: WatchlistRepository) {
+class UpdateFromWatchlistUseCase @Inject constructor(private val watchlistRepository: WatchlistRepository) {
 
     suspend operator fun invoke(screening: Screening): Flow<Screening> {
-        watchlistRepository.insert(screening)
-        return watchlistRepository.getScreeningById(screening.id)
+        watchlistRepository.updateFavorite(screening)
+        return (watchlistRepository.getScreeningById(screening.id))
     }
 
 }

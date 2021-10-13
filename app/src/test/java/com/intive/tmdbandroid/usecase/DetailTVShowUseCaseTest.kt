@@ -42,7 +42,9 @@ class DetailTVShowUseCaseTest{
         number_of_episodes = 5,
         number_of_seasons = 2,
         status = "Online",
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG"))
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     private lateinit var detailUseCase: DetailTVShowUseCase
