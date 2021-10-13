@@ -3,13 +3,7 @@ package com.intive.tmdbandroid.details.ui
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
-import android.widget.RatingBar
-import android.view.WindowManager
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.content.res.AppCompatResources
@@ -29,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailBinding
+import com.intive.tmdbandroid.databinding.RankDialogBinding
 import com.intive.tmdbandroid.details.ui.adapters.NetworkAdapter
 import com.intive.tmdbandroid.details.ui.adapters.RecommendationAdapter
 import com.intive.tmdbandroid.details.viewmodel.DetailsViewModel
@@ -94,56 +89,53 @@ class DetailFragment : Fragment() {
 
         screeningItemId?.let {
             Timber.i("MAS - screeningID: $it")
-            if(savedInstanceState==null){
+            if (savedInstanceState == null) {
                 if (isMovie) viewModel.movie(it)
                 else viewModel.tVShows(it)
             }
         }
     }
 
-    private fun showRateOrStar(){
-        val buttonRating = view?.findViewById<Button>(R.id.rate_button)
-        val ratingbarUser = view?.findViewById<RatingBar>(R.id.ratingbar_user)
-        if(screening.my_rate==0.0) {
-            ratingbarUser?.visibility=View.GONE
-            buttonRating?.visibility=View.VISIBLE
-            buttonRating?.setOnClickListener {
+    private fun showRateOrStar(binding: FragmentDetailBinding) {
+
+        if (screening.my_rate == 0.0) {
+            binding.ratingbarUser.visibility = View.GONE
+            binding.rateButton.visibility = View.VISIBLE
+            binding.rateButton.setOnClickListener {
                 screeningItemId?.let { it1 -> showDialogRate(it1) }
             }
-        }
-        else{
-            ratingbarUser?.visibility=View.VISIBLE
-            buttonRating?.visibility=View.GONE
-            ratingbarUser?.rating=(screening.my_rate).toFloat()
+        } else {
+            binding.ratingbarUser.visibility = View.VISIBLE
+            binding.rateButton.visibility = View.GONE
+            binding.ratingbarUser.rating = (screening.my_rate).toFloat()
         }
     }
 
-    private fun showDialogRate(idItem:Int) {
-        val dialog = this.context?.let { Dialog(it) }
+    private fun showDialogRate(idItem: Int) {
+        val bindingDialog = RankDialogBinding.inflate(LayoutInflater.from(context))
+        val dialog = activity?.let { Dialog(it) }
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog?.setCancelable(false)
-        dialog?.setContentView(R.layout.rank_dialog)
-        val yesBtn = dialog?.findViewById(R.id.rank_dialog_button_rate) as Button
-        val noBtn = dialog.findViewById(R.id.rank_dialog_button_cancel) as Button
-        val ratingBar: RatingBar = dialog.findViewById(R.id.dialog_ratingbar) as RatingBar
-        if(screening.my_rate==0.0) {
-            yesBtn.setOnClickListener {
+        dialog?.setContentView(bindingDialog.root)
+        if (screening.my_rate == 0.0) {
+            bindingDialog.rankDialogButtonRate.setOnClickListener {
 
-                if (isMovie) viewModel.ratingMovie(idItem, ratingBar.rating.toDouble())
+                if (isMovie) viewModel.ratingMovie(idItem, bindingDialog.dialogRatingbar.rating.toDouble())
                 else {
-                    viewModel.ratingTvShow(idItem, ratingBar.rating.toDouble())
+                    viewModel.ratingTvShow(idItem, bindingDialog.dialogRatingbar.rating.toDouble())
                 }
-                screening.my_rate = ratingBar.rating.toDouble()
+                screening.my_rate = bindingDialog.dialogRatingbar.rating.toDouble()
                 viewModel.addToWatchlist(screening)
-                dialog.dismiss()
+                dialog?.dismiss()
             }
+        } else {
+            bindingDialog.rankDialogButtonRate.visibility = View.GONE
+            bindingDialog.dialogRatingbar.rating = (screening.my_rate).toFloat()
         }
-        else{
-            yesBtn.visibility = View.GONE
-            ratingBar.rating=(screening.my_rate).toFloat()
+        bindingDialog.rankDialogButtonCancel.setOnClickListener {
+            dialog?.dismiss()
         }
-        noBtn.setOnClickListener { dialog.dismiss() }
-        dialog.show()
+        dialog?.show()
 
     }
 
@@ -197,7 +189,7 @@ class DetailFragment : Fragment() {
                             screening.my_favorite = isSaveOnWatchlist
                             screening.my_rate = it.data.my_rate
                         }
-                        showRateOrStar()
+                        showRateOrStar(binding)
                     }
                     State.Error -> {
                         binding.layoutLoadingDetail.progressBar.visibility = View.GONE
@@ -393,10 +385,10 @@ class DetailFragment : Fragment() {
             when (it.itemId) {
                 R.id.ic_heart_watchlist -> {
                     if (!isSaveOnWatchlist) {
-                        screening.my_favorite=true
+                        screening.my_favorite = true
                         viewModel.addToWatchlist(screening)
                     } else {
-                        screening.my_favorite=false
+                        screening.my_favorite = false
                         viewModel.updateToWatchlist(screening)
                     }
                     true
@@ -407,7 +399,8 @@ class DetailFragment : Fragment() {
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT,
-                            "Check out this $mediaType! \n ${resources.getString(R.string.to_watch_url)}/${screening.media_type}/${screening.id}")
+                            "Check out this $mediaType! \n ${resources.getString(R.string.to_watch_url)}/${screening.media_type}/${screening.id}"
+                        )
                         type = "text/plain"
                     }
 
@@ -504,8 +497,8 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening){
-        if (screening.networks.isNotEmpty()){
+    private fun setNetworkImages(binding: FragmentDetailBinding, screening: Screening) {
+        if (screening.networks.isNotEmpty()) {
             networkAdapter.submitList(screening.networks)
         } else {
             binding.networksHeader.visibility = View.GONE

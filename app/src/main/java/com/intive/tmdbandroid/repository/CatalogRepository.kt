@@ -83,8 +83,8 @@ class CatalogRepository @Inject constructor(
         return service.getMovieVideos(id)
     }
 
-    suspend fun setMovieRating(idMovie: Int,rating: Double, session:Session):Boolean{
-        return service.setMovieRating(idMovie,rating,session)
+    suspend fun setMovieRating(idTVShow: Int,rating: Double, session:Session):Boolean{
+        return service.setMovieRating(idTVShow,rating,session)
     }
 
     suspend fun setTVShowRating(idMovie: Int,rating: Double, session:Session):Boolean{
