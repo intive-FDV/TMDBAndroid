@@ -2,6 +2,7 @@ package com.intive.tmdbandroid.search.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -80,6 +81,7 @@ class ScreeningSearchAdapter(
             val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
                 strokeWidth = 5f
                 centerRadius = 25f
+                setColorSchemeColors(ContextCompat.getColor(binding.root.context, R.color.material_on_background_emphasis_high_type))
             }
             circularProgressDrawable.start()
 

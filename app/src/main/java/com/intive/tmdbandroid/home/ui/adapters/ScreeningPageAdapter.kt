@@ -48,6 +48,7 @@ class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : Pag
             val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
                 strokeWidth = 5f
                 centerRadius = 25f
+                setColorSchemeColors(ContextCompat.getColor(context, R.color.material_on_background_emphasis_high_type))
             }
             circularProgressDrawable.start()
 
