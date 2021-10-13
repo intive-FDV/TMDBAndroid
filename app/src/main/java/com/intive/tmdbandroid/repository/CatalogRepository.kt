@@ -9,6 +9,7 @@ import com.intive.tmdbandroid.datasource.network.Service
 import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -80,6 +81,18 @@ class CatalogRepository @Inject constructor(
 
     fun getMovieTrailer(id: Int): Flow<String> {
         return service.getMovieVideos(id)
+    }
+
+    suspend fun setMovieRating(idMovie: Int,rating: Double, session:Session):Boolean{
+        return service.setMovieRating(idMovie,rating,session)
+    }
+
+    suspend fun setTVShowRating(idTVShow: Int,rating: Double, session:Session):Boolean{
+        return service.setTVShowRating(idTVShow,rating,session)
+    }
+
+    fun getGuestSession():Flow<Session>{
+        return service.getGuestSession()
     }
 
     fun getTVShowSimilar(id: Int): Flow<List<Screening>> {

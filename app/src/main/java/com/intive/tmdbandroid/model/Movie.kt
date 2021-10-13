@@ -4,13 +4,17 @@ data class Movie(
     val backdrop_path: String,
     val genres: List<Genre>,
     val id: Int,
+    val original_title: String,
     val overview: String,
     val popularity: Double,
     val poster_path: String,
     val release_date: String?,
     val title: String,
     val vote_average: Double,
-    val status: String
+    val vote_count: Int,
+    val status: String,
+    val my_rate: Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -24,13 +28,16 @@ data class Movie(
             poster_path,
             status,
             vote_average,
+            vote_count,
             popularity,
             release_date,
             media_type = "movie",
             adult = false,
             genre_ids = null,
             false,
-            emptyList()
+            emptyList(),
+            my_rate,
+            my_favorite
         )
     }
 }

@@ -2,6 +2,7 @@ package com.intive.tmdbandroid.model
 
 data class TVShow(
     val backdrop_path: String?,
+    val created_by: List<CreatedBy>,
     val first_air_date: String?,
     val genres: List<Genre>,
     val id: Int,
@@ -14,7 +15,10 @@ data class TVShow(
     val poster_path: String?,
     val status: String?,
     val vote_average: Double,
-    val networks: List<Network>
+    val vote_count: Int,
+    val networks: List<Network>,
+    val my_rate:Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -28,13 +32,16 @@ data class TVShow(
             poster_path,
             status,
             vote_average,
+            vote_count,
             popularity = 0.0,
             release_date = first_air_date,
             media_type = "tv",
             adult = false,
             genre_ids = null,
             video = false,
-            networks
+            networks,
+            my_rate,
+            my_favorite
         )
     }
 }

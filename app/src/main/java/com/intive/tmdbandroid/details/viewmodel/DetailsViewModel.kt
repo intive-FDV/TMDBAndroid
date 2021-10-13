@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.model.Screening
+import com.intive.tmdbandroid.model.Session
 import com.intive.tmdbandroid.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,19 +17,26 @@ class DetailsViewModel @Inject internal constructor(
     private val tVShowUseCase: DetailTVShowUseCase,
     private val movieUseCase: DetailMovieUseCase,
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
-    private val deleteFromWatchlistUseCase: DeleteFromWatchlistUseCase,
     private val existUseCase: ExistUseCase,
-    private val tvShowTrailerUseCase: GetTVShowTrailerUseCase,
-    private val movieTrailerUseCase: GetMovieTrailerUseCase,
+    private val tvShowTrailerUseCase: GetTVShowTrailer,
     private val getTVShowSimilarUseCase: GetTVShowSimilarUseCase,
-    private val getMovieSimilarUseCase: GetMovieSimilarUseCase
+    private val getMovieSimilarUseCase: GetMovieSimilarUseCase,
+    private val movieTrailerUseCase: GetMovieTrailer,
+    private val ratingMovieUseCase: RatingMovieUseCase,
+    private val ratingTVShowUseCase: RatingTVShowUseCase,
+    private val guestSessionUseCase: GuestSessionUseCase,
+    private val sessionExistUseCase: SessionExistUseCase,
+    private val insertInSessiontUseCase: InsertInSessiontUseCase,
+    private val updateInWatchlistUseCase : UpdateFromWatchlistUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<Screening>>(State.Waiting)
     val uiState: StateFlow<State<Screening>> = _state
 
-    private val _watchlistState = MutableStateFlow<State<Boolean>>(State.Waiting)
-    val watchlistUIState: StateFlow<State<Boolean>> = _watchlistState
+    private val _watchlistState = MutableStateFlow<State<Screening>>(State.Loading)
+    val watchlistUIState: StateFlow<State<Screening>> = _watchlistState
+
+    private lateinit var session:Session
 
     private val _trailerState = Channel<State<String>>()
     val trailerState = _trailerState
@@ -105,9 +113,9 @@ class DetailsViewModel @Inject internal constructor(
         }
     }
 
-    fun deleteFromWatchlist(screening: Screening) {
+    fun updateToWatchlist(screening: Screening) {
         viewModelScope.launch {
-            deleteFromWatchlistUseCase(screening)
+            updateInWatchlistUseCase(screening)
                 .onStart {
                     _watchlistState.value = State.Loading
                 }
@@ -150,6 +158,32 @@ class DetailsViewModel @Inject internal constructor(
                 .onStart { _recommendedState.value = State.Loading }
                 .catch { _recommendedState.value = State.Error }
                 .collect { _recommendedState.value = State.Success(it) }
+        }
+    }
+
+    private suspend fun getSession() {
+        session = sessionExistUseCase()
+        if(session.id==0){
+            var sessionFlow = guestSessionUseCase()
+            session = sessionFlow.single()
+            session.status_message="empty"
+            insertInSessiontUseCase(session)
+        }
+
+
+    }
+
+    fun ratingMovie(idMovie: Int, rating: Double) {
+        viewModelScope.launch {
+            getSession()
+            ratingMovieUseCase(idMovie, rating,session)
+        }
+    }
+
+    fun ratingTvShow(idTVShow: Int, rating: Double) {
+        viewModelScope.launch {
+            getSession()
+            ratingTVShowUseCase(idTVShow, rating,session)
         }
     }
 }

@@ -33,7 +33,9 @@ data class PersonItemEntity(
             adult = false,
             genre_ids = null,
             video = false,
-            networks = emptyList()
+            networks = emptyList(),
+            my_favorite = false,
+            my_rate = 0.0
         )
     }
 }

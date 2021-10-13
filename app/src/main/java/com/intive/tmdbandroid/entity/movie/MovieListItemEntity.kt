@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity.movie
+package com.intive.tmdbandroid.entity
 
 import com.intive.tmdbandroid.model.Screening
 
@@ -7,10 +7,14 @@ data class MovieListItemEntity(
     val release_date: String?,
     val id: Int,
     val title: String,
+    val original_title: String,
     val overview: String,
     val popularity: Double?,
     val poster_path: String?,
     val vote_average: Double,
+    val vote_count: Int,
+    val my_rate: Double,
+    val my_favorite: Boolean
 ) {
     fun toScreening(): Screening {
         return Screening(
@@ -24,13 +28,16 @@ data class MovieListItemEntity(
             poster_path,
             null,
             vote_average,
+            vote_count,
             popularity ?: 0.0,
             release_date,
             "movie",
             false,
             null,
             false,
-            emptyList()
+            emptyList(),
+            my_rate,
+            my_favorite
         )
     }
 }

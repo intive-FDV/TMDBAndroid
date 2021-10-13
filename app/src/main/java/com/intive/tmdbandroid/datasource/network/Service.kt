@@ -12,6 +12,13 @@ import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.TVShow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import com.intive.tmdbandroid.model.Session
+import kotlinx.coroutines.flow.collect
+
+import timber.log.Timber
 
 class Service {
     private val retrofit = RetrofitHelper.getRetrofit()
@@ -72,6 +79,56 @@ class Service {
                 else -> emit("")
             }
         }
+    }
+
+    suspend fun setMovieRating(movieID: Int, rating: Double,session:Session): Boolean {
+        var retorno:Boolean = true
+        if(rating < 0.5 || rating > 10){
+            retorno=false
+        }
+        else{
+            // Create JSON using JSONObject
+            val jsonObject = JSONObject()
+            jsonObject.put("value", rating)
+
+            // Convert JSONObject to String
+            val jsonObjectString = jsonObject.toString()
+
+            // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
+            retrofit.create(ApiClient::class.java).postMovieRanking(movieID,BuildConfig.API_KEY,session.guest_session_id,requestBody)
+        }
+
+        return  retorno
+    }
+
+    suspend fun setTVShowRating(tvShowID: Int, rating: Double,session:Session): Boolean {
+        var retorno:Boolean = true
+        if(rating < 0.5 || rating > 10){
+            retorno=false
+        }
+        else{
+            // Create JSON using JSONObject
+            val jsonObject = JSONObject()
+            jsonObject.put("value", rating)
+
+            // Convert JSONObject to String
+            val jsonObjectString = jsonObject.toString()
+
+            // Create RequestBody ( We're not using any converter, like GsonConverter, MoshiConverter e.t.c, that's why we use RequestBody )
+            val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
+
+            retrofit.create(ApiClient::class.java).postTVRanking(tvShowID,BuildConfig.API_KEY,session.guest_session_id,requestBody)
+        }
+
+        return  retorno
+    }
+
+    fun getGuestSession():Flow<Session>{
+        return   flow {
+                emit(retrofit.create(ApiClient::class.java).getNewGuestSession(BuildConfig.API_KEY))
+            }
     }
 
     fun getCombinedCredits(personID: Int): Flow<List<Screening>> {

@@ -36,11 +36,15 @@ class DetailTVShowUseCaseTest{
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
+        vote_count = 100,
+        created_by = emptyList(),
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,
         status = "Online",
-        networks = listOf(Network("/netflixlogo.jpg"))
+        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        my_rate = 3.5,
+        my_favorite = true
     )
 
     private lateinit var detailUseCase: DetailTVShowUseCase
