@@ -13,7 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="ProgressBarStyle">
-        <item name="colorAccent">#6200EE</item>
+    <style name="CardView">
+        <item name="cardBackgroundColor">@color/white</item>
     </style>
 </resources>
