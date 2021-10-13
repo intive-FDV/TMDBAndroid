@@ -113,10 +113,10 @@ class DetailFragment : Fragment() {
 
     private fun showDialogRate(idItem: Int) {
         val bindingDialog = RankDialogBinding.inflate(LayoutInflater.from(context))
-        val dialog = activity?.let { Dialog(it) }
-        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog?.setCancelable(false)
-        dialog?.setContentView(bindingDialog.root)
+        val dialog =  Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(bindingDialog.root)
         if (screening.my_rate == 0.0) {
             bindingDialog.rankDialogButtonRate.setOnClickListener {
 
@@ -126,16 +126,16 @@ class DetailFragment : Fragment() {
                 }
                 screening.my_rate = bindingDialog.dialogRatingbar.rating.toDouble()
                 viewModel.addToWatchlist(screening)
-                dialog?.dismiss()
+                dialog.dismiss()
             }
         } else {
             bindingDialog.rankDialogButtonRate.visibility = View.GONE
             bindingDialog.dialogRatingbar.rating = (screening.my_rate).toFloat()
         }
         bindingDialog.rankDialogButtonCancel.setOnClickListener {
-            dialog?.dismiss()
+            dialog.dismiss()
         }
-        dialog?.show()
+        dialog.show()
 
     }
 
