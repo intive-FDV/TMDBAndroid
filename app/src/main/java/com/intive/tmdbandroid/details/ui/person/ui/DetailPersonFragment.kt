@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -110,7 +109,7 @@ class DetailPersonFragment : Fragment() {
                     is State.Success -> {
                         binding.layoutLoadingDetail.root.isVisible = false
                         binding.coordinatorContainerDetail.isVisible = true
-                        setupUICombineCredits(binding, state.data)
+                        setupUICombineCredits(state.data)
                     }
                 }
             }
@@ -144,15 +143,8 @@ class DetailPersonFragment : Fragment() {
         }
     }
 
-    private fun setupUICombineCredits(
-        binding: FragmentDetailPersonBinding,
-        screenings: List<Screening>
-    ) {
-        if (screenings.isNotEmpty())
-            combinedCreditsAdapter.submitList(screenings)
-        else {
-            binding.layoutErrorDetail.root.isVisible = true
-        }
+    private fun setupUICombineCredits(screenings: List<Screening>) {
+        combinedCreditsAdapter.submitList(screenings)
     }
 
     private fun setupUIDetailPerson(
@@ -160,7 +152,6 @@ class DetailPersonFragment : Fragment() {
         resultPerson: ResultPerson
     ) {
         setImage(resultPerson.profile_path, binding)
-        setPopularity(resultPerson.popularity, binding)
         setToolbar(resultPerson.name, binding)
         setBiography(resultPerson.biography, binding)
     }
@@ -179,29 +170,6 @@ class DetailPersonFragment : Fragment() {
             .load(posterURL)
             .apply(options)
             .into(binding.imageDetailImageView)
-    }
-
-    private fun setPopularity(
-        popularity: Double,
-        binding: FragmentDetailPersonBinding
-    ) {
-        val percentage = (popularity * 10).toInt()
-
-        binding.popularityRatingNumber.text =
-            requireContext().resources.getString(R.string.popularity, percentage)
-
-        val context = binding.root.context
-
-        when {
-            percentage < 25 -> binding.popularityThumbIcon.imageTintList =
-                ContextCompat.getColorStateList(context, R.color.red)
-            percentage < 45 -> binding.popularityThumbIcon.imageTintList =
-                ContextCompat.getColorStateList(context, R.color.orange)
-            percentage < 75 -> binding.popularityThumbIcon.imageTintList =
-                ContextCompat.getColorStateList(context, R.color.yellow)
-            else -> binding.popularityThumbIcon.imageTintList =
-                ContextCompat.getColorStateList(context, R.color.green)
-        }
     }
 
     private fun setToolbar(name: String, binding: FragmentDetailPersonBinding) {

@@ -6,4 +6,8 @@
         android:title="@string/search_text"
         android:icon="@drawable/ic_search"
         app:showAsAction="collapseActionView|ifRoom"/>
+    <item android:id="@+id/switch_theme"
+        android:title="@string/search_text"
+        android:icon="@drawable/ic_sunny"
+        app:showAsAction="collapseActionView|ifRoom"/>
 </menu>
