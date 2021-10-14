@@ -55,7 +55,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttons"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/margin_medium"
         app:layout_constraintEnd_toEndOf="parent"
