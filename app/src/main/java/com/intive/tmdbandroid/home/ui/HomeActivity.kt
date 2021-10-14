@@ -98,7 +98,6 @@ class HomeActivity : AppCompatActivity() {
             }
             R.id.switch_theme  -> {
                 val themePreference = getPreferences(MODE_PRIVATE)
-                println("shared preference: ${themePreference.getInt(baseContext.getString(R.string.theme_shared_pref), THEME_DEFAULT)}")
                 when (baseContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                     Configuration.UI_MODE_NIGHT_NO -> {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
