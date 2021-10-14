@@ -69,12 +69,10 @@ class DetailFragment : Fragment() {
     ): View {
         val binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        if(savedInstanceState == null){
-            collectScreeningDetailFromViewModel(binding)
-            collectWatchlistDataFromViewModel(binding)
-            collectTrailer()
-            collectRecommendations(binding)
-        }
+        collectScreeningDetailFromViewModel(binding)
+        collectWatchlistDataFromViewModel(binding)
+        collectTrailer()
+        collectRecommendations(binding)
 
         initViews(binding)
 
