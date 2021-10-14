@@ -216,12 +216,10 @@ class DetailFragment : Fragment() {
                             showDialog(it.data)
                         }
                     }
-                    is State.Loading -> {
-                        Toast.makeText(context, "Loading trailer...", Toast.LENGTH_LONG).show()
-                    }
-                    else -> {
+                    is State.Error -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
                     }
+                    else -> { }
                 }
             }
         }
