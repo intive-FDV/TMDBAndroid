@@ -254,6 +254,7 @@ class DetailsViewModelTest {
         detailViewModel.getTVShowTrailer(2)
 
         detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Loading)
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
         }
     }
@@ -272,6 +273,7 @@ class DetailsViewModelTest {
         detailViewModel.getMovieTrailer(2)
 
         detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Loading)
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
         }
     }

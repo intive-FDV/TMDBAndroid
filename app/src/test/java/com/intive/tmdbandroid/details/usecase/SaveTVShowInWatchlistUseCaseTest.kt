@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -66,15 +67,16 @@ class SaveTVShowInWatchlistUseCaseTest {
     @ExperimentalCoroutinesApi
     @ExperimentalTime
     fun invokeTest() = mainCoroutineRule.runBlockingTest {
-        BDDMockito.given(watchlistRepository.insert(screening)).willReturn(
-            flowOf(true)
+        BDDMockito.given(watchlistRepository.getScreeningById(anyInt())).willReturn(
+            flowOf(screening)
         )
 
         val expected = saveTVShowInWatchlistUseCase(screening)
 
         expected.test {
-            Assert.assertEquals(awaitItem(), flowOf(true))
+            Assert.assertEquals(awaitItem(), screening)
             awaitComplete()
         }
+
     }
 }

@@ -72,7 +72,7 @@ class GetIfExistsUseCaseTest {
         val expected = getIfExistsUseCase(2)
 
         expected.test {
-            Assert.assertEquals(awaitItem(), false)
+            Assert.assertEquals(awaitItem(), screening)
             awaitComplete()
         }
     }
@@ -86,7 +86,7 @@ class GetIfExistsUseCaseTest {
         val expected = getIfExistsUseCase(2)
 
         expected.test {
-            Assert.assertEquals(awaitItem(), true)
+            Assert.assertEquals(awaitItem(), screening)
             awaitComplete()
         }
     }
