@@ -42,12 +42,12 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val clickListener = { screening: Screening ->
-            val isMovie = screening.media_type == "movie"
-            val isPerson = screening.media_type == "person"
-            val action: NavDirections = if (isPerson) {
+            val action: NavDirections = if (screening.media_type == context?.getString(R.string.screening_person_type)) {
                 SearchFragmentDirections.actionSearchFragmentDestToDetailPersonFragment(screening.id)
             } else {
-                SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
+                SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                    screening.id,
+                    screening.media_type == context?.getString(R.string.screening_movie_type))
             }
             val currentDestination = findNavController().currentDestination?.id
             if (currentDestination == R.id.searchFragmentDest) {
