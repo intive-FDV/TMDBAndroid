@@ -35,7 +35,6 @@ class DetailTVShowUseCaseTest{
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
-        created_by = emptyList(),
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,

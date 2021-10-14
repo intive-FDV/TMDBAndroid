@@ -73,7 +73,7 @@ class SaveTVShowInWatchlistUseCaseTest {
         val expected = saveTVShowInWatchlistUseCase(screening)
 
         expected.test {
-            Assert.assertEquals(awaitItem(), true)
+            Assert.assertEquals(awaitItem(), flowOf(true))
             awaitComplete()
         }
     }
