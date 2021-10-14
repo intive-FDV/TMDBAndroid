@@ -69,10 +69,10 @@
             android:background="@android:color/transparent"
             android:focusable="false"
             android:text="@string/cancel_button_text"
-            android:textColor="#2196F3"
+            android:textColor="@color/red_cancel_dialog"
             android:textSize="@dimen/subtitle_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rank_dialog_button_rate" />
+            app:layout_constraintEnd_toStartOf="@+id/rank_dialog_button_rate"/>
 
         <Button
             android:id="@+id/rank_dialog_button_rate"
