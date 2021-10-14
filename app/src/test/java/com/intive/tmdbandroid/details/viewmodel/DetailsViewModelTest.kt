@@ -38,17 +38,14 @@ class DetailsViewModelTest {
         genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
         id = 1,
         name = "Simona la Cacarisa",
-        original_name = "El cochiloco",
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
-        vote_count = 100,
-        created_by = emptyList(),
         last_air_date = "1990-09-25",
         number_of_episodes = 5,
         number_of_seasons = 2,
         status = "Online",
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        networks = listOf(Network("/netflixlogo.jpg")),
         my_rate = 3.5,
         my_favorite = true
     )
@@ -59,11 +56,9 @@ class DetailsViewModelTest {
         genres = listOf(Genre(1, "genre1"), Genre(2, "genre2")),
         id = 1,
         title = "Simona la Cacarisa",
-        original_title = "El cochiloco",
         overview = "Simona la cacarisa, el cochiloco",
         poster_path = "POSTER_PATH",
         vote_average = 10.5,
-        vote_count = 100,
         status = "Online",
         popularity = 34.0,
         my_rate = 3.5,
@@ -82,13 +77,12 @@ class DetailsViewModelTest {
         poster_path = "POSTER_PATH",
         status = "Online",
         vote_average = 10.5,
-        vote_count = 100,
         popularity = 34.0,
         media_type = "tv",
         adult = false,
         genre_ids = null,
         video = false,
-        networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+        networks = listOf(Network("/netflixlogo.jpg")),
         my_rate = 3.5,
         my_favorite = true
     )
@@ -111,9 +105,9 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var guestSessionUseCase: GuestSessionUseCase
     @Mock
-    private lateinit var tvShowTrailerUseCase: GetTVShowTrailer
+    private lateinit var tvShowTrailerUseCase: GetTVShowTrailerUseCase
     @Mock
-    private lateinit var movieTrailerUseCase: GetMovieTrailer
+    private lateinit var movieTrailerUseCase: GetMovieTrailerUseCase
     @Mock
     private lateinit var getTVShowSimilarUseCase: GetTVShowSimilarUseCase
     @Mock
@@ -121,7 +115,7 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var sessionExistUseCase: SessionExistUseCase
     @Mock
-    private lateinit var insertInSessiontUseCase: InsertInSessiontUseCase
+    private lateinit var insertInSessionUseCase: InsertInSessionUseCase
     @Mock
     private lateinit var updateInWatchlistUseCase : UpdateFromWatchlistUseCase
 
@@ -142,7 +136,7 @@ class DetailsViewModelTest {
             ratingTVShowUseCase,
             guestSessionUseCase,
             sessionExistUseCase,
-            insertInSessiontUseCase,
+            insertInSessionUseCase,
             updateInWatchlistUseCase
         )
     }
@@ -260,6 +254,7 @@ class DetailsViewModelTest {
         detailViewModel.getTVShowTrailer(2)
 
         detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Loading)
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
         }
     }
@@ -278,6 +273,7 @@ class DetailsViewModelTest {
         detailViewModel.getMovieTrailer(2)
 
         detailViewModel.trailerState.consumeAsFlow().test {
+            Truth.assertThat(awaitItem()).isEqualTo(State.Loading)
             Truth.assertThat(awaitItem()).isEqualTo(State.Success(videoKey))
         }
     }

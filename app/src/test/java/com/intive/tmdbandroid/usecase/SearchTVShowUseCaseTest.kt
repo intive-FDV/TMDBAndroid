@@ -41,13 +41,12 @@ class SearchTVShowUseCaseTest {
                 poster_path = "POSTER_PATH",
                 status = "Online",
                 vote_average = 10.5,
-                vote_count = 100,
                 popularity = 34.0,
                 media_type = "tv",
                 adult = false,
                 genre_ids = null,
                 video = false,
-                networks = listOf(Network("/netflixlogo.jpg", "netflix", 123, "ARG")),
+                networks = listOf(Network("/netflixlogo.jpg")),
                 my_rate = 3.5,
                 my_favorite = true
             )
@@ -67,7 +66,7 @@ class SearchTVShowUseCaseTest {
     @ExperimentalTime
     fun invokeTest() {
         mainCoroutineRule.runBlockingTest {
-            `when`(catalogRepository.search(anyString(), eq("All")))
+            `when`(catalogRepository.searchByName(anyString(), eq("All")))
                 .thenReturn(
                     flow {
                         emit(
@@ -81,7 +80,7 @@ class SearchTVShowUseCaseTest {
                 Assert.assertEquals(awaitItem(), screening)
                 awaitComplete()
             }
-            verify(catalogRepository, only()).search("cristina kirchner", "All")
+            verify(catalogRepository, only()).searchByName("cristina kirchner", "All")
 
         }
     }

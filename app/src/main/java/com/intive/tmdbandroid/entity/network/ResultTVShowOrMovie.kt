@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.network
 
 import com.intive.tmdbandroid.model.Screening
 
@@ -20,11 +20,9 @@ data class ResultTVShowOrMovie(
     val title: String,
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int,
     val backdrop_path: String?,
     val first_air_date: String?,
     val name: String?,
-    val original_name: String?,
     val poster_path: String?,
     val my_rate: Double,
     val my_favorite: Boolean,
@@ -42,7 +40,6 @@ data class ResultTVShowOrMovie(
             poster_path ?: profile_path,
             null,
             vote_average,
-            vote_count,
             popularity,
             release_date = release_date ?: first_air_date,
             media_type,

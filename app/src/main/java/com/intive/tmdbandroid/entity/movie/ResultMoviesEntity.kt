@@ -1,12 +1,13 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.movie
 
 import com.google.gson.annotations.SerializedName
+import com.intive.tmdbandroid.entity.MovieListItemEntity
 import com.intive.tmdbandroid.model.Screening
 
-data class ResultTVShowsEntity(
+data class ResultMoviesEntity(
     val page: Int,
     @SerializedName("results")
-    val list: List<TVShowListItemEntity>,
+    val list: List<MovieListItemEntity>,
     val total_pages: Int,
     val total_results: Int
 ) {

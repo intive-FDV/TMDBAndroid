@@ -7,7 +7,5 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PaginatedPopularTVShowsUseCase @Inject constructor(private val catalogRepository: CatalogRepository) {
-
     operator fun invoke(): Flow<PagingData<Screening>> = catalogRepository.paginatedPopularTVShows()
-
 }

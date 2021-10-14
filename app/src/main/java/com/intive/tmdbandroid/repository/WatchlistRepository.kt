@@ -18,12 +18,14 @@ class WatchlistRepository @Inject constructor(
         )
     }
 
-    suspend fun insert(screening: Screening) {
+    suspend fun insert(screening: Screening) : Flow<Boolean> {
         dao.insertFavorite(screening.toScreeningORMEntity())
+        return flowOf(true)
     }
 
-    suspend fun delete(screening: Screening) {
+    suspend fun delete(screening: Screening) : Flow<Boolean> {
         dao.deleteFavorite(screening.toScreeningORMEntity())
+        return flowOf(false)
     }
 
     suspend fun updateFavorite(screening: Screening) {

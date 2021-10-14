@@ -9,11 +9,12 @@
 
     <ImageView
         android:id="@+id/ic_warning_empty_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/search_hint_icon_size"
+        android:layout_height="@dimen/search_hint_icon_size"
         android:layout_marginTop="-24dp"
         android:contentDescription="@string/hint_layout_description"
-        android:src="@drawable/ic_search_hint"
+        android:src="@drawable/ic_search"
+        app:tint="@color/lightgrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,13 +22,13 @@
 
     <TextView
         android:id="@+id/message_empty_textView"
-        android:layout_width="157dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_large"
         android:gravity="center"
         android:text="@string/search_hint"
         android:textColor="@color/grey"
-        android:textSize="16sp"
+        android:textSize="@dimen/subtitle_size"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

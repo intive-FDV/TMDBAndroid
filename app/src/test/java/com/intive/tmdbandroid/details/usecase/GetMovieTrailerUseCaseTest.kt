@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.repository.CatalogRepository
-import com.intive.tmdbandroid.usecase.GetMovieTrailer
+import com.intive.tmdbandroid.usecase.GetMovieTrailerUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -31,13 +31,13 @@ class GetMovieTrailerUseCaseTest {
 
     private val trailerKey = "This is a trailer key"
 
-    private lateinit var getMovieTrailerUseCase: GetMovieTrailer
+    private lateinit var getMovieTrailerUseCase: GetMovieTrailerUseCase
     @Mock
     private lateinit var catalogRepository: CatalogRepository
 
     @Before
     fun setup(){
-        getMovieTrailerUseCase = GetMovieTrailer(catalogRepository)
+        getMovieTrailerUseCase = GetMovieTrailerUseCase(catalogRepository)
     }
 
     @Test

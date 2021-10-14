@@ -1,37 +1,64 @@
 <resources>
+    <!-- Manifest -->
     <string name="app_name">To Watch</string>
+    <string name="linking_scheme">http</string>
+    <string name="linking_host">www.intive.towatch.com</string>
 
+    <!-- HomeActivity -->
+    <string name="popular_movies">Popular movies</string>
+    <string name="popular_tvShows">Popular TV shows</string>
     <string name="watchlist">Watchlist</string>
     <string name="movies">Movies</string>
     <string name="tvShows">TV shows</string>
-    <string name="popular_movies">Popular movies</string>
-    <string name="popular_tvShows">Popular TV shows</string>
-    <string name="base_imageURL">https://image.tmdb.org/t/p/w780</string>
-    <string name="base_youtubeURL">https://www.youtube.com/watch?v=%1$s</string>
-    <string name="popularity">"%1$d%%"</string>
-    <string name="error_message">Oops! Something went wrong.\nSorry about that :(</string>
-    <string name="empty_message">Nothing to see here</string>
-    <string name="warning">Warning</string>
-    <string name="overview">Overview</string>
-    <string name="add_to_watchlist">Add to Watchlist</string>
-    <string name="share_icon_title">Share</string>
-    <string name="search_text">Search a TV Show or Movie</string>
-    <string name="search_hint">Start typing to find awesome TV shows</string>
+    <string name="year">(%1$s)</string>
+
+    <!-- Watchlist Hint Layout -->
     <string name="watchlist_hint">Go look for something to watch</string>
-    <string name="hint_layout_description">Search Hint Icon</string>
+
+    <!-- Detail Fragment -->
+    <string name="overview">Overview</string>
     <string name="collapsing_toolbar_description">Backdrop Poster Header</string>
     <string name="details_poster_description">TV Show Poster</string>
-    <string name="search_result_header">Results for: %1$s</string>
-    <string name="year">(%1$s)</string>
     <string name="watch_trailer">Trailer</string>
     <string name="no_overview">No overview available</string>
     <string name="thumb_description">Rating Icon</string>
     <string name="rate_button_text">Rate it</string>
     <string name="networks_header_text">Available in:</string>
-    <string name="network_img_description">Network Logo</string>
     <string name="to_watch_url">http://www.intive.towatch.com</string>
-    <string name="linking_scheme">http</string>
-    <string name="linking_host">www.intive.towatch.com</string>
+
+    <!-- Detail Fragment Menu -->
+    <string name="add_to_watchlist">Add to Watchlist</string>
+    <string name="share_icon_title">Share</string>
+
+    <!-- Movies Fragment -->
+    <string name="state_error">Illegal state type</string>
+
+    <!-- Common -->
+    <string name="popularity">"%1$d%%"</string>
+    <string name="base_imageURL">https://image.tmdb.org/t/p/w780</string>
+    <string name="search_text">Search a TV Show or Movie</string>
+    <string name="intent_extra_key_screening_id">screeningID</string>
+    <string name="intent_extra_key_is_movie">isMovieBoolean</string>
+    <string name="intent_extra_key_action">action</string>
+    <string name="intent_extra_key_action_default">search</string>
+    <string name="intent_extra_key_action_detail">detail</string>
+
+    <!-- Empty Layout -->
+    <string name="empty_message">Nothing to see here</string>
+
+    <!-- Error Layout -->
+    <string name="error_message">Oops! Something went wrong.\nSorry about that :(</string>
+    <string name="warning">Warning</string>
+
+    <!-- Search Hint Layout -->
+    <string name="search_hint">Start typing to find awesome\nTV shows and Movies</string>
+    <string name="hint_layout_description">Search Hint Icon</string>
+
+    <!-- Search Fragment -->
+    <string name="search_result_header">Results for: %1$s</string>
+    <string name="screening_movie_type">movie</string>
+    <string name="screening_person_type">person</string>
+    <string name="saved_instance_state_is_load">isLoad</string>
     <string name="all_filter">All</string>
     <string name="tv_shows_filter">TV Shows</string>
     <string name="movies_filter">Movies</string>
@@ -40,6 +67,13 @@
     <string name="biography">Biography</string>
     <string name="theme_shared_pref">theme</string>
 
+    <!-- Rate Dialog -->
+    <string name="rate_title">Add Rating</string>
+    <string name="rate_subtitle">How would you rate this?</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="confirm_button_text">Rate</string>
+
+    <!-- Plurals -->
     <plurals name="numberOfSeasons">
         <item quantity="one">%d Season</item>
         <item quantity="other">%d Seasons</item>

@@ -10,7 +10,7 @@ class ScreeningPagingSource(private val service: Service, private val type: Int)
     companion object {
         const val DEFAULT_PAGE_INDEX = 1
 
-        const val TYPE_TVSHOW = 1
+        const val TYPE_TV_SHOW = 1
         const val TYPE_MOVIE = 2
     }
 
@@ -21,13 +21,13 @@ class ScreeningPagingSource(private val service: Service, private val type: Int)
             lateinit var screenings: List<Screening>
 
             when (type) {
-                TYPE_TVSHOW -> {
+                TYPE_TV_SHOW -> {
                     service.getPaginatedPopularTVShows(pageNumber).collect { screenings = it.toScreeningList() }
                 }
                 TYPE_MOVIE ->  {
                     service.getPaginatedPopularMovies(pageNumber).collect { screenings = it.toScreeningList() }
                 }
-                else -> throw RuntimeException("Ilegal type parameter")
+                else -> throw RuntimeException("Illegal type parameter")
             }
 
 

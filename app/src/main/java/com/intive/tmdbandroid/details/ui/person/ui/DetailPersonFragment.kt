@@ -21,7 +21,7 @@ import com.intive.tmdbandroid.common.State
 import com.intive.tmdbandroid.databinding.FragmentDetailPersonBinding
 import com.intive.tmdbandroid.details.ui.person.adapter.CombinedCreditsAdapter
 import com.intive.tmdbandroid.details.ui.person.viewmodel.DetailPersonViewModel
-import com.intive.tmdbandroid.entity.ResultPerson
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.model.Screening
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

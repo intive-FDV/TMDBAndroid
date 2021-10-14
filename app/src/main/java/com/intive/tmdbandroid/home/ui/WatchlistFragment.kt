@@ -34,12 +34,11 @@ class WatchlistFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val clickListener = { screening: Screening ->
             val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
-            val isMovie = screening.media_type == "movie"
             intent.putExtras(
                 bundleOf(
-                    "action" to "detail",
-                    "screeningID" to screening.id,
-                    "isMovieBoolean" to isMovie
+                    (context?.getString(R.string.intent_extra_key_action) ?: "") to (context?.getString(R.string.intent_extra_key_action_detail) ?: ""),
+                    (context?.getString(R.string.intent_extra_key_screening_id) ?: "") to screening.id,
+                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to (screening.media_type == context?.getString(R.string.screening_movie_type))
                 )
             )
             requireActivity().startActivity(intent)
@@ -72,7 +71,7 @@ class WatchlistFragment : Fragment() {
             viewModel.uiState.collectLatest {
                 when(it) {
                     is State.Success<List<Screening>> -> {
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutProgressbar.root.visibility = View.GONE
 
                         binding.layoutNodata.root.isVisible = it.data.isEmpty()
@@ -81,11 +80,11 @@ class WatchlistFragment : Fragment() {
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.root.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutError.root.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    else -> {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                     }
                 }
             }

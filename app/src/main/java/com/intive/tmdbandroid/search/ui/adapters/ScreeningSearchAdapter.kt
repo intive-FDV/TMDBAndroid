@@ -2,11 +2,9 @@ package com.intive.tmdbandroid.search.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.AsyncPagingDataDiffer
-import androidx.paging.PagingData
-import androidx.recyclerview.widget.AdapterListUpdateCallback
+import androidx.core.content.ContextCompat
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListUpdateCallback
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -20,41 +18,15 @@ import java.util.*
 
 class ScreeningSearchAdapter(
     private val clickListener: ((Screening) -> Unit)
-) : RecyclerView.Adapter<ScreeningSearchAdapter.SearchResultHolder>() {
-
-    val adapterCallback = AdapterListUpdateCallback(this)
-
-    val differ = AsyncPagingDataDiffer(
-        ScreeningAsyncPagingDataDiffCallback(),
-        object : ListUpdateCallback {
-            override fun onInserted(position: Int, count: Int) {
-                adapterCallback.onInserted(position, count)
-            }
-
-            override fun onRemoved(position: Int, count: Int) {
-                adapterCallback.onRemoved(position, count)
-            }
-
-            override fun onMoved(fromPosition: Int, toPosition: Int) {
-                adapterCallback.onMoved(fromPosition, toPosition)
-            }
-
-            override fun onChanged(position: Int, count: Int, payload: Any?) {
-                adapterCallback.onChanged(position, count, payload)
-            }
-
+) : PagingDataAdapter<Screening, ScreeningSearchAdapter.SearchResultHolder>(COMPARATOR) {
+    companion object {
+        private val COMPARATOR = object : DiffUtil.ItemCallback<Screening>() {
+            override fun areItemsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
+            override fun areContentsTheSame(oldItem: Screening, newItem: Screening): Boolean = (oldItem == newItem)
         }
-    )
-
-    suspend fun submitData(screening: PagingData<Screening>) {
-        differ.submitData(screening)
     }
 
-    override fun getItemCount(): Int {
-        return differ.itemCount
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreeningSearchAdapter.SearchResultHolder {
         return SearchResultHolder(
             ItemFoundSearchBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -65,7 +37,7 @@ class ScreeningSearchAdapter(
     }
 
     override fun onBindViewHolder(holder: SearchResultHolder, position: Int) {
-        differ.getItem(position)?.let { holder.bind(it) }
+        getItem(position)?.let { holder.bind(it) }
     }
 
     inner class SearchResultHolder(
@@ -109,6 +81,7 @@ class ScreeningSearchAdapter(
             val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
                 strokeWidth = 5f
                 centerRadius = 25f
+                setColorSchemeColors(ContextCompat.getColor(binding.root.context, R.color.material_on_background_emphasis_high_type))
             }
             circularProgressDrawable.start()
 
@@ -124,25 +97,6 @@ class ScreeningSearchAdapter(
                 .load(posterURL)
                 .apply(options)
                 .into(binding.itemPosterSearch)
-
-
         }
     }
-
-    private class ScreeningAsyncPagingDataDiffCallback : DiffUtil.ItemCallback<Screening>() {
-        override fun areItemsTheSame(
-            oldItem: Screening,
-            newItem: Screening
-        ): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(
-            oldItem: Screening,
-            newItem: Screening
-        ): Boolean {
-            return oldItem == newItem
-        }
-    }
-
 }

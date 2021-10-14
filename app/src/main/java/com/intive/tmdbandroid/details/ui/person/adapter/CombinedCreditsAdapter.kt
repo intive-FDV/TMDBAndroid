@@ -2,6 +2,7 @@ package com.intive.tmdbandroid.details.ui.person.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +47,7 @@ class CombinedCreditsAdapter(
             val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
                 strokeWidth = 5f
                 centerRadius = 25f
+                setColorSchemeColors(ContextCompat.getColor(context, R.color.material_on_background_emphasis_high_type))
             }
             circularProgressDrawable.start()
 

@@ -1,79 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="2dip">
+    android:paddingStart="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_large"
+    android:paddingBottom="@dimen/margin_medium">
 
     <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/rank_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Add Rating"
-        android:textSize="24dp" />
+        android:text="@string/rate_title"
+        android:textSize="@dimen/title_size" />
 
     <TextView
+        app:layout_constraintTop_toBottomOf="@+id/rank_dialog_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/rank_dialog_sub_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="How would you rate this?"
-        android:textSize="20dp" />
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/rate_subtitle"
+        android:textSize="@dimen/subtitle_size" />
 
     <RatingBar
+        app:layout_constraintTop_toBottomOf="@+id/rank_dialog_sub_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/dialog_ratingbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_short"
         android:clickable="true"
+        android:focusable="true"
         android:isIndicator="false"
         android:numStars="5"
-        android:rating="2.5"
+        tools:rating="2.5"
         android:stepSize="0.5"
-        android:theme="@style/RatingBar"/>
+        android:theme="@style/RatingBar"
+        style="?attr/ratingBarStyleIndicator"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttons"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_ratingbar">
 
         <Button
             android:id="@+id/rank_dialog_button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
-            android:layout_marginRight="3dp"
-            android:focusable="false"
-            android:text="CANCEL"
-            android:textColor="#2196F3"
-            android:textSize="20dip"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:background="@android:color/transparent"
+            android:focusable="false"
+            android:text="@string/cancel_button_text"
+            android:textColor="@color/red_cancel_dialog"
+            android:textSize="@dimen/subtitle_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rank_dialog_button_rate"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/rank_dialog_button_rate"/>
 
         <Button
             android:id="@+id/rank_dialog_button_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:focusable="false"
-            android:text="RATE"
-            android:textColor="#000000"
-            android:textSize="20dip"
             android:background="@android:color/transparent"
+            android:focusable="false"
+            android:text="@string/confirm_button_text"
+            android:textColor="@color/material_on_background_emphasis_high_type"
+            android:textSize="@dimen/subtitle_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rank_dialog_button_cancel" />
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

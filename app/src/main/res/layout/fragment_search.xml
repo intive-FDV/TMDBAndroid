@@ -25,9 +25,7 @@
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
             android:queryHint="@string/search_text"
-            android:searchIcon="@null"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="4dp" />
+            android:searchIcon="@null" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -35,10 +33,10 @@
         android:id="@+id/all_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_status"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="2dp"
+        android:layout_marginTop="@dimen/margin_short"
+        android:background="@drawable/chip_background"
+        android:backgroundTint="@color/secondaryLightColor"
+        android:paddingHorizontal="@dimen/margin_medium"
         android:text="@string/all_filter"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/tv_shows_filter"
@@ -50,10 +48,10 @@
         android:id="@+id/tv_shows_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_status"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="2dp"
+        android:layout_marginTop="@dimen/margin_short"
+        android:background="@drawable/chip_background"
+        android:backgroundTint="@color/secondaryLightColor"
+        android:paddingHorizontal="@dimen/margin_medium"
         android:text="@string/tv_shows_filter"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/movies_filter"
@@ -64,10 +62,10 @@
         android:id="@+id/movies_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_status"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="2dp"
+        android:layout_marginTop="@dimen/margin_short"
+        android:background="@drawable/chip_background"
+        android:backgroundTint="@color/secondaryLightColor"
+        android:paddingHorizontal="@dimen/margin_medium"
         android:text="@string/movies_filter"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/people_filter"
@@ -78,10 +76,10 @@
         android:id="@+id/people_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_status"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="2dp"
+        android:layout_marginTop="@dimen/margin_short"
+        android:background="@drawable/chip_background"
+        android:backgroundTint="@color/secondaryLightColor"
+        android:paddingHorizontal="@dimen/margin_medium"
         android:text="@string/people_filter"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,9 +90,8 @@
         android:id="@+id/result_search_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:paddingHorizontal="16dp"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:paddingHorizontal="@dimen/margin_medium"
         app:layout_constraintBottom_toTopOf="@id/search_results"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +102,6 @@
         android:id="@+id/search_results"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,18 +109,22 @@
         app:layout_constraintTop_toBottomOf="@id/result_search_header"
         tools:listitem="@layout/item_found_search" />
 
-
     <include
         android:id="@+id/layout_error"
         layout="@layout/layout_error"
-        android:padding="5dp" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/result_search_header" />
 
     <include
         android:id="@+id/layout_empty"
         layout="@layout/layout_empty"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="5dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -134,17 +134,24 @@
     <include
         android:id="@+id/layout_progressbar"
         layout="@layout/layout_progressbar"
-        tools:visibility="gone" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/result_search_header" />
 
     <include
         android:id="@+id/layout_search_hint"
         layout="@layout/layout_search_hint"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_short"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/all_filter"
         tools:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

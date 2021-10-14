@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/biography"
-                    android:textColor="@color/black"
+                    android:textColor="@color/material_on_background_emphasis_high_type"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
                     android:layout_marginVertical="20dp"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/material_on_background_emphasis_high_type"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/biography_textView"
@@ -104,20 +104,22 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-
     <include
         android:id="@+id/layout_error_detail"
         layout="@layout/layout_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_anchor="@+id/coordinatorContainer_detail"
+        app:layout_anchorGravity="center" />
 
     <include
         android:id="@+id/layout_loading_detail"
         layout="@layout/layout_progressbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_anchor="@+id/coordinatorContainer_detail"
         app:layout_anchorGravity="center" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

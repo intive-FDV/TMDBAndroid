@@ -18,15 +18,15 @@ class DetailsViewModel @Inject internal constructor(
     private val movieUseCase: DetailMovieUseCase,
     private val insertInWatchlistUseCase: InsertInWatchlistUseCase,
     private val existUseCase: ExistUseCase,
-    private val tvShowTrailerUseCase: GetTVShowTrailer,
+    private val tvShowTrailerUseCase: GetTVShowTrailerUseCase,
     private val getTVShowSimilarUseCase: GetTVShowSimilarUseCase,
     private val getMovieSimilarUseCase: GetMovieSimilarUseCase,
-    private val movieTrailerUseCase: GetMovieTrailer,
+    private val movieTrailerUseCase: GetMovieTrailerUseCase,
     private val ratingMovieUseCase: RatingMovieUseCase,
     private val ratingTVShowUseCase: RatingTVShowUseCase,
     private val guestSessionUseCase: GuestSessionUseCase,
     private val sessionExistUseCase: SessionExistUseCase,
-    private val insertInSessiontUseCase: InsertInSessiontUseCase,
+    private val insertInSessionUseCase: InsertInSessionUseCase,
     private val updateInWatchlistUseCase : UpdateFromWatchlistUseCase
 ) : ViewModel() {
 
@@ -59,6 +59,9 @@ class DetailsViewModel @Inject internal constructor(
     fun getTVShowTrailer(id: Int) {
         viewModelScope.launch {
             tvShowTrailerUseCase(id)
+                .onStart {
+                    _trailerState.send(State.Loading)
+                }
                 .catch {
                     _trailerState.send(State.Error)
                 }
@@ -83,6 +86,9 @@ class DetailsViewModel @Inject internal constructor(
     fun getMovieTrailer(id: Int) {
         viewModelScope.launch {
             movieTrailerUseCase(id)
+                .onStart {
+                    _trailerState.send(State.Loading)
+                }
                 .catch {
                     _trailerState.send(State.Error)
                 }
@@ -95,6 +101,9 @@ class DetailsViewModel @Inject internal constructor(
     fun addToWatchlist(screening: Screening) {
         viewModelScope.launch {
             insertInWatchlistUseCase(screening)
+                .onStart {
+                    _watchlistState.value = State.Loading
+                }
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -107,6 +116,9 @@ class DetailsViewModel @Inject internal constructor(
     fun updateToWatchlist(screening: Screening) {
         viewModelScope.launch {
             updateInWatchlistUseCase(screening)
+                .onStart {
+                    _watchlistState.value = State.Loading
+                }
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -119,6 +131,9 @@ class DetailsViewModel @Inject internal constructor(
     fun existAsFavorite(id: Int) {
         viewModelScope.launch {
             existUseCase(id)
+                .onStart {
+                    _watchlistState.value = State.Loading
+                }
                 .catch {
                     _watchlistState.value = State.Error
                 }
@@ -149,10 +164,10 @@ class DetailsViewModel @Inject internal constructor(
     private suspend fun getSession() {
         session = sessionExistUseCase()
         if(session.id==0){
-            var sessionFlow = guestSessionUseCase()
+            val sessionFlow = guestSessionUseCase()
             session = sessionFlow.single()
             session.status_message="empty"
-            insertInSessiontUseCase(session)
+            insertInSessionUseCase(session)
         }
 
 
