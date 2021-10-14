@@ -115,7 +115,7 @@ class DetailsViewModelTest {
     @Mock
     private lateinit var sessionExistUseCase: SessionExistUseCase
     @Mock
-    private lateinit var insertInSessiontUseCase: InsertInSessiontUseCase
+    private lateinit var insertInSessionUseCase: InsertInSessionUseCase
     @Mock
     private lateinit var updateInWatchlistUseCase : UpdateFromWatchlistUseCase
 
@@ -136,7 +136,7 @@ class DetailsViewModelTest {
             ratingTVShowUseCase,
             guestSessionUseCase,
             sessionExistUseCase,
-            insertInSessiontUseCase,
+            insertInSessionUseCase,
             updateInWatchlistUseCase
         )
     }

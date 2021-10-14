@@ -26,7 +26,7 @@ class DetailsViewModel @Inject internal constructor(
     private val ratingTVShowUseCase: RatingTVShowUseCase,
     private val guestSessionUseCase: GuestSessionUseCase,
     private val sessionExistUseCase: SessionExistUseCase,
-    private val insertInSessiontUseCase: InsertInSessiontUseCase,
+    private val insertInSessionUseCase: InsertInSessionUseCase,
     private val updateInWatchlistUseCase : UpdateFromWatchlistUseCase
 ) : ViewModel() {
 
@@ -164,10 +164,10 @@ class DetailsViewModel @Inject internal constructor(
     private suspend fun getSession() {
         session = sessionExistUseCase()
         if(session.id==0){
-            var sessionFlow = guestSessionUseCase()
+            val sessionFlow = guestSessionUseCase()
             session = sessionFlow.single()
             session.status_message="empty"
-            insertInSessiontUseCase(session)
+            insertInSessionUseCase(session)
         }
 
 

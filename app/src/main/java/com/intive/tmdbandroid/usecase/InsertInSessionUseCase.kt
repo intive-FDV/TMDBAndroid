@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-class InsertInSessiontUseCase @Inject constructor(private val sessionRepository: SessionRepository) {
+class InsertInSessionUseCase @Inject constructor(private val sessionRepository: SessionRepository) {
 
     suspend operator fun invoke(session: Session): Flow<Boolean> {
         sessionRepository.insert(session)

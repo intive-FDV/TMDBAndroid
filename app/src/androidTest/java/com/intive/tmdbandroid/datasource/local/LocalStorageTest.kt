@@ -109,7 +109,7 @@ class LocalStorageTest : TestCase() {
         dao.insertFavorite(screening)
         val exists = dao.existAsFavorite(screening.id)
 
-        assertThat("Expecting result to be true", exists)
+        assertThat("Expecting result to be true", exists == screening)
 
         dao.updateFavorite(screeningUpdate)
         val tvShowsDeleted = dao.allFavorites()
@@ -124,6 +124,6 @@ class LocalStorageTest : TestCase() {
     fun writeAndReadOneFailureTest() = runBlocking {
         val exists = dao.existAsFavorite(screening.id)
 
-        assertThat("Expecting result to be true", !exists)
+        assertThat("Expecting result to be true", exists != screening)
     }
 }
