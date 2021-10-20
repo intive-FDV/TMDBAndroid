@@ -2,7 +2,7 @@ package com.intive.tmdbandroid.datasource.local
 
 import androidx.room.*
 import androidx.room.Dao
-import com.intive.tmdbandroid.entity.ScreeningORMEntity
+import com.intive.tmdbandroid.entity.room.ScreeningORMEntity
 import com.intive.tmdbandroid.entity.SessionORMEntity
 
 @Dao

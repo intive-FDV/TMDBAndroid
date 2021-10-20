@@ -42,12 +42,12 @@ class SearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val clickListener = { screening: Screening ->
-            val isMovie = screening.media_type == "movie"
-            val isPerson = screening.media_type == "person"
-            val action: NavDirections = if (isPerson) {
+            val action: NavDirections = if (screening.media_type == context?.getString(R.string.screening_person_type)) {
                 SearchFragmentDirections.actionSearchFragmentDestToDetailPersonFragment(screening.id)
             } else {
-                SearchFragmentDirections.actionSearchFragmentToDetailFragment(screening.id, isMovie)
+                SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                    screening.id,
+                    screening.media_type == context?.getString(R.string.screening_movie_type))
             }
             val currentDestination = findNavController().currentDestination?.id
             if (currentDestination == R.id.searchFragmentDest) {
@@ -63,7 +63,9 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         if (savedInstanceState != null) {
-            isLoad = savedInstanceState.getBoolean("isLoad", false)
+            isLoad = savedInstanceState.getBoolean(
+                context?.getString(R.string.saved_instance_state_is_load),
+                false)
         }
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
         setupToolbar(binding)
@@ -123,8 +125,8 @@ class SearchFragment : Fragment() {
             viewModel.uiState.collectLatest { screening ->
                 when (screening) {
                     is State.Success<PagingData<Screening>> -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
                         binding.resultSearchHeader.text =
@@ -135,20 +137,20 @@ class SearchFragment : Fragment() {
                         searchAdapter.submitData(screening.data)
                     }
                     is State.Error -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutError.root.visibility = View.VISIBLE
                     }
                     is State.Loading -> {
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.GONE
-                        binding.layoutProgressbar.progressBar.visibility = View.VISIBLE
+                        binding.layoutProgressbar.root.visibility = View.VISIBLE
                     }
                     is State.Waiting -> {
-                        binding.layoutProgressbar.progressBar.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutProgressbar.root.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                         binding.layoutEmpty.root.visibility = View.GONE
                         binding.layoutSearchHint.hintContainer.visibility = View.VISIBLE
                     }
@@ -165,7 +167,7 @@ class SearchFragment : Fragment() {
             adapter = searchAdapter
         }
         lifecycleScope.launchWhenStarted {
-            searchAdapter.differ.loadStateFlow.collectLatest { loadState ->
+            searchAdapter.loadStateFlow.collectLatest { loadState ->
                 if (loadState.refresh is LoadState.NotLoading &&
                     loadState.append is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached
@@ -203,7 +205,7 @@ class SearchFragment : Fragment() {
         setFilterSelectedColor(binding, textView)
         if (viewModel.searchQuery.value.isNotEmpty()) {
             lifecycleScope.launch {
-                searchAdapter.differ.submitData(PagingData.empty())
+                searchAdapter.submitData(PagingData.empty())
             }
             viewModel.search(viewModel.searchQuery.value)
             isLoad = true

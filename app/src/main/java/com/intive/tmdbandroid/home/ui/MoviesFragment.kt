@@ -41,9 +41,9 @@ class MoviesFragment : Fragment() {
             val intent = Intent(requireActivity(), DetailAndSearchActivity::class.java)
             intent.putExtras(
                 bundleOf(
-                    "action" to "detail",
-                    "screeningID" to screening.id,
-                    "isMovieBoolean" to true
+                    (context?.getString(R.string.intent_extra_key_action) ?: "") to (context?.getString(R.string.intent_extra_key_action_detail) ?: ""),
+                    (context?.getString(R.string.intent_extra_key_screening_id) ?: "") to screening.id,
+                    (context?.getString(R.string.intent_extra_key_is_movie) ?: "") to true
                 )
             )
             requireActivity().startActivity(intent)
@@ -78,17 +78,17 @@ class MoviesFragment : Fragment() {
 
                 when (resultMovies) {
                     is State.Success<PagingData<Screening>> -> {
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
 
                         moviePageAdapter.submitData(resultMovies.data)
                     }
                     is State.Error -> {
                         binding.layoutProgressbar.root.visibility = View.GONE
-                        binding.layoutError.errorContainer.visibility = View.VISIBLE
+                        binding.layoutError.root.visibility = View.VISIBLE
                     }
-                    is State.Loading -> {
+                    else -> {
                         binding.layoutProgressbar.root.visibility = View.VISIBLE
-                        binding.layoutError.errorContainer.visibility = View.GONE
+                        binding.layoutError.root.visibility = View.GONE
                     }
                 }
             }

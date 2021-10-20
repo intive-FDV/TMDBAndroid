@@ -7,7 +7,5 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchUseCase @Inject constructor(private val catalogRepository: CatalogRepository) {
-
-    operator fun invoke(name: String, filterSelected: String?): Flow<PagingData<Screening>> =
-        catalogRepository.search(name, filterSelected)
+    operator fun invoke(name:String, filterSelected: String?): Flow<PagingData<Screening>> = catalogRepository.searchByName(name, filterSelected)
 }

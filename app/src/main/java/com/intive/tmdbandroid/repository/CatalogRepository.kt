@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import com.intive.tmdbandroid.datasource.ScreeningPagingSource
 import com.intive.tmdbandroid.datasource.ScreeningSearchSource
 import com.intive.tmdbandroid.datasource.network.Service
-import com.intive.tmdbandroid.entity.ResultPerson
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.model.Movie
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.model.Session
@@ -63,7 +63,7 @@ class CatalogRepository @Inject constructor(
         return service.getDetailPerson(personID)
     }
 
-    fun search(query: String, filterSelected: String?): Flow<PagingData<Screening>> {
+    fun searchByName(query: String, filterSelected: String?): Flow<PagingData<Screening>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,

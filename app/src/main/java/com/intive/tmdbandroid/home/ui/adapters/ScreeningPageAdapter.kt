@@ -10,9 +10,8 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.intive.tmdbandroid.R
-import com.intive.tmdbandroid.databinding.ItemScreenengSmallBinding
+import com.intive.tmdbandroid.databinding.ItemScreeningSmallBinding
 import com.intive.tmdbandroid.model.Screening
-import com.intive.tmdbandroid.model.TVShow
 
 class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : PagingDataAdapter<Screening, ScreeningPageAdapter.ScreeningHolder>(COMPARATOR) {
     companion object {
@@ -27,11 +26,11 @@ class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : Pag
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreeningHolder = ScreeningHolder(
-        ItemScreenengSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        ItemScreeningSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         clickListener
     )
 
-    class ScreeningHolder(binding: ItemScreenengSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
+    class ScreeningHolder(binding: ItemScreeningSmallBinding, private val clickListener: (Screening) -> Unit) : RecyclerView.ViewHolder(binding.root)  {
         private val title = binding.itemTitle
         private val backdrop = binding.itemBackdrop
         private val date = binding.itemDate
@@ -49,6 +48,7 @@ class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : Pag
             val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
                 strokeWidth = 5f
                 centerRadius = 25f
+                setColorSchemeColors(ContextCompat.getColor(context, R.color.material_on_background_emphasis_high_type))
             }
             circularProgressDrawable.start()
 
@@ -67,7 +67,6 @@ class ScreeningPageAdapter(private val clickListener: (Screening) -> Unit) : Pag
             title.text = item.name
 
             try {
-                //val dateFormat = item.first_air_date?.let { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it) }
                 date.text = item.release_date?.let { context.resources.getString(R.string.year, it.substring(0..3)) }
             } catch (e: Exception) {
                 date.text = ""

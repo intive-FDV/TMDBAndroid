@@ -6,7 +6,7 @@
     "entities": [
       {
         "tableName": "ScreeningORMEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `backdrop_path` TEXT, `genres` TEXT, `name` TEXT NOT NULL, `number_of_episodes` INTEGER, `number_of_seasons` INTEGER, `overview` TEXT NOT NULL, `poster_path` TEXT, `status` TEXT, `vote_average` REAL NOT NULL, `vote_count` INTEGER NOT NULL, `popularity` REAL NOT NULL, `release_date` TEXT, `media_type` TEXT NOT NULL, `adult` INTEGER NOT NULL, `genre_ids` TEXT, `video` INTEGER NOT NULL, `networks` TEXT NOT NULL, `my_rate` REAL NOT NULL, `my_favorite` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `backdrop_path` TEXT, `genres` TEXT, `name` TEXT NOT NULL, `number_of_episodes` INTEGER, `number_of_seasons` INTEGER, `overview` TEXT NOT NULL, `poster_path` TEXT, `status` TEXT, `vote_average` REAL NOT NULL, `popularity` REAL NOT NULL, `release_date` TEXT, `media_type` TEXT NOT NULL, `adult` INTEGER NOT NULL, `genre_ids` TEXT, `video` INTEGER NOT NULL, `networks` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -66,12 +66,6 @@
             "fieldPath": "vote_average",
             "columnName": "vote_average",
             "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "vote_count",
-            "columnName": "vote_count",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {

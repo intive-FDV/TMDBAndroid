@@ -1,34 +1,35 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.person
 
 import com.intive.tmdbandroid.model.Screening
 
-data class ResultCombinedCredits(
-    val cast: List<CastItem>
+data class ResultPeopleEntity(
+    val page: Int,
+    val results: List<PersonItemEntity>,
+    val total_pages: Int,
+    val total_results: Int
 )
 
-data class CastItem(
-    val name: String,
-    val title: String?,
-    val backdrop_path: String?,
-    val media_type: String,
+data class PersonItemEntity(
+    val profile_path: String?,
     val id: Int,
+    val name: String,
+    val popularity: Double
 ) {
     fun toScreening(): Screening {
         return Screening(
-            backdrop_path,
+            backdrop_path = null,
             genres = null,
             id,
-            name = title ?: name,
+            name,
             number_of_episodes = null,
             number_of_seasons = null,
             overview = "",
-            poster_path = null,
+            poster_path = profile_path,
             status = null,
             vote_average = 0.0,
-            vote_count = 0,
-            popularity = 0.0,
+            popularity,
             release_date = null,
-            media_type,
+            media_type = "person",
             adult = false,
             genre_ids = null,
             video = false,

@@ -1,6 +1,6 @@
 package com.intive.tmdbandroid.model
 
-import com.intive.tmdbandroid.entity.ScreeningORMEntity
+import com.intive.tmdbandroid.entity.room.ScreeningORMEntity
 
 data class Screening(
     val backdrop_path: String?,
@@ -13,7 +13,6 @@ data class Screening(
     val poster_path: String?,
     val status: String?,
     val vote_average: Double,
-    val vote_count: Int,
     val popularity: Double,
     val release_date: String?,
     val media_type: String,
@@ -36,7 +35,6 @@ data class Screening(
             poster_path,
             status,
             vote_average,
-            vote_count,
             popularity,
             release_date,
             media_type,

@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.intive.tmdbandroid.common.MainCoroutineRule
 import com.intive.tmdbandroid.repository.CatalogRepository
-import com.intive.tmdbandroid.usecase.GetTVShowTrailer
+import com.intive.tmdbandroid.usecase.GetTVShowTrailerUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -31,13 +31,13 @@ class GetTVShowTrailerUseCaseTest {
 
     private val trailerKey = "This is a trailer key"
 
-    private lateinit var getTVShowTrailer: GetTVShowTrailer
+    private lateinit var getTVShowTrailerUseCase: GetTVShowTrailerUseCase
     @Mock
     private lateinit var catalogRepository: CatalogRepository
 
     @Before
     fun setup(){
-        getTVShowTrailer = GetTVShowTrailer(catalogRepository)
+        getTVShowTrailerUseCase = GetTVShowTrailerUseCase(catalogRepository)
     }
 
     @Test
@@ -46,7 +46,7 @@ class GetTVShowTrailerUseCaseTest {
         mainCoroutineRule.runBlockingTest {
             BDDMockito.given(catalogRepository.getTVShowTrailer(anyInt())).willReturn(flowOf(trailerKey))
 
-            val expected = getTVShowTrailer(2)
+            val expected = getTVShowTrailerUseCase(2)
 
             expected.test {
                 Assert.assertEquals(awaitItem(), trailerKey)

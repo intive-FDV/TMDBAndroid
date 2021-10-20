@@ -16,7 +16,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayoutDetail"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="@dimen/appbar_height"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
 
@@ -26,8 +26,8 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/primaryColor"
-                app:expandedTitleMarginBottom="20dp"
-                app:expandedTitleMarginStart="15dp"
+                app:expandedTitleMarginBottom="@dimen/margin_large"
+                app:expandedTitleMarginStart="@dimen/margin_medium"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <ImageView
@@ -58,7 +58,7 @@
                     android:layout_height="?actionBarSize"
                     android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
                     app:contentInsetStart="0dp"
-                    app:titleMarginStart="16dp"
+                    app:titleMarginStart="@dimen/margin_medium"
                     app:contentInsetStartWithNavigation="0dp"
                     app:layout_collapseMode="pin" />
 
@@ -74,7 +74,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp">
+                android:layout_margin="@dimen/margin_medium">
 
                 <TextView
                     android:id="@+id/genres_detail_textView"
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/popularity_thumb_icon"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_medium"
                     android:textColor="@color/material_on_background_emphasis_high_type"
                     tools:text="Action, Drama, Thriller, Soap"/>
 
@@ -103,8 +103,8 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:textSize="20sp"
-                    android:layout_marginStart="12dp"
+                    android:textSize="@dimen/title_size"
+                    android:layout_marginStart="@dimen/margin_short"
                     app:layout_constraintTop_toTopOf="@id/popularity_thumb_icon"
                     app:layout_constraintBottom_toBottomOf="@+id/popularity_thumb_icon"
                     app:layout_constraintStart_toEndOf="@id/popularity_thumb_icon"/>
@@ -143,9 +143,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/overview"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/title_size"
                     android:textStyle="bold"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     app:layout_constraintTop_toBottomOf="@+id/genres_detail_textView"
                     app:layout_constraintStart_toStartOf="parent"/>
 
@@ -154,9 +154,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:paddingVertical="2dp"
-                    android:paddingHorizontal="12dp"
-                    android:background="@drawable/bg_status"
+                    android:paddingHorizontal="@dimen/margin_short"
+                    android:background="@drawable/chip_background"
+                    android:backgroundTint="@color/secondaryLightColor"
                     app:layout_constraintTop_toTopOf="@+id/overview_textView"
                     app:layout_constraintBottom_toBottomOf="@+id/overview_textView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -167,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/overview_detail_textView"
                     tools:text="Aug 23, 2021" />
@@ -177,7 +177,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="@dimen/margin_large"
                     app:layout_constraintStart_toEndOf="@+id/first_air_date_detail_textView"
                     app:layout_constraintTop_toTopOf="@+id/first_air_date_detail_textView"
                     tools:text="1 Season" />
@@ -187,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="@dimen/margin_large"
                     app:layout_constraintStart_toEndOf="@+id/number_of_seasons_detail_textView"
                     app:layout_constraintTop_toTopOf="@id/number_of_seasons_detail_textView"
                     tools:text="12 Episodes" />
@@ -197,8 +197,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
-                    android:paddingHorizontal="5dp"
-                    android:drawablePadding="3dp"
+                    android:paddingHorizontal="@dimen/margin_short"
+                    android:drawablePadding="@dimen/margin_spacing"
                     android:gravity="end|center_vertical"
                     android:text="@string/watch_trailer"
                     app:drawableStartCompat="@drawable/ic_play_filled"
@@ -211,10 +211,10 @@
                     android:id="@+id/overview_detail_textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:lineSpacingExtra="4dp"
+                    android:layout_marginTop="@dimen/margin_short"
+                    android:lineSpacingExtra="@dimen/margin_spacing"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/subtitle_size"
                     app:layout_constraintTop_toBottomOf="@id/overview_textView"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginVertical="20dp"
@@ -226,9 +226,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/networks_header_text"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/title_size"
                     android:textStyle="bold"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     app:layout_constraintTop_toBottomOf="@+id/first_air_date_detail_textView"
                     app:layout_constraintStart_toStartOf="parent"/>
 
@@ -236,8 +236,8 @@
                     android:id="@+id/network_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="@dimen/margin_short"
+                    android:layout_marginStart="@dimen/margin_spacing"
                     app:layout_constraintTop_toBottomOf="@+id/networks_header"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -249,9 +249,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/recomendations_header_text"
                     android:textColor="@color/material_on_background_emphasis_high_type"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/title_size"
                     android:textStyle="bold"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     app:layout_constraintTop_toBottomOf="@+id/network_list"
                     app:layout_constraintStart_toStartOf="parent"/>
 
@@ -271,20 +271,22 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-
     <include
         android:id="@+id/layout_error_detail"
         layout="@layout/layout_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_anchor="@+id/coordinatorContainer_detail"
+        app:layout_anchorGravity="center" />
 
     <include
         android:id="@+id/layout_loading_detail"
         layout="@layout/layout_progressbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_anchor="@+id/coordinatorContainer_detail"
         app:layout_anchorGravity="center" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

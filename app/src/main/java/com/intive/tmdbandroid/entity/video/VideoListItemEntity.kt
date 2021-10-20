@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.video
 
 data class VideoListItemEntity(
     val key: String,

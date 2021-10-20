@@ -3,7 +3,7 @@ package com.intive.tmdbandroid.details.ui.person.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.intive.tmdbandroid.common.State
-import com.intive.tmdbandroid.entity.ResultPerson
+import com.intive.tmdbandroid.entity.person.ResultPerson
 import com.intive.tmdbandroid.model.Screening
 import com.intive.tmdbandroid.usecase.person.GetCombinedCreditsUseCase
 import com.intive.tmdbandroid.usecase.person.GetDetailPersonUseCase

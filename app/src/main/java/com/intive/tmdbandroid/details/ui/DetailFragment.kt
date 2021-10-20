@@ -150,19 +150,19 @@ class DetailFragment : Fragment() {
             viewModel.uiState.collect { state ->
                 when (state) {
                     is State.Success -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
                         screening = state.data
                         setupUI(binding)
                     }
                     is State.Error -> {
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.VISIBLE
                         binding.coordinatorContainerDetail.visibility = View.VISIBLE
                     }
                     else -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.VISIBLE
                     }
                 }
             }
@@ -174,8 +174,8 @@ class DetailFragment : Fragment() {
             viewModel.watchlistUIState.collectLatest {
                 when (it) {
                     is State.Success -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
                         if (it.data == null) {
                             selectOrUnselectWatchlistFav(binding, false)
                             isSaveOnWatchlist = false
@@ -192,13 +192,12 @@ class DetailFragment : Fragment() {
                         showRateOrStar(binding)
                     }
                     State.Error -> {
-                        binding.layoutLoadingDetail.progressBar.visibility = View.GONE
-                        binding.layoutErrorDetail.errorContainer.visibility = View.VISIBLE
-                        binding.coordinatorContainerDetail.visibility = View.VISIBLE
+                        binding.layoutLoadingDetail.root.visibility = View.GONE
+                        Toast.makeText(context, "Couldn't save to watchlist. Please try later", Toast.LENGTH_LONG).show()
                     }
                     else -> {
-                        binding.layoutErrorDetail.errorContainer.visibility = View.GONE
-                        binding.layoutLoadingDetail.progressBar.visibility = View.VISIBLE
+                        binding.layoutErrorDetail.root.visibility = View.GONE
+                        binding.layoutLoadingDetail.root.visibility = View.VISIBLE
                     }
                 }
             }
@@ -217,9 +216,10 @@ class DetailFragment : Fragment() {
                             showDialog(it.data)
                         }
                     }
-                    else -> {
+                    is State.Error -> {
                         Toast.makeText(context, "There was an error. Please try again", Toast.LENGTH_LONG).show()
                     }
+                    else -> { }
                 }
             }
         }
@@ -322,11 +322,9 @@ class DetailFragment : Fragment() {
     ) {
         val percentage = (voteAverage * 10).toInt()
 
-        binding.popularityRatingNumber.text =
-            requireContext().resources.getString(R.string.popularity, percentage)
-
-
         val context = binding.root.context
+
+        binding.popularityRatingNumber.text = context.getString(R.string.popularity, percentage)
 
         when {
             percentage < 25 -> binding.popularityThumbIcon.imageTintList =

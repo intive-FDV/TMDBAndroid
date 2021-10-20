@@ -6,7 +6,5 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DetailTVShowUseCase @Inject constructor(private val repository: CatalogRepository) {
-
     operator fun invoke(id:Int): Flow<TVShow> = repository.getTVShowByID(id)
-
 }

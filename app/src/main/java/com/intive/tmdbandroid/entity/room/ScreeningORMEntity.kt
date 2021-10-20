@@ -1,4 +1,4 @@
-package com.intive.tmdbandroid.entity
+package com.intive.tmdbandroid.entity.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -24,7 +24,6 @@ data class ScreeningORMEntity(
     val poster_path: String?,
     val status: String?,
     val vote_average: Double,
-    val vote_count: Int,
     val popularity: Double,
     val release_date: String?,
     val media_type: String,
@@ -49,7 +48,6 @@ data class ScreeningORMEntity(
             poster_path,
             status,
             vote_average,
-            vote_count,
             popularity,
             release_date,
             media_type,
