@@ -32,11 +32,12 @@ Tech
 ScreenShot
 ----------
 ## Home
-![Home](https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg){:height="50%" width="50%"}
+<img src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg" data-canonical-src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg" width="50%" height="50%" />
 ## Details
-![Details](https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/details.jpg)
+<img src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/details.jpg" data-canonical-src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/details.jpg" width="50%" height="50%" />
 ## Search
-![Search](https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/search.jpg)
+<img src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/search.jpg" data-canonical-src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/search.jpg" width="50%" height="50%" />
+
 
 [TMDB]: <https://www.themoviedb.org>
 [Clean Architecture]: <https://www.raywenderlich.com/3595916-clean-architecture-tutorial-for-android-getting-started>
