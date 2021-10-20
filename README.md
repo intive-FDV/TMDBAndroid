@@ -32,7 +32,7 @@ Tech
 ScreenShot
 ----------
 ## Home
-![Home](https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg)
+![Home](https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg width="50%" height="50%")
 ## Details
 ![Details](https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/details.jpg)
 ## Search
