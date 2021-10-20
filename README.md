@@ -33,8 +33,10 @@ ScreenShot
 ----------
 ## Home
 <img src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg" data-canonical-src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/home.jpg" width="50%" height="50%" />
+
 ## Details
 <img src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/details.jpg" data-canonical-src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/details.jpg" width="50%" height="50%" />
+
 ## Search
 <img src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/search.jpg" data-canonical-src="https://github.com/intive-FDV/TMDBAndroid/blob/master/screenshot/search.jpg" width="50%" height="50%" />
 
